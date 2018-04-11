@@ -1,0 +1,17 @@
+.SignForm {
+    display: flex;
+    flex-direction: column;
+    min-width: 450px;
+
+}
+
+.sign__grid__form__field {
+    display:flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.sign__grid__form__field .sign__grid__form__field-label {
+    text-align: left;
+    font-size: 1em;
+}
