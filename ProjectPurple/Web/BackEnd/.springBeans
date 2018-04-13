@@ -9,6 +9,7 @@
 	<configs>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/application-context.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/rabbitmq-context.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/websocket-context.xml</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>

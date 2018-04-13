@@ -203,6 +203,14 @@
 			<artifactId>netty-all</artifactId>
 			<version>4.0.31.Final</version>
 		</dependency>
+
+		<!--JWT-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- ojdbc -->

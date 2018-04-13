@@ -161,6 +161,7 @@
 		내부 IP:${item.innerIp}<br>
 		<button type="button" onclick="delete_device(${item.sfCode})">삭제</button>
 		<button type="button">설정</button>
+		<button type="button" disabled="disabled">수경재배 시작</button>
 		<button type="button" disabled="disabled">LED켜기</button>
 		<button type="button" disabled="disabled">LED끄기</button>
 		<hr>

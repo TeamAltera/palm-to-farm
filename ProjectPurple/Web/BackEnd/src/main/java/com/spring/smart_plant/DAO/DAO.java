@@ -2,6 +2,7 @@ package com.spring.smart_plant.DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 
 import com.spring.smart_plant.DTO.APInfoDTO;
 import com.spring.smart_plant.DTO.LoginDTO;
+import com.spring.smart_plant.DTO.SensorDataDTO;
 import com.spring.smart_plant.DTO.SmartFarmInfoDTO;
 import com.spring.smart_plant.DTO.UserInfoDTO;
 import com.spring.smart_plant.utills.ConstantJDBCTemplate;
@@ -26,8 +28,8 @@ public class DAO {
 	//로그인할때 사용자 존재 여부 확인하기 위해 사용
 	public UserInfoDTO searchMember(LoginDTO dto) {
 		UserInfoDTO resultDto=null;
-		String query="SELECT * FROM PLANT_USER WHERE PWD=? AND MEMBER_ID=?";
-		Object[] params= {dto.getPwd(), dto.getMemberId()};
+		String query="SELECT * FROM PLANT_USER WHERE PWD=? AND EMAIL=?";
+		Object[] params= {dto.getPwd(), dto.getEmail()};
 		int[] types= {Types.VARCHAR, Types.VARCHAR};
 		try {
 			resultDto=template.queryForObject(query,params,types,new BeanPropertyRowMapper<UserInfoDTO>(UserInfoDTO.class));
@@ -48,15 +50,15 @@ public class DAO {
 	
 	//회원가입 페이지에서 사용
 	public void insertMember(UserInfoDTO dto) {
-		String query = "INSERT INTO PLANT_USER(USER_CODE,MEMBER_ID,PWD,EMAIL,USER_NAME,SF_CNT) VALUES(PLANT_USER_SEQ.NEXTVAL,?,?,?,?,0)";
+		String query = "INSERT INTO PLANT_USER(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT) VALUES(PLANT_USER_SEQ.NEXTVAL,?,?,?,?,0)";
 		template.update(query,new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement arg0) throws SQLException {
 				// TODO Auto-generated method stub
-				arg0.setString(1, dto.getMemberId());
-				arg0.setString(2, dto.getPwd());
-				arg0.setString(3, dto.getEmail());
-				arg0.setString(4, dto.getUserName());
+				arg0.setString(1, dto.getPwd());
+				arg0.setString(2, dto.getEmail());
+				arg0.setString(3, dto.getFirstName());
+				arg0.setString(3, dto.getSecondName());
 			}
 		});
 	}
@@ -125,4 +127,23 @@ public class DAO {
 			}
 		});
 	}
+	
+	/*public void insertData(SensorDataDTO dto) {
+		String query="INSERT INTO SENSOR_DATA (CALC_DT,SF_CODE,TEMP,HUMI,ELUM,WATER_TEMP,WATER_LIM) "
+				+ "VALUES (?,?,?,?,?,?,?)";
+		template.update(query, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0) throws SQLException {
+				// TODO Auto-generated method stub
+				arg0.setTimestamp(1, dto.getDate());
+				arg0.setInt(2, dto.getSfCode());
+				arg0.setInt(3, dto.getTemp());
+				arg0.setInt(4, dto.getHumi());
+				arg0.setInt(5, dto.getElum());
+				arg0.setInt(6, dto.getWaterTemp());
+				arg0.setInt(7, dto.getWaterLim());
+			}
+		});
+	}*/
 }
+

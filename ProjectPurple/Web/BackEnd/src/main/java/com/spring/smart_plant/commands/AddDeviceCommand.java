@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import com.spring.smart_plant.DAO.DAO;
 import com.spring.smart_plant.DTO.APInfoDTO;
 import com.spring.smart_plant.DTO.UserInfoDTO;
-import com.spring.smart_plant.DTO.JSON.DeviceInfoJSON;
+import com.spring.smart_plant.DTO.JSON.Request.DeviceInfoJSON;
 
 public class AddDeviceCommand implements AjaxCommand {
 

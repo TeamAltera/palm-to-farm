@@ -16,7 +16,7 @@ import com.spring.smart_plant.DTO.JoinEmailDTO;
 import com.spring.smart_plant.commands.AjaxCommand;
 import com.spring.smart_plant.commands.JoinCodeCheckCommand;
 import com.spring.smart_plant.commands.MailSendCommand;
-import com.spring.smart_plant.services.MailService;
+import com.spring.smart_plant.services.mail.MailService;
 import com.spring.smart_plant.utills.ConstantMailService;
 
 @Controller

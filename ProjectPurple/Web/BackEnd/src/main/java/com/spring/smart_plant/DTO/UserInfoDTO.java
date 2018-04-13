@@ -2,10 +2,10 @@ package com.spring.smart_plant.DTO;
 
 public class UserInfoDTO {
 	private int userCode;
-	private String memberId;
 	private String pwd;
 	private String email;
-	private String userName;
+	private String firstName;
+	private String secondName;
 	private int sfCnt;
 	
 	/**
@@ -25,15 +25,14 @@ public class UserInfoDTO {
 	 * @param userName
 	 * @param sfCnt
 	 */
-	public UserInfoDTO(int userCode, String memberId, String pwd, String email, String userName,
-			int sfCnt) {
+	public UserInfoDTO(int userCode,String pwd, String email, int sfCnt, String firstName, String secondName) {
 		super();
 		this.userCode = userCode;
-		this.memberId = memberId;
 		this.pwd = pwd;
 		this.email = email;
-		this.userName = userName;
 		this.sfCnt = sfCnt;
+		this.firstName=firstName;
+		this.secondName=secondName;
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class UserInfoDTO {
 	 */
 	public UserInfoDTO(LoginDTO dto) {
 		super();
-		this.memberId = dto.getMemberId();
+		this.email = dto.getEmail();
 		this.pwd = dto.getPwd();
 	}
 
@@ -52,14 +51,6 @@ public class UserInfoDTO {
 
 	public void setUserCode(int userCode) {
 		this.userCode = userCode;
-	}
-
-	public String getMemberId() {
-		return memberId;
-	}
-
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
 	}
 
 	public String getPwd() {
@@ -78,12 +69,20 @@ public class UserInfoDTO {
 		this.email = email;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getSecondName() {
+		return secondName;
+	}
+
+	public void setSecondName(String secondName) {
+		this.secondName = secondName;
 	}
 
 	public int getSfCnt() {

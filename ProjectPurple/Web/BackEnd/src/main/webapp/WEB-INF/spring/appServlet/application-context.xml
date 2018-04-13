@@ -18,7 +18,7 @@
 		</property>
 	</bean>
 
-	<bean id="mailServiceObject" class="com.spring.smart_plant.services.MailServiceImpl">
+	<bean id="mailServiceObject" class="com.spring.smart_plant.services.mail.MailServiceImpl">
 		<property name="sender" ref="mailSender"></property>
 	</bean>
 

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:websocket="http://www.springframework.org/schema/websocket"
-	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.1.xsd
-		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -45,6 +44,8 @@
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
 	</beans:bean>
 
+	<beans:bean class="com.spring.smart_plant.services.jwt.JwtServiceImpl"></beans:bean>
+
 	<!-- validator -->
 	<!-- <beans:bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" 
 		/> -->
@@ -53,11 +54,11 @@
 	<interceptors>
 		<interceptor>
 			<!-- path여러개 추가가능 -->
-			<mapping path="/login" />
-			<!-- <mapping path="/loginAction" /> -->
-			<mapping path="/main" />
-			<mapping path="/sensing_data" />
-			<beans:bean class="com.spring.smart_plant.interceptors.SessionInterceptor" />
+			<mapping path="/**" />
+			<exclude-mapping path="/login"/>
+			<exclude-mapping path="/memberJoinAction"/>
+			<exclude-mapping path="/loginAction"/>
+			<beans:bean class="com.spring.smart_plant.interceptors.JwtInterceptor" />
 		</interceptor>
 		<beans:bean id="webContentInterceptor"
 			class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -67,37 +68,4 @@
 			<beans:property name="useCacheControlNoStore" value="true" />
 		</beans:bean>
 	</interceptors>
-
-	<!-- websocket handler mapping -->
-	
-	<!-- <beans:bean class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean">
-		<beans:property name="maxTextMessageBufferSize" value="8192"/>
-		<beans:property name="maxBinaryMessageBufferSize" value="8192"/>
-	</beans:bean> -->
-	
-	<!-- <beans:bean id="webSocketHandler" class="com.spring.smart_plant.services.WebSocketHandler"/> -->
-	
-	<!-- <websocket:handlers allowed-origins="*">
-		<websocket:mapping handler="webSocketHandler" path="/sensing_data" />
-		<websocket:handshake-interceptors>
-			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
-		</websocket:handshake-interceptors>
-		<websocket:sockjs />
-	</websocket:handlers>  -->
-	
-	<websocket:message-broker application-destination-prefix="/app" path-matcher="pathMatcher" 
-	user-destination-prefix="/user">
-		<websocket:stomp-endpoint path="/sensing_data">
-			<websocket:sockjs/>
-		</websocket:stomp-endpoint>
-		<!-- <websocket:simple-broker prefix="/topic, /queue"/> -->
-		<websocket:stomp-broker-relay prefix="/topic, /queue,/user" 
-		relay-host="localhost" relay-port="61613" client-login="guest" client-passcode="guest" 
-		system-login="guest" system-passcode="guest"
-		/>
-	</websocket:message-broker>
-	
-	<beans:bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
-		<beans:constructor-arg index="0" value="."/>
-	</beans:bean>
 </beans:beans>

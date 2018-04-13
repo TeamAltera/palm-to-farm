@@ -1,14 +1,14 @@
 package com.spring.smart_plant.DTO;
 
 public class LoginDTO {
-	private String memberId;
+	private String email;
 	private String pwd;
 	
-	public String getMemberId() {
-		return memberId;
+	public String getEmail() {
+		return email;
 	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getPwd() {
 		return pwd;

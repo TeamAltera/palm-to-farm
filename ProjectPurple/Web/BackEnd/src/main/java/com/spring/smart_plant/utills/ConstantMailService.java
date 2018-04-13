@@ -1,6 +1,6 @@
 package com.spring.smart_plant.utills;
 
-import com.spring.smart_plant.services.MailService;
+import com.spring.smart_plant.services.mail.MailService;
 
 public class ConstantMailService {
 	private static MailService mailService;
