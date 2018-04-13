@@ -1,0 +1,18 @@
+<?php
+	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+	header('Content-Type: application/json');
+
+	$str = file_get_contents('/var/www/html/results.json');
+
+	$json = json_decode($str, true);
+
+	$res = 'OK';
+	if( array_key_exists("user_code", $json) ){
+		 $res = 'FAIL';
+	}
+	$data = ['state'=> $res , 'forward' => [9000 , 9001] ];
+	echo json_encode($data);
+
+
+?>
