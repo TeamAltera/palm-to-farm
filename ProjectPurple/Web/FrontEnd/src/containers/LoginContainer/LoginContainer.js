@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { LoginWrapper, LoginForm } from "../../components";
-import * as service from "../../services/login";
 import { isEmail, isLength } from "validator";
+import { Field, reduxForm } from "redux-form";
 
 export default class LoginContainer extends Component {
   state = {};
 
-  doLogin = async event => {
-    const login = await service.doLogin();
-
+  doLogin = value => {
     this.validate.email("asdf@ad.ad");
     this.validate.password("1234");
 
