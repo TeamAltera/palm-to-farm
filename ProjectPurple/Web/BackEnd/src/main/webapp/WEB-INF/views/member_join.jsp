@@ -45,57 +45,6 @@
 		}, 1500); //setTimeout
 	}
 
-	function checkPwd() {
-		clearTimeout(checkPwdSetTimeout);
-		checkPwdSetTimeout = setTimeout(function() {
-	            $('input[type=password]').keyup(function() { // 사용자가 키보드 누를때마다 검사하기!
-                var pwd = $(this).val(); // 사용자가 입력한 패스워드 값 가지고 오기!
-  	            // 패스워드 길이 확인하기! 8자 이상 15자 이하~!
-                if (pwd.length > 7 && pwd.length < 16) {
-                	$('#length').removeClass('invalid').addClass('valid');
-                } else {
-                	$('#length').removeClass('valid').addClass('invalid');
-                }
-                // 최소한에 하나의 문자 포함하는지 확인하기!
-                if (pwd.match(/[A-z]/)) {
-                	$('#letter').removeClass('invalid').addClass('valid');
-                } else {
-                	$('#letter').removeClass('valid').addClass('invalid');
-                }
-                // 특수문자 들어갔는지 확인해보기!
-                if (pwd.match(/[!@#$%^&*()]/)) {
-                	$('#specialChar').removeClass('invalid').addClass('valid');
-                } else {
-                	$('#specialChar').removeClass('valid').addClass('invalid');
-                }
-                // 숫자 들어갔는지 확인해보기!
-                if (pwd.match(/\d/)) {
-                	$('#number').removeClass('invalid').addClass('valid');
-                } else {
-                	$('#number').removeClass('valid').addClass('invalid');
-           		}
-            }).focus(function() {
-            	$('#pwd_info').show();
-            }).blur(function() {
-            	$('#pwd_info').hide();
-            });
-			confirm();
-		}, 1000);
-	}
-	
-	function checkPwd2(){
-		if ($('.pwd').val() == '') {
-			confirm_pwd = false;
-			$('.pwd_confirm').val() = '';
-			$('#checkPwdMsg').html('');
-		}
-		if (confirm_pwd = $('.pwd').val() == ($('.pwd_confirm').val())) {
-		$('#checkPwdMsg').html('<p style="color:green"><strong>비밀번호 일치</strong></p>');
-		} else {
-			$('#checkPwdMsg').html('<p style="color:red"><strong>비밀번호 불일치</strong></p>');
-		} 
-	}
-
 	function sendEmail() {
 		$('#send_code_btn').html('인증코드재전송');
 		user_email=$('#str_email01').val()+'@'+$('#str_email02').val();
@@ -116,14 +65,6 @@
 			}
 		}); //end ajax
 	}
-	
-	 function sessionClockInit(){
-		var sec=180;
-		clearTimeout(sessionClockTimeout);
-		sessionClockTimeout=setTimeout(function() {
-			
-		},1000);
-	} 
 	
 	function sendJoinCode(){
 		var sendData = JSON.stringify({code :$('#joinCode').val()});
@@ -188,21 +129,8 @@
 	<%--회원가입 폼 --%>
 	<form action="memberJoinAction" method="post" autocomplete="off">
 		<%--아이디--%>
-		아이디:<input required class="searchText" name="memberId" type="text" onkeyup="checkId()" maxlength="30"/>
-		<br>
-		<div id="checkIdMsg"></div>
 		<%--패스워드 --%>
 		패스워드: <input type="password" name="pwd" required class="pwd"onkeyup="checkPwd()"><br>
-		<%-- 패스워드 validation --%>
-		<div id="pwd_info">
-			<h4>조건을 만족해주세요!</h4>
-			<ul>
-				<li id="letter" class="invalid"><strong>1개의 단어 포함</strong></li>
-				<li id="number" class="invalid"><strong>숫자 포함</strong></li>
-				<li id="specialChar" class="invalid"><strong>특수문자 포함</strong></li>
-				<li id="length" class="invalid"><strong>8~15글자</strong></li>
-			</ul>
-		</div>
 		<%--패스워드 확인--%>
 		패스워드 확인: <input type="password" required class="pwd_confirm" onkeyup="checkPwd2()"><br>
 		<div id="checkPwdMsg"></div>

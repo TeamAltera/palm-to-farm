@@ -45,7 +45,7 @@
 	</bean>
 
 
-	<bean id="recoverer" class="com.spring.smart_plant.services.websocket.WebSocketErrorRecoverer" />
+	<bean id="recoverer" class="com.spring.smart_plant.common.service.websocket.WebSocketErrorRecoverer" />
 
 	<!-- retry interceptor설정 -->
 	<bean id="retryInterceptor"
@@ -54,7 +54,7 @@
 		<property name="retryOperations" ref="retryTemplate" />
 	</bean>
 
-	<bean id="consumer" class="com.spring.smart_plant.services.rabbit.RabbitMessageListenerImpl"></bean>
+	<bean id="consumer" class="com.spring.smart_plant.common.service.rabbitmq.RabbitMessageListenerImpl"></bean>
 
 	<bean id="jsonConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter">
 	</bean>

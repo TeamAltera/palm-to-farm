@@ -25,7 +25,10 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<context:component-scan base-package="com.spring.smart_plant.controller" />
+	<context:component-scan base-package="com.spring.smart_plant.test" />
+	<context:component-scan base-package="com.spring.smart_plant.mail.controller" />
+	<context:component-scan base-package="com.spring.smart_plant.device.controller" />
+	<context:component-scan base-package="com.spring.smart_plant.user.controller" />
 
 	<beans:bean name="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -44,7 +47,7 @@
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
 	</beans:bean>
 
-	<beans:bean class="com.spring.smart_plant.services.jwt.JwtServiceImpl"></beans:bean>
+	<beans:bean class="com.spring.smart_plant.common.service.jwt.JwtServiceImpl"></beans:bean>
 
 	<!-- validator -->
 	<!-- <beans:bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" 
@@ -55,10 +58,10 @@
 		<interceptor>
 			<!-- path여러개 추가가능 -->
 			<mapping path="/**" />
+			<exclude-mapping path="/user/signin"/>
+			<exclude-mapping path="/user/signup"/>
 			<exclude-mapping path="/login"/>
-			<exclude-mapping path="/memberJoinAction"/>
-			<exclude-mapping path="/loginAction"/>
-			<beans:bean class="com.spring.smart_plant.interceptors.JwtInterceptor" />
+			<beans:bean class="com.spring.smart_plant.common.interceptors.JwtInterceptor" />
 		</interceptor>
 		<beans:bean id="webContentInterceptor"
 			class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -69,3 +72,4 @@
 		</beans:bean>
 	</interceptors>
 </beans:beans>
+

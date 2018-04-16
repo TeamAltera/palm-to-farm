@@ -2,7 +2,6 @@ package com.spring.smart_plant.DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
@@ -11,12 +10,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 
-import com.spring.smart_plant.DTO.APInfoDTO;
-import com.spring.smart_plant.DTO.LoginDTO;
-import com.spring.smart_plant.DTO.SensorDataDTO;
-import com.spring.smart_plant.DTO.SmartFarmInfoDTO;
-import com.spring.smart_plant.DTO.UserInfoDTO;
-import com.spring.smart_plant.utills.ConstantJDBCTemplate;
+import com.spring.smart_plant.common.utills.ConstantJDBCTemplate;
+import com.spring.smart_plant.device.domain.APInfoDTO;
+import com.spring.smart_plant.device.domain.SmartFarmInfoDTO;
+import com.spring.smart_plant.user.domain.LoginDTO;
+import com.spring.smart_plant.user.domain.UserInfoDTO;
 
 public class DAO {
 	JdbcTemplate template;
@@ -64,11 +62,11 @@ public class DAO {
 	}
 
 	//회원가입 페이지에서 사용
-	public int searchMember(String memberId) {
-		String query="SELECT * FROM PLANT_USER WHERE MEMBER_ID=?";
-		Object[] params= {memberId};
+	public int searchMember(String email) {
+		String query="SELECT * FROM PLANT_USER WHERE EMAIL=?";
+		Object[] params= {email};
 		int[] types= {Types.VARCHAR};
-		System.out.println(memberId);
+		System.out.println(email);
 		return template.query(query, params,types,new BeanPropertyRowMapper<UserInfoDTO>(UserInfoDTO.class)).size();
 		//결과가 존재한다면 1반환
 	}

@@ -45,7 +45,7 @@
   </filter>
   <filter>
     <filter-name>CORSHandlerFilter</filter-name>
-    <filter-class>com.spring.smart_plant.Filters.CORSHandlerFilter</filter-class>
+    <filter-class>com.spring.smart_plant.common.filters.CORSHandlerFilter</filter-class>
   </filter>
   <!-- CORS Handling -->
   <filter-mapping>
