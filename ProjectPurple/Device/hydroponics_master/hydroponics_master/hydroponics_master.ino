@@ -1,7 +1,7 @@
 ﻿/*
-Name:		IR_master.ino
-Created:	2018-02-12 오후 7:35:00
-Author:	AN
+Name:      IR_master.ino
+Created:   2018-02-12 오후 7:35:00
+Author:   AN
 */
 #include <ArduinoJson.h>
 char* userName = "";
