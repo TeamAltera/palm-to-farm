@@ -3,7 +3,7 @@
     use PhpAmqpLib\Connection\AMQPStreamConnection;
     use PhpAmqpLib\Message\AMQPMessage;
 
-    define("HOST", "203.250.32.171");
+    define("HOST", "203.250.32.48");
     define("PORT", 5672);
     define("USER", "manager");
     define("PASS", "manager");
