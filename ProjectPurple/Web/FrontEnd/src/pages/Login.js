@@ -1,12 +1,27 @@
-import React from "react";
+import React, { Component } from "react";
 import { LoginContainer } from "../containers";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as baseActions from "redux/modules/base";
 
-const Login = () => {
-  return (
-    <div>
-      <LoginContainer />
-    </div>
-  );
-};
+class Login extends Component {
+  // 페이지에 진입 할 때 헤더를 비활성화
+  componentWillMount() {}
 
-export default Login;
+  // 페이지에서 벗어 날 때 다시 활성화
+  componentWillUnmount() {}
+
+  render() {
+    return (
+      <div>
+      </div>
+    );
+  }
+}
+
+export default connect(
+  state => ({}),
+  dispatch => ({
+    BaseActions: bindActionCreators(baseActions, dispatch)
+  })
+)(Login);
