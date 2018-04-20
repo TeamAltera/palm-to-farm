@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const DEFAULT_DOMAIN = "http://203.250.32.171:9001/smart_plant/";
+const DEFAULT_DOMAIN = "http://203.250.32.171:9001/smart_plant/user/";
 
 //로그인
 export const signin = (email, password) => {

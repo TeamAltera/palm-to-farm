@@ -12,7 +12,7 @@ class SignupContainer extends Component {
   handleChange = e => {
     const { AuthActions } = this.props;
     const { name, value } = e.target;
-
+    console.log(e);
     AuthActions.changeInput({
       name,
       value,
@@ -54,15 +54,15 @@ class SignupContainer extends Component {
       // TODO: 로그인 정보 저장 (로컬스토리지/스토어)
       history.push("/"); // 회원가입 성공시 홈페이지로 이동 -> 이후 url 변경해야함
     } catch (e) {
-      // 에러 처리하기
-      // if (e.response.status === 409) {
-      //   const { key } = e.response.data;
-      //   const message =
-      //     key === "email"
-      //       ? "이미 존재하는 이메일입니다."
-      //       : "이미 존재하는 아이디입니다.";
-      //   return this.setError(message);
-      // }
+      //에러 처리하기
+      if (e.response.status === 409) {
+        const { key } = e.response.data;
+        const message =
+          key === "email"
+            ? "이미 존재하는 이메일입니다."
+            : "이미 존재하는 아이디입니다.";
+        return this.setError(message);
+      }
       this.setError("알 수 없는 에러가 발생했습니다.");
     }
   };

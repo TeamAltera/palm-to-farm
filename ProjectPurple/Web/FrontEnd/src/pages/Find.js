@@ -1,11 +1,13 @@
-import React from "react";
+import React, { Component } from "react";
 
-const Find = () => {
-  return (
-    <div>
-      <h2>Find page</h2>
-    </div>
-  );
-};
+class Find extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Find page</h2>
+      </div>
+    );
+  }
+}
 
 export default Find;
