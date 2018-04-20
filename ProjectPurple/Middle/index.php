@@ -38,14 +38,14 @@
 
 			$ip=$_GET['ip']; //Query_string
 			$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
-			//$self_ip = $_SERVER['HTTP_X_FORWARD_FOR']; //my ip
+			$self_ip = $_SERVER['HTTP_X_FORWARD_FOR']; //my ip
 			$whois_user = $_SERVER['REMOTE_ADDR']; //웹서버의 요청을 보내는 사용자ip
 			$using_port = $_SERVER['SERVER_PORT']; //클라이언트 포트
 
 			//$source =$_POST['source'];
 
 			printf("root : %s<br/>", $site);
-			//printf("ip : %s<br/>",$self_ip);
+			printf("ip : %s<br/>",$self_ip);
 			printf("user ip : %s<br/>", $whois_user);
 			printf("port num : %s<br/>", $using_port);
 			printf("query string ip : %s<br/>", $ip);

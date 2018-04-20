@@ -41,15 +41,19 @@
 	//$json = json_decode($str1, true);
     $conn_user = mysqli_connect($db_host1, $db_user1, $db_passwd1, $db_name1) or die("Connected Failed!!!!");
 
-    $query_user = "SELECT COUNT(*) FROM Sys_info";
+    $query_user = "SELECT * FROM Sys_info";
 	$result_user = mysqli_query($conn_user, $query_user);
 	//true 참 0 이외의 값 , false 거짓 0 //
-
+	$num = mysqli_num_rows($result_user);
+	// 데이터베이스의개수.
 	$res = 'OK';
-	if( $result_user == 0 ){
-		 $res = 'FAIL';
+	if(  $num >= 1 ){
+		$res = 'FAIL';
+		$data = ['state' => $res];
 	}
-	$data = ['state'=> $res , 'ssid' => 'pi3-ap' , 'inner_ip' => $return_arr ];
+	else if( $num == 0) {
+        $data = ['state' => $res, 'ssid' => 'pi3-ap', 'inner_ip' => $return_arr];
+    }
 	echo json_encode($data);
 
 	mysqli_close($conn);

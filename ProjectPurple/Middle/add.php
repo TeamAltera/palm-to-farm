@@ -9,7 +9,6 @@
 	$db_name = "water_middle_server";
 
 	$conn = mysqli_connect($db_host, $db_user, $db_passwd, $db_name) or die("Connected Failed!!!!");
-
 	# Get JSON as a string
 	$json_str = file_get_contents('php://input');
 
