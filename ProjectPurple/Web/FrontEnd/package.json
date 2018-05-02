@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "eslint-config-airbnb": "^16.1.0",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
     "jsonwebtoken": "^8.2.1",
@@ -31,6 +32,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "cross-env": "^5.1.4"
+    "cross-env": "^5.1.4",
+    "prettier-eslint": "^8.8.1"
   }
 }

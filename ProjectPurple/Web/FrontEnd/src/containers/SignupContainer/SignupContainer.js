@@ -7,6 +7,7 @@ import * as authActions from "../../redux/modules/auth";
 import { isEmail, isLength } from "validator";
 import * as userActions from "../../redux/modules/user";
 import storage from "../../lib/storage";
+import { withRouter } from "react-router";
 
 class SignupContainer extends Component {
   handleChange = e => {
@@ -45,8 +46,8 @@ class SignupContainer extends Component {
     }
     try {
       await AuthActions.localRegister({
-        email,
         username,
+        email,
         password
       });
       const loggedInfo = this.props.result.toJS();
@@ -130,11 +131,10 @@ class SignupContainer extends Component {
                   Purple ID 만들기
                 </Header>
                 <Form.Group widths="equal">
-                  <Form.Input fluid placeholder="성" />
                   <Form.Input
                     fluid
                     name="username"
-                    placeholder="이름"
+                    placeholder="성 이름"
                     value={username}
                     onChange={handleChange}
                   />
@@ -190,15 +190,17 @@ class SignupContainer extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    form: state.auth.getIn(["signup", "form"]),
-    error: state.auth.getIn(["signup", "error"]),
-    exists: state.auth.getIn(["signup", "exists"]),
-    result: state.auth.get("result")
-  }),
-  dispatch => ({
-    AuthActions: bindActionCreators(authActions, dispatch),
-    userActions: bindActionCreators(userActions, dispatch)
-  })
-)(SignupContainer);
+export default withRouter(
+  connect(
+    state => ({
+      form: state.auth.getIn(["signup", "form"]),
+      error: state.auth.getIn(["signup", "error"]),
+      exists: state.auth.getIn(["signup", "exists"]),
+      result: state.auth.get("result")
+    }),
+    dispatch => ({
+      AuthActions: bindActionCreators(authActions, dispatch),
+      userActions: bindActionCreators(userActions, dispatch)
+    })
+  )(SignupContainer)
+);

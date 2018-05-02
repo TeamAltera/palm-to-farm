@@ -10,13 +10,13 @@ import {
   Segment,
   Divider
 } from "semantic-ui-react";
-import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as authActions from "../../redux/modules/auth";
 import * as userActions from "../../redux/modules/user";
 import storage from "../../lib/storage";
-import createHistory from "history/createBrowserHistory";
+//import createHistory from "history/createBrowserHistory";
+import { withRouter } from "react-router";
 
 class LoginContainer extends Component {
   handleChange = e => {
@@ -45,9 +45,9 @@ class LoginContainer extends Component {
   };
 
   handleLocalLogin = async () => {
-    const { form, AuthActions, UserActions } = this.props;
+    const { form, AuthActions, UserActions, history } = this.props;
     const { email, password } = this.props.form.toJS();
-    const history = createHistory();
+    //const history = createHistory();
 
     try {
       console.log("email은 " + email + " pwd는 " + password);
@@ -119,14 +119,16 @@ class LoginContainer extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    form: state.auth.getIn(["login", "form"]),
-    error: state.auth.getIn(["login", "error"]),
-    result: state.auth.get("result")
-  }),
-  dispatch => ({
-    AuthActions: bindActionCreators(authActions, dispatch),
-    UserActions: bindActionCreators(userActions, dispatch)
-  })
-)(LoginContainer);
+export default withRouter(
+  connect(
+    state => ({
+      form: state.auth.getIn(["login", "form"]),
+      error: state.auth.getIn(["login", "error"]),
+      result: state.auth.get("result")
+    }),
+    dispatch => ({
+      AuthActions: bindActionCreators(authActions, dispatch),
+      UserActions: bindActionCreators(userActions, dispatch)
+    })
+  )(LoginContainer)
+);
