@@ -3,6 +3,7 @@ import { Button, Form, Modal, Image } from "semantic-ui-react";
 import { MainWrapper } from "../../components";
 import raz_router from "../../assets/images/raz_router.png";
 import * as MainApi from "../../lib/api/main";
+import { Link } from "react-router-dom";
 
 class MainContainer extends Component {
   state = {
@@ -16,11 +17,12 @@ class MainContainer extends Component {
     const { first, second, third, fourth } = this.state;
     try {
       await MainApi.confirm_ip(first, second, third, fourth);
-      console.log("요요요" + first + second + third + fourth);
     } catch (e) {
       console.log(e);
     }
   };
+
+  moveGraph = () => {};
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
@@ -28,6 +30,7 @@ class MainContainer extends Component {
     const { first, second, third, fourth } = this.state;
     return (
       <MainWrapper>
+        <Link to="graph">그래프</Link>
         <Modal trigger={<Button content="수경재배기 ap 추가" />}>
           <Modal.Header>공유기 추가</Modal.Header>
           <Modal.Content>
