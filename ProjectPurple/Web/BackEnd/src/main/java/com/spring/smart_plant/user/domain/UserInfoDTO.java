@@ -1,5 +1,14 @@
 package com.spring.smart_plant.user.domain;
 
+/*{
+ * 	userCode:
+ * 	pwd:
+ * 	email:
+ * 	firstName:
+ * 	secondName:
+ * 	sfCnt:
+ * }
+ * */
 public class UserInfoDTO {
 	private int userCode;
 	private String pwd;
@@ -18,7 +27,7 @@ public class UserInfoDTO {
 
 	/**
 	 * @param userCode
-	 * @param memberId
+	 * @param email
 	 * @param pwd
 	 * @param email
 	 * @param phoneNum
@@ -36,7 +45,7 @@ public class UserInfoDTO {
 	}
 
 	/**
-	 * @param memberId
+	 * @param email
 	 * @param pwd
 	 */
 	public UserInfoDTO(LoginDTO dto) {

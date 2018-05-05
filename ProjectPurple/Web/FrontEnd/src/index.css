@@ -5,6 +5,7 @@ body {
   font-family: sans-serif;
 }
 
-html, #root {
+html,
+#root {
   height: 100%;
 }

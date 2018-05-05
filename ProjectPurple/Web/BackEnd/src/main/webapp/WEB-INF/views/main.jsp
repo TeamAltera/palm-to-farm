@@ -11,12 +11,6 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <!-- <script type="text/javascript" src="http://jsgetip.appspot.com"></script> -->
 <script>
-	setTimeout('expireSession()',${limitTime});
-	function expireSession() {
-		window.location = "login";
-	}
-</script>
-<script>
 	var checkIPSetTimeout;
 	var ap_ip;
 	var inner_ip;
@@ -27,7 +21,8 @@
   			ap_ip=$('#Aclass').val()+'.'+$('#Bclass').val()+'.'+$('#Cclass').val()+'.'+$('#Dclass').val()
   			console.log(ap_ip);
   			<%--공유기에 전송할 사용자코드값--%>
-  			var sendData = JSON.stringify({user : ${sessionScope.userInfo.userCode}});
+  			/* var sendData = JSON.stringify({user : ${sessionScope.userInfo.userCode}}); */
+  			var sendData = JSON.stringify({innerIp: ap_ip});
   			<%--ajax send이전에 대기 문구를 알려준다--%>
   			$('#result_text').html('<p style="color:orange">등록 여부 확인중...</p>');
   			<%--
@@ -36,6 +31,16 @@
   			if(xhr)
   				xhr.abort();
   			xhr=$.ajax({
+  				type : 'POST',
+				url : 'device/confirm',
+				data : sendData,
+				dataType : "json",
+				contentType : "application/json;charset=UTF-8",
+				success : function(data) {
+					console.log(data);
+				}
+  			});
+  			/* xhr=$.ajax({
 				type : 'POST',
 				url : 'http://'+ap_ip+'/search.php',
 				data : sendData,
@@ -63,8 +68,7 @@
 					$('#regist_btn').prop('disabled', true);
 					$('#result_text').html('<p style="color:red">등록 불가능한 IP주소 입니다.</p>');
 				}
-			}); <%--end ajax--%>
-			
+			}); */ <%--end ajax--%>
   		}
   		function ip_validation(){
   			clearTimeout(checkIPSetTimeout);
@@ -80,39 +84,41 @@
 			},500);
   		}
   		function submit_ip(){
-  			var sendData = JSON.stringify({user_code : ${sessionScope.userInfo.userCode}});
+  			var sendData = JSON.stringify({innerIp: ap_ip});
+  			var token="eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNTI1NDM5MTU0NTcxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOiIxMjMiLCJlbWFpbCI6InNlQG5hdmVyLmNvbSIsImZpcnN0TmFtZSI6Iu2ZjSAgICAgICAgICAgICAiLCJzZWNvbmROYW1lIjoi6ri464-ZICAgICAgICAgICAgICAgICAgICAgICAgIiwic2ZDbnQiOjB9fQ.P7gSv-i2It5F6CW7e_HuzOsb59sq6gmcxGhUPR1tZuQ";
   			$.ajax({
 				type : 'POST',
-				url : 'http://'+ap_ip+'/add.php',
-				data : sendData,
+				url : 'device/add',
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
+				dataType : "json",
+				data:sendData,
+				contentType : "application/json;charset=UTF-8",
+				cache : false,
+				success : function(data) {
+					console.log(data);
+				}
+			});
+  		}
+  		
+  		function info(){
+  			var token="eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNTI1NDM5MTU0NTcxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOiIxMjMiLCJlbWFpbCI6InNlQG5hdmVyLmNvbSIsImZpcnN0TmFtZSI6Iu2ZjSAgICAgICAgICAgICAiLCJzZWNvbmROYW1lIjoi6ri464-ZICAgICAgICAgICAgICAgICAgICAgICAgIiwic2ZDbnQiOjB9fQ.P7gSv-i2It5F6CW7e_HuzOsb59sq6gmcxGhUPR1tZuQ";
+  			$.ajax({
+				type : 'GET',
+				url : 'device/info',
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
 				dataType : "json",
 				contentType : "application/json;charset=UTF-8",
 				cache : false,
 				success : function(data) {
-					console.log('success');
-					if(data['result']=='OK'){
-						var sendData = JSON.stringify({ip : ap_ip, ssid:ssid,innerIp:inner_ip});
-						console.log(inner_ip);
-						$.ajax({
-							type : 'POST',
-							url : 'addDevice',
-							data : sendData,
-							dataType : "json",
-							contentType : "application/json;charset=UTF-8",
-							cache : false,
-							success : function(data) {
-								console.log('success');
-								if(data['result']=='OK'){
-									console.log('ok');
-								}
-								else{}
-							}
-						});
-					}
-					else{}
+					console.log(data);
 				}
 			});
   		}
+  		
   		function delete_device(arg){
   			var sendData=JSON.stringify({sfCode : arg});
   			$.ajax({
@@ -166,7 +172,8 @@
 		<button type="button" disabled="disabled">LED끄기</button>
 		<hr>
 	</c:forEach>
-	<button type="button" onclick="show()">수경재배기AP추가</button>
+	<button type="button" onclick="show()">수경재배기AP추가</button><br>
+	<button type="button" onclick="info();">정보</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" role="dialog">
@@ -186,16 +193,15 @@
 						<li>접속해서 나오는 공유기의 IP정보를 하단에 입력하고 등록합니다.</li>
 					</ol>
 					라즈베리 공유기IP: 
-					<input type="text" id="Aclass" size="3" placeholder="A" onkeyup="ip_validation()"/>.
-					<input type="text" id="Bclass" size="3" placeholder="B" onkeyup="ip_validation()"/>. 
-					<input type="text" id="Cclass" size="3" placeholder="C" onkeyup="ip_validation()"/>. 
-					<input type="text" id="Dclass" size="3" placeholder="D" onkeyup="ip_validation()"/>
-					<input type="button" name="submit" value="조회" onclick="confirm_ip()" id="confirm_btn"
-					disabled="disabled">
+					<input type="text" id="Aclass" size="3" placeholder="A"/>.
+					<input type="text" id="Bclass" size="3" placeholder="B"/>. 
+					<input type="text" id="Cclass" size="3" placeholder="C"/>. 
+					<input type="text" id="Dclass" size="3" placeholder="D"/>
+					<input type="button" name="submit" value="조회" onclick="confirm_ip()" id="confirm_btn">
 					<p id="result_text"></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" data-dismiss="modal" id="regist_btn" disabled="disabled" onclick="submit_ip()">등록</button>
+					<button type="button" data-dismiss="modal" id="regist_btn" onclick="submit_ip()">등록</button>
 					<!-- <button type="button"  id="regist_btn" disabled="disabled" onclick="submit_ip()">등록</button> -->
 				</div>
 			</div>

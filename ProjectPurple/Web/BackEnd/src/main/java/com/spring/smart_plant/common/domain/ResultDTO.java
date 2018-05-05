@@ -2,6 +2,12 @@ package com.spring.smart_plant.common.domain;
 
 import org.springframework.http.HttpStatus;
 
+/*{
+ * 	status:
+ * 	msg:
+ * 	data:
+ * }
+ * */
 public class ResultDTO {
 	public static final String SUCCESS_MSG="success";
 	public static final String FAIL_MSG="fail";
@@ -46,4 +52,13 @@ public class ResultDTO {
 		this.data=data;
 		return this;
 	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public Object getData() {
+		return data;
+	}
+	
 }

@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +24,8 @@ import com.spring.smart_plant.common.validators.LoginDTOValidator;
 import com.spring.smart_plant.common.validators.UserInfoDTOValidator;
 import com.spring.smart_plant.user.command.JoinCommand;
 import com.spring.smart_plant.user.command.JoinSearchCommand;
-import com.spring.smart_plant.user.command.LoginCommand;
-import com.spring.smart_plant.user.command.LogoutCommand;
+import com.spring.smart_plant.user.command.SigninCommand;
+import com.spring.smart_plant.user.command.SignoutCommand;
 import com.spring.smart_plant.user.domain.EmailDTO;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
@@ -61,21 +63,14 @@ public class UserController {
 		binder.setValidator(new UserInfoDTOValidator());
 	}
 
-	// 로그인 페이지로 이동
-	/*@RequestMapping("/login")
-	public String login(Model model) {
-		return "redirect:http://203.250.32.39:3000/";
-		 return "login"; 
-	}*/
-
 	// 로그아웃시 토큰 만료
-	@PostMapping("/logout")
-	public ResultDTO logout(Model model) {
+	@PostMapping("/signout")
+	public ResultDTO signout(Model model) {
 		/*model.addAttribute("request", request);*/
-		return new LogoutCommand().execute(model);
+		return new SignoutCommand().execute(model);
 	}
 
-	// 로그인 시도시 수행하는 경로
+	// 로그인 시도시 유효한 사용자라면 JWT토큰 발급
 	@PostMapping(value="/signin")
 	public ResultDTO login(Model model, @Valid @RequestBody LoginDTO loginInfo,
 			BindingResult result, HttpServletResponse response) {
@@ -83,9 +78,9 @@ public class UserController {
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.");
 		model.addAttribute("loginInfo", loginInfo);
 		model.addAttribute("response", response);
-		return new LoginCommand().execute(model);
+		return new SigninCommand().execute(model);
 	}
-
+	
 	// 회원가입 동작 수행
 	@PostMapping(value = "/signup")
 	public ResultDTO memberJoinAction(@Valid @RequestBody UserInfoDTO userInfo, Model model) {
@@ -94,9 +89,9 @@ public class UserController {
 	}
 	
 	//회원가입 페이지에서 아이디조회를 위해 사용, 많은 커넥션이 요구되어지므로 validation제외
-	@PostMapping(value = "/finduser")
-	public ResultDTO userExist(EmailDTO emailInfo, Model model){
-		model.addAttribute("emailInfo", emailInfo);
+	@GetMapping(value = "/find/{email}")
+	public ResultDTO userExist(@PathVariable String email, Model model){
+		model.addAttribute("emailInfo", email);
 		return new JoinSearchCommand().execute(model);
 	}
 }

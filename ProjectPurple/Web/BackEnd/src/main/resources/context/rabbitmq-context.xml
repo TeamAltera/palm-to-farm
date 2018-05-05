@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-2.0.xsd">	
+		
+	<!-- A reference to the org.springframework.amqp.rabbit.connection.ConnectionFactory -->
+	<rabbit:connection-factory id="connectionFactory"
+		port="${rabbit.port}" host="${rabbit.host}" username="${rabbit.user}" password="${rabbit.password}" />
+
+	<!-- Creates a org.springframework.amqp.rabbit.core.RabbitAdmin to manage 
+		exchanges, queues and bindings -->
+	<rabbit:admin connection-factory="connectionFactory" />
+
+	<!-- Creates a queue for consumers to retrieve messages -->
+	<rabbit:queue name="myQueue" />
+
+	<!-- binding Queue -->
+	<rabbit:direct-exchange name="amq.direct">
+		<rabbit:bindings>
+			<rabbit:binding queue="myQueue" key="foo.bar"/>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!-- Creates a org.springframework.amqp.rabbit.core.RabbitTemplate for access 
+		to the broker -->
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+		routing-key="foo.bar" exchange="amq.direct"/>
+
+	<!-- 큐데이터 처리 못하는 에러 발생시 재시도를 위한 템플릿 -->
+	<bean id="retryTemplate" class="org.springframework.retry.support.RetryTemplate">
+		<property name="retryPolicy">
+			<!-- 실패했을 때 재시도 횟수는 2회 -->
+			<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+				<property name="maxAttempts" value="${rabbit.maxAttempts}" />
+			</bean>
+		</property>
+		<property name="backOffPolicy">
+			<!-- 재시도할 때 재시도 간격 -->
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<property name="initialInterval" value="${rabbit.initialInterval}" />
+				<property name="multiplier" value="${rabbit.multiplier}" />
+				<property name="maxInterval" value="${rabbit.maxInterval}" />
+			</bean>
+		</property>
+	</bean>
+
+
+	<bean id="recoverer" class="com.spring.smart_plant.common.service.websocket.WebSocketErrorRecoverer" />
+
+	<!-- retry interceptor설정 -->
+	<bean id="retryInterceptor"
+		class="org.springframework.amqp.rabbit.config.StatelessRetryOperationsInterceptorFactoryBean">
+		<property name="messageRecoverer" ref="recoverer" />
+		<property name="retryOperations" ref="retryTemplate" />
+	</bean>
+
+	<bean id="consumer" class="com.spring.smart_plant.common.service.rabbitmq.RabbitMessageListenerImpl"></bean>
+
+	<bean id="jsonConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter">
+	</bean>
+	<!-- retry interceptor를 AOP로 적용한다 -->
+	<rabbit:listener-container
+		connection-factory="connectionFactory" advice-chain="retryInterceptor" message-converter="jsonConverter">
+		<rabbit:listener queue-names="myQueue" ref="consumer"
+			method="onMessage"/>
+	</rabbit:listener-container>
+</beans>

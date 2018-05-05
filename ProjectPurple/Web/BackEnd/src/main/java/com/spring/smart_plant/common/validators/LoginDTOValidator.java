@@ -34,7 +34,7 @@ public class LoginDTOValidator implements Validator{
 		if(email.length()>30) {
 			errors.rejectValue("email", "lengthsize", "이메일은 30자이하");
 		}
-		else{
+		else{//이메일 형식인지를 확인
 			String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";  
 			Pattern emailPattern=Pattern.compile(regex);
 			Matcher m = emailPattern.matcher(email);
@@ -42,7 +42,7 @@ public class LoginDTOValidator implements Validator{
 				errors.rejectValue("email", "invalid email", "invalid email form");
 			}
 		}
-		if(pwd.length()>64) {
+		if(pwd.length()>64) { //SHA256, 패스워드 길이는 64
 			errors.rejectValue("pwd", "lengthsize", "password length is not valid");
 		}
 	}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import { Route } from "react-router-dom";
-import { Home, Login, Signup, Find } from "../pages";
+import { Home, Login, Signup, Find, Graph } from "../pages";
 
 import storage from "lib/storage";
 import { connect } from "react-redux";
@@ -38,6 +38,7 @@ class App extends Component {
         <Route path="/signup" component={Signup} />
         <Route path="/find" component={Find} />
         <Route path="/home" component={Home} />
+        <Route path="/graph" component={Graph} />
       </div>
     );
   }
