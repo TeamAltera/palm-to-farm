@@ -13,7 +13,8 @@
 #define DHT_pin 39
 #define WATER_LEVEL_echo 5	//초음파 수위센서(echo)
 #define WATER_LEVEL_trigger 6 //초음파 수위센서(trigger)
-#define WATER_LEVEL_MAX 20	//수위 최대 레벨(cm)
+#define TANK_HEIGHT 20	//물탱크 최대 크기(cm)
+#define MAX_WATER_LEVEL 15	//수위 최대 레벨(cm)
 #define POT1_pin 0
 #define POT2_pin 1
 #define POT3_pin 2
@@ -131,18 +132,16 @@ float getTemp(void) {
 
 //수위 측정함수. 
 float getWaterLevel(void) {
-	float duration, distance;
+	float distance = 0;
 
 	// 초음파를 보낸다. 다 보내면 echo가 HIGH 상태로 대기하게 된다.
 	digitalWrite(WATER_LEVEL_trigger, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(WATER_LEVEL_trigger, LOW);
 
-	// echoPin 이 HIGH를 유지한 시간을 저장 한다.
-	duration = pulseIn(WATER_LEVEL_echo, HIGH);
 	// HIGH 였을 때 시간(초음파가 보냈다가 다시 들어온 시간)을 가지고 거리를 계산 한다.
-	distance = (float)duration / 58;
-	distance = ((WATER_LEVEL_MAX - distance) / WATER_LEVEL_MAX) * 100;
+	distance = TANK_HEIGHT - ((float)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// mm단위로 바닥에서 물의 높이.
+
 	return distance;
 }
 
