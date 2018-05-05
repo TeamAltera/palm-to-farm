@@ -37,7 +37,7 @@ float water_level = 0.0;	//수위
 unsigned long sensor_previousTime = 0;
 unsigned long data_send_previousTime = 0;
 unsigned long sensor_interval = 10000;		//센서 측정 시간.
-unsigned long data_send_interval = 60000;	//센서 전송 시간.
+unsigned long data_send_interval = 15000;	//센서 전송 시간.
 
 char* userName = "";
 char* ssid = ""; //AP's ssid
@@ -55,24 +55,16 @@ boolean wifi_join = false;
 
 //냉각팬 제어 함수.
 void fan_control(float temp) {
-	if (temp > 22.00) {
-		if (fan_state == 0) {
+	if (fan_state == 0) {
+		if (temp > 22.00) {
 			fan_state = 1;
 			digitalWrite(fan1, HIGH);
 			digitalWrite(fan2, HIGH);
 			digitalWrite(fan3, HIGH);
 		}
 	}
-	else if (temp < 17.00) {
-		if (fan_state == 1) {
-			fan_state = 0;
-			digitalWrite(fan1, LOW);
-			digitalWrite(fan2, LOW);
-			digitalWrite(fan3, LOW);
-		}
-	}
-	else {
-		if (fan_state == 1) {
+	else if (fan_state == 1) {
+		if (temp <= 20.00) {
 			fan_state = 0;
 			digitalWrite(fan1, LOW);
 			digitalWrite(fan2, LOW);
@@ -220,7 +212,7 @@ boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, in
 		return false;
 	}		//서버와 연결하는 부분
 
-	String query = "?userName=" + String(userName) + "&t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot);
+	String query = "?t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot);
 	String request = "GET " + uri + query + "\r\n";
 	request += "Connection:close\r\n\r\n";
 	sendData(String("AT+CIPSEND=") + request.length() + "\r\n", 1000, 0);
@@ -269,6 +261,9 @@ void setup() {
 	bluetooth_set();//userName, AP ssid, AP PWD값 저장
 	esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
 	sensors_setup();
+	digitalWrite(fan1, LOW);
+	digitalWrite(fan2, LOW);
+	digitalWrite(fan3, LOW);
 }
 
 // the loop function runs over and over again until power down or reset
