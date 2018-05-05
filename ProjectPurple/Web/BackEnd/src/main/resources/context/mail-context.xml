@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mailSender.host}" />
+		<property name="port" value="${mailSender.port}" />
+		<property name="username" value="${mailSender.user}"/>
+		<property name="password" value="${mailSender.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.ssl.trust">${mailSender.host}</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.auth">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="mailServiceObject" class="com.spring.smart_plant.common.service.mail.MailServiceImpl">
+		<property name="sender" ref="mailSender"></property>
+	</bean>
+
+	<!-- <bean class="com.spring.smart_plant.controller.MailController"> <property 
+		name="mailService" ref="mailServiceObject"></property> </bean> -->
+</beans>

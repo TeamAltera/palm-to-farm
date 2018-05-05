@@ -34,17 +34,14 @@ public class WaterPlantController {
 		return "find_password";
 	}
 
-/*	// 메인페이지 로딩 시 DB로부터 각종정보 로드
+	// 메인페이지 로딩 시 DB로부터 각종정보 로드
 	@RequestMapping("/main")
 	public String main(Model model, HttpServletRequest request) {
-		model.addAttribute("request", request);
-		UserCommand command = new MainCommand();
-		command.execute(model);
 		return "main";
-	}*/
-/*
+	}
+
 	// 로그인 시도시 수행하는 경로
-	@RequestMapping(value = "/loginAction", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/loginAction", method = RequestMethod.POST)
 	public String login(Model model, HttpSession session,@Valid LoginDTO loginInfo,BindingResult result) {
 		if(result.hasErrors()) {
 			return "redirect:login";
@@ -69,14 +66,11 @@ public class WaterPlantController {
 		UserCommand command = new MemberJoinCommand();
 		command.execute(model);
 		return "login";
-	}
+	}*/
 
 	//수경재배기 센싱정보 확인
 	@RequestMapping(value = "/sensing_data")
 	public String sensingInfo(Model model, HttpServletRequest request) {
-		model.addAttribute("request",request);
-		UserCommand command = new SensingDataCommand();
-		command.execute(model);
 		return "sensing_data";
-	}*/
+	}
 }

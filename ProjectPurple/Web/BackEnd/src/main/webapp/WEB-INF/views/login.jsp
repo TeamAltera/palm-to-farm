@@ -8,7 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript">
 	function login(){
-		var sendData=JSON.stringify({email : $("#email").val(), pwd:$("#pwd").val()});
+		var sendData=JSON.stringify({email : $("#e").val(), pwd:$("#p").val()});
 		$.ajax({
 			type : 'POST',
 			url : 'user/signin',
@@ -26,8 +26,8 @@
 <body>
 <h2>로그인 페이지 입니다.</h2>
 <form action="loginAction" method="post">
-	아이디:<input type="text" name="email" placeholder required id="email" ><br>
-	패스워드:<input type="password" name="pwd" required id="pwd"><br>
+	아이디:<input type="text" placeholder required id="e" ><br>
+	패스워드:<input type="password" required id="p"><br>
 	<button type="button" onclick="login();">로그인</button>
 </form>
 <hr>

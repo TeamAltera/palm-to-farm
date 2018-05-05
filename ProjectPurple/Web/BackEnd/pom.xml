@@ -218,6 +218,13 @@
 			<version>3.4</version>
 		</dependency>
 
+		<!-- json Object parser-->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- ojdbc -->
@@ -265,6 +272,31 @@
 					<mainClass>org.test.int1.Main</mainClass>
 				</configuration>
 			</plugin>
+			<!-- maven remote deploy -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- manager/text는 default -->
+					<url>http://203.250.32.48:8080/manager/text</url>
+					<path>/smart_plant</path>
+					<!-- user -->
+					<username>admin</username>
+					<!-- password -->
+					<password>admin</password>
+					<charset>UTF-8</charset>
+					<uriEncoding>UTF-8</uriEncoding>
+				</configuration>
+			</plugin>
+			<!-- -->
 		</plugins>
 	</build>
 </project>

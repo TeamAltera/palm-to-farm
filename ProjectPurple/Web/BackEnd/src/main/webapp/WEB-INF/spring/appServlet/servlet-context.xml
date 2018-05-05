@@ -26,32 +26,9 @@
 	</beans:bean>
 
 	<context:component-scan base-package="com.spring.smart_plant.test" />
-	<context:component-scan base-package="com.spring.smart_plant.mail.controller" />
-	<context:component-scan base-package="com.spring.smart_plant.device.controller" />
-	<context:component-scan base-package="com.spring.smart_plant.user.controller" />
+	<context:component-scan base-package="com.spring.smart_plant.**.controller" />
 
-	<beans:bean name="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></beans:property>
-		<beans:property name="url"
-			value="jdbc:oracle:thin:@localhost:1521:orcl"></beans:property>
-		<beans:property name="username" value="ahn"></beans:property>
-		<beans:property name="password" value="lion"></beans:property>
-	</beans:bean>
-	<beans:bean name="template"
-		class="org.springframework.jdbc.core.JdbcTemplate">
-		<beans:property name="dataSource" ref="dataSource"></beans:property>
-	</beans:bean>
-	<beans:bean name="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<beans:property name="dataSource" ref="dataSource"></beans:property>
-	</beans:bean>
-
-	<beans:bean class="com.spring.smart_plant.common.service.jwt.JwtServiceImpl"></beans:bean>
-
-	<!-- validator -->
-	<!-- <beans:bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" 
-		/> -->
+	<beans:bean class="com.spring.smart_plant.common.service.jwt.JwtServiceImpl"/>
 
 	<!-- interceptor -->
 	<interceptors>
@@ -60,7 +37,12 @@
 			<mapping path="/**" />
 			<exclude-mapping path="/user/signin"/>
 			<exclude-mapping path="/user/signup"/>
+			<!-- 나중에 지워야 -->
+			<exclude-mapping path="/device/confirm"/>
+			
+			<exclude-mapping path="/sensing_data"/>
 			<exclude-mapping path="/login"/>
+			<exclude-mapping path="/main"/>
 			<beans:bean class="com.spring.smart_plant.common.interceptors.JwtInterceptor" />
 		</interceptor>
 		<beans:bean id="webContentInterceptor"

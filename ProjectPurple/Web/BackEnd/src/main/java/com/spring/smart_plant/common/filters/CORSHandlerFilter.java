@@ -39,6 +39,7 @@ public class CORSHandlerFilter implements Filter {
 		// TODO Auto-generated method stub
 		// place your code here
 		// pass the request along the filter chain
+		//CORS Handle을 처리해주는 코드
 		HttpServletResponse res=(HttpServletResponse)response;
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");

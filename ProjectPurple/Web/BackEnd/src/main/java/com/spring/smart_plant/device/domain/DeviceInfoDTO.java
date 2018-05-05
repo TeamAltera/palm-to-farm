@@ -1,26 +1,37 @@
 package com.spring.smart_plant.device.domain;
 
 public class DeviceInfoDTO {
-	private String ip;
-	private String ssid;
-	private String[] innerIp;
+	APInfoDTO apInfo;
+	IPDTO ipInfo;
 	
-	public String getIp() {
-		return ip;
+	/**
+	 * 
+	 */
+	public DeviceInfoDTO() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-	public void setIp(String ip) {
-		this.ip = ip;
+	public APInfoDTO getApInfo() {
+		return apInfo;
 	}
-	public String getSsid() {
-		return ssid;
+	/**
+	 * @param apInfo
+	 * @param ipInfo
+	 */
+	public DeviceInfoDTO(APInfoDTO apInfo, IPDTO ipInfo) {
+		super();
+		this.apInfo = apInfo;
+		this.ipInfo = ipInfo;
 	}
-	public void setSsid(String ssid) {
-		this.ssid = ssid;
+	public void setApInfo(APInfoDTO apInfo) {
+		this.apInfo = apInfo;
 	}
-	public String[] getInnerIp() {
-		return innerIp;
+	public IPDTO getIpInfo() {
+		return ipInfo;
 	}
-	public void setInnerIp(String[] innerIp) {
-		this.innerIp = innerIp;
+	public void setIpInfo(IPDTO ipInfo) {
+		this.ipInfo = ipInfo;
 	}
+	
+	
 }
