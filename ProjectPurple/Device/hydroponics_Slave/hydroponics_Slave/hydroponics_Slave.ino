@@ -24,13 +24,6 @@
 #define RELAY_IN3 24
 #define RELAY_IN4 25
 #define DS18_pin 26
-/*
-#define DHT_temp_interval 60000
-#define DHT_humi_interval 60000		//대기 온/습도 1분마다 전송
-#define DS18_temp_interval 600000	//수온 10분마다 전송
-#define WATER_level_interval 3600000	//수위 1시간 마다 전송
-#define POT_val_interval 30000
-*/
 
 DHT dht22(DHT_pin, DHT22);
 OneWire DS18(DS18_pin);		//수온센서
@@ -43,15 +36,8 @@ float water_level = 0.0;	//수위
 
 unsigned long sensor_previousTime = 0;
 unsigned long data_send_previousTime = 0;
-unsigned long sensor_interval = 5000;		//센서 측정 시간.
+unsigned long sensor_interval = 10000;		//센서 측정 시간.
 unsigned long data_send_interval = 60000;	//센서 전송 시간.
-											/*
-											unsigned long DHT_temp_millis = 0;
-											unsigned long DHT_humi_millis = 0;
-											unsigned long DS18_temp_millis = 0;
-											unsigned long POT_val_millis = 0;
-											unsigned long WATER_level_millis = 0;		//수위 측정용 시간.
-											*/
 
 char* userName = "";
 char* ssid = ""; //AP's ssid
@@ -227,17 +213,16 @@ void esp8266_joinAP() {
 //웹서버에 센싱한 값 전송, 매개변수랑 함수내부 코드 수정필요
 //복수개의 수경재배기 운용시, 어느 수경재배기인지 식별해줘야 되므로
 //쿼리스트링에 수경재배기 번호 포함해줘야
-boolean esp8266_send(int dataType, String data) {
+boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, int pot) {
 	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
 	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
 		Serial2.flush();
 		return false;
 	}		//서버와 연결하는 부분
 
-	String query = "?userName=" + String(userName) + "&dataType=" + String(dataType) + "&data=" + data;
+	String query = "?userName=" + String(userName) + "&t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot);
 	String request = "GET " + uri + query + "\r\n";
 	request += "Connection:close\r\n\r\n";
-	//dataType : 전송할 센서 값의 종류 결정(온도, 습도, 수온 등), data : 센서 값.
 	sendData(String("AT+CIPSEND=") + request.length() + "\r\n", 1000, 0);
 	sendData(request, 1000, 0);
 	Serial2.flush();
@@ -284,13 +269,6 @@ void setup() {
 	bluetooth_set();//userName, AP ssid, AP PWD값 저장
 	esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
 	sensors_setup();
-	/*
-	DHT_temp_millis = millis();
-	DHT_humi_millis = millis();
-	DS18_temp_millis = millis();
-	WATER_level_millis = millis();
-	POT_val_millis = millis();	//각 센서 작동 시작시간 저장
-	*/
 }
 
 // the loop function runs over and over again until power down or reset
@@ -298,16 +276,17 @@ void loop() {
 	//와이파이 연결과 상관없이 센서값 측정.
 	float DHT_temp = dht22.readTemperature();
 	float DHT_humi = dht22.readHumidity();
-	float Water_temp = getTemp();		//수온측정
+	float water_temp = getTemp();		//수온측정
 	water_level = getWaterLevel();		//수위 측정. (%값으로 리턴)
 	unsigned long present_millis = millis();	//루프 시작시간
 
-	fan_control(Water_temp);			//수온에 따른 냉각팬 제어
+	fan_control(water_temp);			//수온에 따른 냉각팬 제어
 	read_POT();							//조도센서값 배열에 저장.
 	Relay_Control();
+
 	if (wifi_join) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
-			Serial.print(String("Water Temperature : ") + Water_temp + "\n");
+			Serial.print(String("Water Temperature : ") + water_temp + "\n");
 			Serial.print(String("DHT Temperature : ") + DHT_temp + "\n");
 			Serial.print(String("DHT Humidity : ") + DHT_humi + "\n");
 			Serial.print(String("Fan State : ") + fan_state + "\n");
@@ -318,66 +297,14 @@ void loop() {
 			sensor_previousTime = millis();
 		}
 		if (present_millis - data_send_previousTime > data_send_interval) {
-			if (esp8266_send(1, String(DHT_temp))) {		//서버로 전송 성공할 경우,
-				Serial.println("=====Temperature sending end..=====");
+			Serial.println("====Data Sending start=====");
+			if (esp8266_send(DHT_temp, DHT_humi, water_temp, water_level, POT_val[4])) {		//서버로 전송 성공할 경우,
+				Serial.println("=====Data sending end..=====");
 			}
 			else {
-				Serial.println("====Temperature sending fail..====");
+				Serial.println("====Data sending fail..====");
 			}
 			data_send_previousTime = millis();
 		}
-#if 0
-		if (present_millis - DHT_temp_millis > DHT_temp_interval) {
-			Serial.println("=====Temperature sending start..=====");
-			if (esp8266_send(1, String(DHT_temp))) {		//서버로 전송 성공할 경우,
-				Serial.println("=====Temperature sending end..=====");
-			}
-			else {
-				Serial.println("====Temperature sending fail..====");
-			}
-			DHT_temp_millis = present_millis;
-		}
-		if (present_millis - DHT_humi_millis > DHT_humi_interval) {
-			Serial.println("=====Humidity sending start..=====");
-			if (esp8266_send(2, String(DHT_humi))) {
-				Serial.println("====Humidity sending end...====");
-			}
-			else {
-				Serial.println("====Humidity sending fail..====");
-			}
-			DHT_humi_millis = present_millis;
-		}
-		if (present_millis - DS18_temp_millis > DS18_temp_interval) {
-			Serial.println("=====Water Temperature sending start..=====");
-			if (esp8266_send(3, String(Water_temp))) {
-				Serial.println("=====Water Temperature sending end...=====");
-			}
-			else {
-				Serial.println("=====Water Temperature sending fail..=====");
-			}
-			DS18_temp_millis = present_millis;
-
-		}
-		if (present_millis - POT_val_millis > POT_val_interval) {
-			Serial.println("=====POT value sending start..=====");
-			if (esp8266_send(4, String(POT_val[4]))) {
-				Serial.println("=====POT value sending end...=====");
-			}
-			else {
-				Serial.println("=====POT value sending fail..=====");
-			}
-			POT_val_millis = present_millis;
-		}
-		if (present_millis - WATER_level_millis > WATER_level_interval) {
-			Serial.println("=====WaterLevel value sending start..=====");
-			if (esp8266_send(5, String(water_level))) {
-				Serial.println("=====WaterLevel value sending end...=====");
-			}
-			else {
-				Serial.println("=====WaterLevel value sending fail..=====");
-			}
-			WATER_level_millis = present_millis;
-		}
-#endif
 	}
 }
