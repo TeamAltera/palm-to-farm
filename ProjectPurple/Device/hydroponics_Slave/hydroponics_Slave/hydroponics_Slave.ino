@@ -140,7 +140,8 @@ float getWaterLevel(void) {
 	digitalWrite(WATER_LEVEL_trigger, LOW);
 
 	// HIGH 였을 때 시간(초음파가 보냈다가 다시 들어온 시간)을 가지고 거리를 계산 한다.
-	distance = TANK_HEIGHT - ((float)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// mm단위로 바닥에서 물의 높이.
+	distance = TANK_HEIGHT - ((float)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// cm단위로 바닥에서 물의 높이.
+	distance = (distance / MAX_WATER_LEVEL) * 100;	//물의 높이를 %로 표현.
 
 	return distance;
 }
