@@ -150,14 +150,10 @@ void read_POT() {
 	int temp = 0;		//4개 값의 합 저장.
 
 	for (int i = 0; i < 4; i++) {
-		if (i != 1) {		//조도센서 1개 없을때, 테스트용 코드
-			POT_val[i] = analogRead(i);		//조도센서 각각의 값을 저장.
-			temp += POT_val[i];
-		}
+		POT_val[i] = analogRead(i);		//조도센서 각각의 값을 저장.
+		temp += POT_val[i];
 	}
-
-	//POT_val[4] = temp / 4;	//4개 값 평균(조도센서 1개 빼고 테스트 위함
-	POT_val[4] = temp / 3;
+	POT_val[4] = temp / 4;	//4개 값 평균(조도센서 1개 빼고 테스트 위함
 }
 
 //조도센서 값에 따라 LED 제어용 릴레이 ON/OFF
