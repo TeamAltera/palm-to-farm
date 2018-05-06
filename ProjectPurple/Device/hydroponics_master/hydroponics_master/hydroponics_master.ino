@@ -12,6 +12,9 @@ boolean bluetooth_protocol = false; // '{' is true, '}' is false
 boolean wifi_join = false;
 String bluetooth_cmd = "";
 String buffer = "";
+
+boolean automatic_led = true;	//LED 동작 지정변수. true : 자동, false : 수동
+
 int buffer_count = 0;
 
 const int success_led = 3;
@@ -106,15 +109,23 @@ void esp8266_read() { //명령 라우팅
 				String content = "";
 				switch (cmd) //cmd 라우팅
 				{
-				case 1:
-
-					content = "on";
-					Serial.println(content);
-					break;
+					//LED 자동설정
 				case 2:
-
-					content = "off";
-					Serial.println(content);
+					content = "led_auto";
+					Serial.println("request to slave : " + cmd);
+					if (automatic_led == false) {
+						Serial1.println(cmd);
+						automatic_led = true;
+					}
+					break;
+					//LED 수동설정
+				case 3:
+					content = "led_manual";
+					Serial.println("request to slave : " + cmd);
+					if (automatic_led == true) {
+						Serial1.println(cmd);
+						automatic_led = false;
+					}
 					break;
 				default:
 					content = "err";

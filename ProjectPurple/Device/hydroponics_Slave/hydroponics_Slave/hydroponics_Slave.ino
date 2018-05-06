@@ -31,6 +31,8 @@ byte DS18_addr[8] = { 0 };	//수온센서 주소값
 
 boolean fan_state = 0;		//냉각팬 상태. 0 : OFF, 1 : ON
 boolean ds18_state = 0;		//연결상태. 0 : 연결X, 1 : 연결O
+
+
 int POT_val[5] = { 0, };	//val1, val2, val3, val4, avg
 float water_level = 0.0;	//수위
 
@@ -52,6 +54,7 @@ String uri = "/send.php"; //웹서버 uri경로
 
 String bluetooth_cmd = "";
 boolean wifi_join = false;
+boolean automatic_led = true;	//led 동작방법.(자동/수동)
 
 //냉각팬 제어 함수.
 void fan_control(float temp) {
@@ -248,6 +251,26 @@ String sendData(String command, long timeout, boolean debug) {
 	return response;
 }
 
+//마스터보드에서 전송하는 값 받기.(수동/자동)
+void get_masterData() {
+	if (Serial1.available()) {
+		char cmd = (char)Serial1.read();	//마스터보드에서 전송되는 제어값 수신.
+		Serial.println("request from master : " + cmd);
+		switch (cmd) {
+			//마스터에서 led 제어값 전송.
+		case 2:
+			automatic_led = true;
+			break;
+		case 3:
+			automatic_led = false;
+			break;
+		default:
+			Serial.println("request from master : error");
+			break;
+		}
+	}
+}
+
 // the setup function runs once when you press reset or power the board
 void setup() {
 	esp8266Client_setup(); //esp설정
@@ -274,13 +297,19 @@ void loop() {
 	float water_temp = getTemp();		//수온측정
 	water_level = getWaterLevel();		//수위 측정. (%값으로 리턴)
 	unsigned long present_millis = millis();	//루프 시작시간
+	read_POT();							//조도센서값 배열에 저장.
+
+	get_masterData();		//마스터보드에서 전송한 제어값 수신.
 
 	fan_control(water_temp);			//수온에 따른 냉각팬 제어
-	read_POT();							//조도센서값 배열에 저장.
-	Relay_Control();
+
+	//LED 자동설정/수동설정 if문
+	if(automatic_led == true)
+		Relay_Control();
 
 	if (wifi_join) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
+			Serial.println("LED mode : " + automatic_led);
 			Serial.print(String("Water Temperature : ") + water_temp + "\n");
 			Serial.print(String("DHT Temperature : ") + DHT_temp + "\n");
 			Serial.print(String("DHT Humidity : ") + DHT_humi + "\n");
