@@ -1,6 +1,7 @@
 package com.spring.smart_plant.common.service.jwt;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,10 +21,20 @@ public class JwtServiceImpl implements JwtService {
 	private static final String SALT = "luvookSecret";
 
 	@Override
-	public <T> String create(String key, T data, String subject) {// JWT생성
+	public <T> String create(String key, T data, String subject) {// JWT생성,키, 데이터, claim의 주제
 		// TODO Auto-generated method stub
-		String jwt = Jwts.builder().setHeaderParam("typ", "JWT").setHeaderParam("regDate", System.currentTimeMillis())
-				.setSubject(subject).claim(key, data).signWith(SignatureAlgorithm.HS256, makeKey()).compact(); // Serialization;
+		//typ: 토큰의 타입
+		//iat: 토큰이 발급된 시간
+		//exp: 토큰의 만료시간 
+		long time;
+		String jwt = Jwts.builder()
+				.setHeaderParam("typ", "JWT")
+				.setSubject(subject)
+				.claim(key, data)
+				.claim("iat", time=System.currentTimeMillis())
+				/*.claim("exp", time+60000*30) //토큰의 만료 시간은 발급시간 기준으로 30분
+*/				.signWith(SignatureAlgorithm.HS256, makeKey()).compact(); // Serialization;
+		System.out.println(time);
 		return jwt;
 	}
 
@@ -43,6 +54,12 @@ public class JwtServiceImpl implements JwtService {
 		// TODO Auto-generated method stub
 		try {
 			Jws<Claims> claims = Jwts.parser().setSigningKey(makeKey()).parseClaimsJws(jwt);
+			/*long exp=(long)claims.getBody().get("exp"); //만료시간을 얻어온다.
+			long time;
+			if((time=exp-System.currentTimeMillis())<0) {//토큰 시간이 만료되었다면 유효하지 않은 토큰
+				throw new UnauthorizedException();
+			}
+			System.out.println(time);*/
 			return true;
 
 		} catch (Exception e) { // claim으로 변환도중 예외 발생 시 유효하지 않은 토큰이라면 예외 발생

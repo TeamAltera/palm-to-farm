@@ -9,7 +9,7 @@
 	src="/smart_plant/resources/js/highchart/highcharts.js"></script>
 <script type="text/javascript" src="/smart_plant/resources/js/highchart/dark-unica.js"></script>
 <script
-	src="/smart_plant/resources/js/highchart/highchart.call_func.js?ver=${ver}"></script>
+	src="/smart_plant/resources/js/highchart/highchart.call_func.js?ver=0"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script> -->
 <script src="/smart_plant/resources/js/realtime/sockjs-0.3.4.js"></script>
 <script
@@ -23,13 +23,14 @@
 var subscribeCode=0;
 var stompClient = null;
 function connect() {
-    var socket = new SockJS('/smart_plant/sensing_data');
+    var socket = new SockJS('http://'+window.location.host+'/smart_plant/sensing_data');
     stompClient = Stomp.over(socket);  
-    stompClient.connect('guest','guest', function(frame) {
+    stompClient.connect('manager','manager', function(frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/messages.'+subscribeCode, function(message) {
-        	console.log(message.body);
-        	dataAdd(parseInt(message.body));
+        stompClient.subscribe('/topic/messages'+subscribeCode, function(message) {
+        	var msg=JSON.parse(message.body);
+        	console.log(msg['t']);
+        	dataAdd(parseInt(msg['t']));
         });
     });
 }

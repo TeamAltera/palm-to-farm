@@ -130,17 +130,18 @@
 	<form action="memberJoinAction" method="post" autocomplete="off">
 		<%--아이디--%>
 		<%--패스워드 --%>
-		패스워드: <input type="password" name="pwd" required class="pwd"onkeyup="checkPwd()"><br>
+		패스워드: <input type="password" name="pwd" required class="pwd" id=pwd><br>
 		<%--패스워드 확인--%>
-		패스워드 확인: <input type="password" required class="pwd_confirm" onkeyup="checkPwd2()"><br>
+		패스워드 확인: <input type="password" required class="pwd_confirm"><br>
 		<div id="checkPwdMsg"></div>
-		사용자 이름: <input type="text" name="userName" required><br>
+		성: <input type="text" id="first" required><br>
+		이름: <input type="text" id="second" required><br>
 		<%-- 이메일 --%>
 		이메일: 
 		<span id="email_area">
 		<input type="text" name="str_email01" id="str_email01" style="width:100px" required>@ 
 		<input type="text" name="str_email02" id="str_email02" style="width:100px;" disabled value="naver.com">
-		<select style="width:100px;margin-right:10px" name="select_email" id="select_email" onclick="mailChange()"> 
+		<select style="width:100px;margin-right:10px" name="select_email" id="select_email"> 
 			<option value="1">직접입력</option> 
 			<option value="naver.com" selected>naver.com</option> 
 			<option value="hanmail.net">hanmail.net</option> 
@@ -159,7 +160,7 @@
 			</p>
 		</div>
 		<%--가입버튼--%>
-		<button type="submit" disabled="disabled" class="submit_btn">가입</button>
+		<button type="submit" class="submit_btn">가입</button>
 	</form>
 </body>
 </html>

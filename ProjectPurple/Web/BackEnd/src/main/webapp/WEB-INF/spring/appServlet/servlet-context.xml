@@ -39,10 +39,16 @@
 			<exclude-mapping path="/user/signup"/>
 			<!-- 나중에 지워야 -->
 			<exclude-mapping path="/device/confirm"/>
+			<exclude-mapping path="/device/add/sf/auto"/>
 			
+			<!-- 나중에 지워야 -->
+			<exclude-mapping path="/resources/**"/>
 			<exclude-mapping path="/sensing_data"/>
+			<exclude-mapping path="/topic/**"/>
 			<exclude-mapping path="/login"/>
 			<exclude-mapping path="/main"/>
+			<exclude-mapping path="/member_join"/>
+			
 			<beans:bean class="com.spring.smart_plant.common.interceptors.JwtInterceptor" />
 		</interceptor>
 		<beans:bean id="webContentInterceptor"

@@ -7,14 +7,11 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 		/WEB-INF/spring/root-context.xml
-		classpath:/context/**/*context.xml
+		classpath:/context/*-context.xml
 		</param-value>
 		<!-- /WEB-INF/spring/appServlet/application-context.xml /WEB-INF/spring/appServlet/rabbitmq-context.xml 
 			/WEB-INF/spring/appServlet/websocket-context.xml /WEB-INF/spring/appServlet/dbms-context.xml -->
 	</context-param>
-	<welcome-file-list>
-		<welcome-file>login.jsp</welcome-file>
-	</welcome-file-list>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
@@ -28,6 +25,7 @@
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<!-- 클라이언트들이 여러개일 때 동시에 데이터 전송할 수 있게 -->
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>

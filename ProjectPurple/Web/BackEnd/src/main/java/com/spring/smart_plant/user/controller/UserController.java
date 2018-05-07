@@ -22,6 +22,7 @@ import com.spring.smart_plant.common.utills.ConstantJDBCTemplate;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.common.validators.LoginDTOValidator;
 import com.spring.smart_plant.common.validators.UserInfoDTOValidator;
+import com.spring.smart_plant.user.command.GetUserInfoCommand;
 import com.spring.smart_plant.user.command.JoinCommand;
 import com.spring.smart_plant.user.command.JoinSearchCommand;
 import com.spring.smart_plant.user.command.SigninCommand;
@@ -52,13 +53,13 @@ public class UserController {
 		ConstantJwtService.setJwtService(jwtService);
 	}
 	
-	// initBinder에 검증하고자하는 타입을 명시해줘야, 그러지 안으면 전체 검사
+	// initBinder에 검증하고자하는 타입을 명시해줘야, 그러지 안으면 전체 검사 첫 문자는 소문자
 	@InitBinder("loginDTO")
 	protected void initLoginDTOBinder(WebDataBinder binder) {
 		binder.setValidator(new LoginDTOValidator());
 	}
 	
-	@InitBinder("UserInfoDTO")
+	@InitBinder("userInfoDTO")
 	protected void initUserInfoDTOBinder(WebDataBinder binder) {
 		binder.setValidator(new UserInfoDTOValidator());
 	}
@@ -75,7 +76,7 @@ public class UserController {
 	public ResultDTO login(Model model, @Valid @RequestBody LoginDTO loginInfo,
 			BindingResult result, HttpServletResponse response) {
 		if(result.hasErrors()) //폼데이터의 유효성 검증결과에 따른 ResultDTO생성
-			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.");
+			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		model.addAttribute("loginInfo", loginInfo);
 		model.addAttribute("response", response);
 		return new SigninCommand().execute(model);
@@ -83,9 +84,18 @@ public class UserController {
 	
 	// 회원가입 동작 수행
 	@PostMapping(value = "/signup")
-	public ResultDTO memberJoinAction(@Valid @RequestBody UserInfoDTO userInfo, Model model) {
+	public ResultDTO memberJoinAction(@Valid @RequestBody UserInfoDTO userInfo, BindingResult result, Model model) {
+		if(result.hasErrors()) { //폼데이터의 유효성 검증결과에 따른 ResultDTO생성
+			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
+		}
 		model.addAttribute("userInfo", userInfo);
 		return new JoinCommand().execute(model);
+	}
+	
+	//JWT토큰으로 부터 사용자 정보 반환
+	@GetMapping(value="/info")
+	public ResultDTO getUserInfo() {
+		return new GetUserInfoCommand().execute(null);
 	}
 	
 	//회원가입 페이지에서 아이디조회를 위해 사용, 많은 커넥션이 요구되어지므로 validation제외

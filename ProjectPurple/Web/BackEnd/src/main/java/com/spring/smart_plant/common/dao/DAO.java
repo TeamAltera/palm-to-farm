@@ -1,4 +1,4 @@
-package com.spring.smart_plant.DAO;
+package com.spring.smart_plant.common.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -151,9 +151,18 @@ public class DAO {
 				arg0.setString(3, ip);
 			}
 		});
+		query="UPDATE USER SET 1+SF_CNT WHERE USER_CODE=?";
+		template.update(query, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				// TODO Auto-generated method stub
+				ps.setInt(1, userCode);
+			}
+		});
 	}
 
-	public void deleteSmartFarmDevice(int sfCode) {
+	//수경재비기 한 대 삭제
+	public void deleteSmartFarmDevice(int sfCode, int userCode) {
 		String query = "DELETE FROM SF WHERE SF_CODE=?";
 		System.out.println("delete device");
 		template.update(query, new PreparedStatementSetter() {
@@ -163,6 +172,37 @@ public class DAO {
 				arg0.setInt(1, sfCode);
 			}
 		});
+		query="UPDATE USER SET SF_CNT-1 WHERE USER_CODE=?";
+		template.update(query, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				// TODO Auto-generated method stub
+				ps.setInt(1, userCode);
+			}
+		});
+	}
+	
+	//공유기에 연결된 모든 수경재배기 삭제
+	public int deleteSmartFarmDevice(String apPublicIp, int userCode) {
+		String query = "DELETE FROM SF WHERE AP_PUBLIC_IP=?";
+		System.out.println("delete device");
+		int count=template.update(query, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement arg0) throws SQLException {
+				// TODO Auto-generated method stub
+				arg0.setString(1, apPublicIp);
+			}
+		});
+		query="UPDATE USER SET SF_CNT-? WHERE USER_CODE=?";
+		template.update(query, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				// TODO Auto-generated method stub
+				ps.setInt(1, count);
+				ps.setInt(2, userCode);
+			}
+		});
+		return count;
 	}
 
 	// DB에 센싱 데이터 저장
@@ -175,11 +215,11 @@ public class DAO {
 				// TODO Auto-generated method stub
 				arg0.setTimestamp(1, dto.getDate());
 				arg0.setInt(2, dto.getSfCode());
-				arg0.setInt(3, dto.getTemp());
-				arg0.setInt(4, dto.getHumi());
+				arg0.setDouble(3, dto.getTemp());
+				arg0.setDouble(4, dto.getHumi());
 				arg0.setInt(5, dto.getElum());
-				arg0.setInt(6, dto.getWaterTemp());
-				arg0.setInt(7, dto.getWaterLim());
+				arg0.setDouble(6, dto.getWaterTemp());
+				arg0.setDouble(7, dto.getWaterLim());
 			}
 		});
 	}

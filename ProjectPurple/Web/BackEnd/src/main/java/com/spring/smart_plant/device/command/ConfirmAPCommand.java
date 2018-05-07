@@ -7,10 +7,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.spring.smart_plant.DAO.DAO;
+import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.device.domain.APStatusDTO;
-import com.spring.smart_plant.device.domain.IPDTO;
+import com.spring.smart_plant.device.domain.IpDTO;
 
 public class ConfirmAPCommand implements DeviceCommand {
 	private final String PHP_SEARCH_URL = "/search.php";
