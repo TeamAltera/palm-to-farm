@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "chart.js": "^2.7.2",
     "eslint-config-airbnb": "^16.1.0",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
@@ -11,6 +12,7 @@
     "promise-polyfill": "^7.1.2",
     "query-string": "^6.0.0",
     "react": "^16.2.0",
+    "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
