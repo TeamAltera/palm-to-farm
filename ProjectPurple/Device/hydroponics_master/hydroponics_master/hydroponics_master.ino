@@ -94,6 +94,7 @@ void change_led_state(boolean st) {
 
 #if 1
 void esp8266_read() { //명령 라우팅
+	Serial2.flush();
 	if (Serial2.available()) {
 		String temp = Serial2.readStringUntil('\n');
 		Serial.println("DEBUG: " + temp);
@@ -105,27 +106,37 @@ void esp8266_read() { //명령 라우팅
 				unsigned int c_id = buffer.charAt(buffer.indexOf("+IPD,") + 5) - 48;
 				Serial.println(c_id);
 				int cmd = buffer.charAt(buffer.indexOf("cmd=") + 4) - 48;
-				Serial.println(cmd);
+				Serial.println(String("cmd is : " + String(cmd)));
 				String content = "";
 				switch (cmd) //cmd 라우팅
 				{
 					//LED 자동설정
 				case 2:
 					content = "led_auto";
-					Serial.println("request to slave : " + cmd);
 					if (automatic_led == false) {
-						Serial1.println(cmd);
+						Serial.println(String("request to slave : ") + cmd);
+						Serial1.print(cmd);
 						automatic_led = true;
 					}
 					break;
 					//LED 수동설정
 				case 3:
 					content = "led_manual";
-					Serial.println("request to slave : " + cmd);
 					if (automatic_led == true) {
-						Serial1.println(cmd);
+						Serial.println(String("request to slave : ") + cmd);
+						Serial1.print(cmd);
 						automatic_led = false;
 					}
+					break;
+				case 4:
+					content = "led_on";
+					Serial.println(String("request to slave : ") + cmd);
+					Serial1.print(cmd);
+					break;
+				case 5:
+					content = "led_off";
+					Serial.println(String("request to slave : ") + cmd);
+					Serial1.print(cmd);
 					break;
 				default:
 					content = "err";

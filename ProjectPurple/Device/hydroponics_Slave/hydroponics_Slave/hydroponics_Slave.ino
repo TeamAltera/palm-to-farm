@@ -251,23 +251,36 @@ String sendData(String command, long timeout, boolean debug) {
 	return response;
 }
 
+int count = 0;
 //마스터보드에서 전송하는 값 받기.(수동/자동)
 void get_masterData() {
 	if (Serial1.available()) {
-		char cmd = (char)Serial1.read();	//마스터보드에서 전송되는 제어값 수신.
-		Serial.println("request from master : " + cmd);
+		int cmd = Serial1.parseInt();	//마스터보드에서 전송되는 제어값 수신. 정수로 변환
+		count++;
+		Serial.print(String("request from master : ") + cmd + String("  count : ") + String(count) + "\n");
 		switch (cmd) {
 			//마스터에서 led 제어값 전송.
 		case 2:
+			Serial.println("automatic_led = true");
 			automatic_led = true;
 			break;
 		case 3:
+			Serial.println("automatic_led = false");
 			automatic_led = false;
+			break;
+		case 4:
+			for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
+				digitalWrite(i, LOW);
+			break;
+		case 5:
+			for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
+				digitalWrite(i, HIGH);
 			break;
 		default:
 			Serial.println("request from master : error");
 			break;
 		}
+
 	}
 }
 
@@ -300,6 +313,7 @@ void loop() {
 	read_POT();							//조도센서값 배열에 저장.
 
 	get_masterData();		//마스터보드에서 전송한 제어값 수신.
+	Serial1.flush();
 
 	fan_control(water_temp);			//수온에 따른 냉각팬 제어
 
@@ -309,7 +323,7 @@ void loop() {
 
 	if (wifi_join) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
-			Serial.println("LED mode : " + automatic_led);
+			Serial.println(String("LED mode : ") + automatic_led);
 			Serial.print(String("Water Temperature : ") + water_temp + "\n");
 			Serial.print(String("DHT Temperature : ") + DHT_temp + "\n");
 			Serial.print(String("DHT Humidity : ") + DHT_humi + "\n");

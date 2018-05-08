@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C5F80730-F44F-4478-BDAE-6634EFC2CA88}</ProjectGuid>
+    <ProjectGuid>{0D840F14-74F1-4876-ADB2-C63C56BDA4E2}</ProjectGuid>
     <RootNamespace>hydroponics_Slave</RootNamespace>
     <ProjectName>hydroponics_Slave</ProjectName>
   </PropertyGroup>
