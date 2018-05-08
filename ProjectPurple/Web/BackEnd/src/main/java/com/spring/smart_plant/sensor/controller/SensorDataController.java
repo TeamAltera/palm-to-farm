@@ -10,8 +10,13 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 @RequestMapping("/sensor")
 public class SensorDataController {
 	
-	@GetMapping("/get")
+	@GetMapping("/get/last")
 	public ResultDTO getLatestDataSet() {
+		return ResultDTO.createInstance(true);
+	}
+	
+	@GetMapping("/get/all")
+	public ResultDTO getAllDataSet() {
 		return ResultDTO.createInstance(true);
 	}
 }

@@ -1,12 +1,12 @@
 package com.spring.smart_plant.device.domain;
 
-public class IPDTO {
+public class IpDTO {
 	private String innerIp;
 
 	/**
 	 * 
 	 */
-	public IPDTO() {
+	public IpDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -14,7 +14,7 @@ public class IPDTO {
 	/**
 	 * @param innerIp
 	 */
-	public IPDTO(String innerIp) {
+	public IpDTO(String innerIp) {
 		super();
 		this.innerIp = innerIp;
 	}

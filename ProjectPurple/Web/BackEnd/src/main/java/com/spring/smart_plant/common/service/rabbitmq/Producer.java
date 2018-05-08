@@ -13,12 +13,12 @@ public class Producer {
 	    cf.setPassword("guest");
 	 
 	    //메시지 보내기
-	    RabbitTemplate template = new RabbitTemplate(cf);
+	    /*RabbitTemplate template = new RabbitTemplate(cf);
 	    template.setExchange("amq.direct");
 	    template.setQueue("myQueue");
 	    template.setMessageConverter(new Jackson2JsonMessageConverter());
 	    Integer i=new Random().nextInt(200);
-	    template.convertAndSend("foo.bar",new RabbitMQCustomMessage(0, i));
+	    template.convertAndSend("foo.bar",new RabbitMQCustomMessage(0, i));*/
 	    /*template.convertAndSend("foo.bar", new RabbitMQCustomMessage(0, i));*/
 	    /*template.convertAndSend("foo.bar", i.toString());*/
 	    cf.destroy();

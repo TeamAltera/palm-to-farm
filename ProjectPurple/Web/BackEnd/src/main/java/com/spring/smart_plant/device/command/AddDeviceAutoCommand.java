@@ -1,6 +1,6 @@
 package com.spring.smart_plant.device.command;
 
-import com.spring.smart_plant.DAO.DAO;
+import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.device.domain.DeviceInfoDTO;
 
@@ -14,9 +14,9 @@ public class AddDeviceAutoCommand implements DeviceCommand{
 		//실행될 수 있는 식으로 수정해야
 		
 		DeviceInfoDTO deviceInfo=(DeviceInfoDTO)obj;
-		String innerIp=deviceInfo.getIpInfo().getInnerIp();
-		int userCode=deviceInfo.getApInfo().getUserCode();
-		String publicIp=deviceInfo.getApInfo().getApPublicIp();
+		String innerIp=deviceInfo.getIpInfo();
+		int userCode=deviceInfo.getUserCode();
+		String publicIp=deviceInfo.getApInfo();
 		
 		DAO dao=new DAO();
 		dao.insertSmartFarmDevice(innerIp, userCode, publicIp);

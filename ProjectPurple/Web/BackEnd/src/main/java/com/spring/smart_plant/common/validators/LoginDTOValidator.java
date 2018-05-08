@@ -24,26 +24,26 @@ public class LoginDTOValidator implements Validator{
 		LoginDTO dto=(LoginDTO)obj;
 		//해당필드값이 null인지만 체크
 		//default msg미지정시 exception
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "email is blank");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "password is blank");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "이메일 입력칸이 공백입니다.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "패스워드 입력칸이 공백입니다.");
 		
 		//추가적인 폼검증
 		String email=dto.getEmail();
 		String pwd=dto.getPwd();
 		//아이디 길이 확인
 		if(email.length()>30) {
-			errors.rejectValue("email", "lengthsize", "이메일은 30자이하");
+			errors.rejectValue("email", "lengthsize", "이메일은 30자이하입니다.");
 		}
 		else{//이메일 형식인지를 확인
 			String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";  
 			Pattern emailPattern=Pattern.compile(regex);
 			Matcher m = emailPattern.matcher(email);
 			if(!m.matches()) {
-				errors.rejectValue("email", "invalid email", "invalid email form");
+				errors.rejectValue("email", "invalid email", "올바른 이메일 형식이 아닙니다.");
 			}
 		}
 		if(pwd.length()>64) { //SHA256, 패스워드 길이는 64
-			errors.rejectValue("pwd", "lengthsize", "password length is not valid");
+			errors.rejectValue("pwd", "lengthsize", "올바른 패스워드 형식이 아닙니다.");
 		}
 	}
 }

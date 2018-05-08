@@ -85,10 +85,10 @@
   		}
   		function submit_ip(){
   			var sendData = JSON.stringify({innerIp: ap_ip});
-  			var token="eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNTI1NDM5MTU0NTcxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOiIxMjMiLCJlbWFpbCI6InNlQG5hdmVyLmNvbSIsImZpcnN0TmFtZSI6Iu2ZjSAgICAgICAgICAgICAiLCJzZWNvbmROYW1lIjoi6ri464-ZICAgICAgICAgICAgICAgICAgICAgICAgIiwic2ZDbnQiOjB9fQ.P7gSv-i2It5F6CW7e_HuzOsb59sq6gmcxGhUPR1tZuQ";
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'POST',
-				url : 'device/add',
+				url : 'device/add/manual',
 				beforeSend: function(request) {
 				    request.setRequestHeader("Authorization", token);
 				  },
@@ -103,10 +103,27 @@
   		}
   		
   		function info(){
-  			var token="eyJ0eXAiOiJKV1QiLCJyZWdEYXRlIjoxNTI1NDM5MTU0NTcxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOiIxMjMiLCJlbWFpbCI6InNlQG5hdmVyLmNvbSIsImZpcnN0TmFtZSI6Iu2ZjSAgICAgICAgICAgICAiLCJzZWNvbmROYW1lIjoi6ri464-ZICAgICAgICAgICAgICAgICAgICAgICAgIiwic2ZDbnQiOjB9fQ.P7gSv-i2It5F6CW7e_HuzOsb59sq6gmcxGhUPR1tZuQ";
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'GET',
 				url : 'device/info',
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
+				dataType : "json",
+				contentType : "application/json;charset=UTF-8",
+				cache : false,
+				success : function(data) {
+					console.log(data);
+				}
+			});
+  		}
+  		
+  		function user_info(){
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
+  			$.ajax({
+				type : 'GET',
+				url : 'user/info',
 				beforeSend: function(request) {
 				    request.setRequestHeader("Authorization", token);
 				  },
@@ -130,6 +147,27 @@
 				cache : false,
 				success : function(data) {
 					console.log('success');
+				}
+			});
+  		}
+  		
+  		function order(cmd){
+  			var middle='203.250.35.169';
+  			var dest='192.168.4.11';
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
+  			var sendData=JSON.stringify({middle : middle, dest:dest, cmd:cmd});
+  			$.ajax({
+				type : 'POST',
+				url : 'device/control',
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
+				data : sendData,
+				dataType : "json",
+				contentType : "application/json;charset=UTF-8",
+				cache : false,
+				success : function(data) {
+					console.log(data);
 				}
 			});
   		}
@@ -173,7 +211,10 @@
 		<hr>
 	</c:forEach>
 	<button type="button" onclick="show()">수경재배기AP추가</button><br>
-	<button type="button" onclick="info();">정보</button>
+	<button type="button" onclick="info();">정보</button><br>
+	<button type="button" onclick="user_info();">정보</button><br>
+	<button type="button" onclick="order(4);">led켜기</button><br>
+	<button type="button" onclick="order(5);">led끄기</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" role="dialog">

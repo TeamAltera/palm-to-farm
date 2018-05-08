@@ -7,21 +7,21 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.spring.smart_plant.device.domain.IPDTO;
+import com.spring.smart_plant.device.domain.IpDTO;
 
-public class InnerIpDTOValidator implements Validator{
+public class IpDTOValidator implements Validator{
 
 	@Override
 	public boolean supports(Class<?> arg0) {
 		// TODO Auto-generated method stub
 		System.out.println(arg0);
-		return IPDTO.class.isAssignableFrom(arg0);
+		return IpDTO.class.isAssignableFrom(arg0);
 	}
 
 	@Override
 	public void validate(Object arg0, Errors errors) {
 		// TODO Auto-generated method stub
-		String ip=((IPDTO)arg0).getInnerIp();
+		String ip=((IpDTO)arg0).getInnerIp();
 		System.out.println(ip);
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "innerIp", "invalid ip form");
 		//IPv4 정규표현식

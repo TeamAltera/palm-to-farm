@@ -2,7 +2,7 @@ package com.spring.smart_plant.user.command;
 
 import org.springframework.ui.Model;
 
-import com.spring.smart_plant.DAO.DAO;
+import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
