@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { SignupContainer } from "../containers";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as baseActions from "redux/modules/base";
+import React, { Component } from 'react';
+import { SignupContainer } from '../containers';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as baseActions from 'redux/modules/base';
 
 class Signup extends Component {
   // 페이지에 진입 할 때 헤더를 비활성화
@@ -23,6 +23,6 @@ class Signup extends Component {
 export default connect(
   state => ({}),
   dispatch => ({
-    BaseActions: bindActionCreators(baseActions, dispatch)
+    BaseActions: bindActionCreators(baseActions, dispatch),
   })
 )(Signup);

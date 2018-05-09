@@ -1,14 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
 
-const DEFAULT_DOMAIN = "http://203.250.32.180:9001/smart_plant/";
-const DOMAIN_USER = "user/";
+const DEFAULT_DOMAIN = 'http://203.250.32.180:9001/smart_plant/';
+const DOMAIN_USER = 'user/';
 
 //로그인
 export const signin = (email, password) => {
   axios
-    .post(DEFAULT_DOMAIN + DOMAIN_USER + "signin", {
+    .post(DEFAULT_DOMAIN + DOMAIN_USER + 'signin', {
       email: email,
-      pwd: password
+      pwd: password,
     })
     .then(function(response) {
       console.log(response);
@@ -21,10 +21,10 @@ export const signin = (email, password) => {
 //회원가입
 export const signup = (username, email, password) => {
   axios
-    .post(DEFAULT_DOMAIN + DOMAIN_USER + "signup", {
+    .post(DEFAULT_DOMAIN + DOMAIN_USER + 'signup', {
       username: username,
       email: email,
-      pwd: password
+      pwd: password,
     })
     .then(function(response) {
       console.log(response);
@@ -37,7 +37,7 @@ export const signup = (username, email, password) => {
 //로그아웃
 export const logout = () => {
   axios
-    .post(DEFAULT_DOMAIN + DOMAIN_USER + "logout")
+    .post(DEFAULT_DOMAIN + DOMAIN_USER + 'logout')
     .then(function(response) {
       console.log(response);
     })
@@ -49,7 +49,7 @@ export const logout = () => {
 //회원가입 페이지에서의 이메일 조회
 export const findUser = () => {
   axios
-    .post(DEFAULT_DOMAIN + DOMAIN_USER + "finduser")
+    .post(DEFAULT_DOMAIN + DOMAIN_USER + 'finduser')
     .then(function(response) {
       console.log(response);
     })
@@ -61,7 +61,7 @@ export const findUser = () => {
 //로그인 상태확인? 만들어야함
 export const checkStatus = () => {
   axios
-    .post(DEFAULT_DOMAIN + "checkStatus")
+    .post(DEFAULT_DOMAIN + 'checkStatus')
     .then(function(response) {
       console.log(response);
     })

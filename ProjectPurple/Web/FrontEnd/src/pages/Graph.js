@@ -1,14 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as baseActions from "redux/modules/base";
-import {Line} from 'react-chartjs-2';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as baseActions from 'redux/modules/base';
+import { Line } from 'react-chartjs-2';
 
 class Graph extends Component {
-
   state = {
-    data : {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    data: {
+      labels: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'],
       datasets: [
         {
           label: 'Sample dataset',
@@ -29,16 +28,16 @@ class Graph extends Component {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data: [65, 59, 80, 81, 56, 55, 40]
-        }
-      ]
-    }
-  }
+          data: [65, 59, 80, 81, 56, 55, 40],
+        },
+      ],
+    },
+  };
 
   render() {
-    return(
+    return (
       <div>
-        <Line data={this.state.data} height="720" width="1400"/>
+        <Line data={this.state.data} height="720" width="800" />
       </div>
     );
   }
@@ -47,6 +46,6 @@ class Graph extends Component {
 export default connect(
   state => ({}),
   dispatch => ({
-    BaseActions: bindActionCreators(baseActions, dispatch)
+    BaseActions: bindActionCreators(baseActions, dispatch),
   })
 )(Graph);

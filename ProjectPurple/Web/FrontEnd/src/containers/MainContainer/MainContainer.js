@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { Button, Form, Modal, Image } from "semantic-ui-react";
-import { MainWrapper } from "../../components";
-import raz_router from "../../assets/images/raz_router.png";
-import * as MainApi from "../../lib/api/main";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Button, Form, Modal, Image } from 'semantic-ui-react';
+import { MainWrapper } from '../../components';
+import raz_router from '../../assets/images/raz_router.png';
+import * as MainApi from '../../lib/api/main';
+import { Link } from 'react-router-dom';
 
 class MainContainer extends Component {
   state = {
-    first: "",
-    second: "",
-    third: "",
-    fourth: ""
+    first: '',
+    second: '',
+    third: '',
+    fourth: '',
   };
 
   doConfirmIp = async () => {

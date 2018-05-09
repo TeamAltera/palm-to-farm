@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { AuthWrapper, AuthError } from "../../components";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { AuthWrapper, AuthError } from '../../components';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Form,
@@ -8,15 +8,15 @@ import {
   Header,
   Message,
   Segment,
-  Divider
-} from "semantic-ui-react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as authActions from "../../redux/modules/auth";
-import * as userActions from "../../redux/modules/user";
-import storage from "../../lib/storage";
+  Divider,
+} from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as authActions from '../../redux/modules/auth';
+import * as userActions from '../../redux/modules/user';
+import storage from '../../lib/storage';
 //import createHistory from "history/createBrowserHistory";
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 
 class LoginContainer extends Component {
   handleChange = e => {
@@ -26,20 +26,20 @@ class LoginContainer extends Component {
     AuthActions.changeInput({
       name,
       value,
-      form: "login"
+      form: 'login',
     });
   };
 
   componentWillUnmount() {
     const { AuthActions } = this.props;
-    AuthActions.initializeForm("login");
+    AuthActions.initializeForm('login');
   }
 
   setError = message => {
     const { AuthActions } = this.props;
     AuthActions.setError({
-      form: "login",
-      message
+      form: 'login',
+      message,
     });
     return false;
   };
@@ -50,15 +50,15 @@ class LoginContainer extends Component {
     //const history = createHistory();
 
     try {
-      console.log("email은 " + email + " pwd는 " + password);
+      console.log('email은 ' + email + ' pwd는 ' + password);
       await AuthActions.doSignin(email, password);
       const loggedInfo = this.props.result.toJS();
 
       UserActions.setLoggedInfo(loggedInfo);
-      history.push("/home");
-      storage.set("loggedInfo", loggedInfo);
+      history.push('/home');
+      storage.set('loggedInfo', loggedInfo);
     } catch (e) {
-      this.setError("잘못된 계정정보입니다." + email + password);
+      this.setError('잘못된 계정정보입니다.' + email + password);
       console.log(e);
     }
   };
@@ -100,8 +100,7 @@ class LoginContainer extends Component {
                   color="purple"
                   fluid
                   size="large"
-                  onClick={this.handleLocalLogin}
-                >
+                  onClick={this.handleLocalLogin}>
                   로그인
                 </Button>
               </Segment>
@@ -122,13 +121,13 @@ class LoginContainer extends Component {
 export default withRouter(
   connect(
     state => ({
-      form: state.auth.getIn(["login", "form"]),
-      error: state.auth.getIn(["login", "error"]),
-      result: state.auth.get("result")
+      form: state.auth.getIn(['login', 'form']),
+      error: state.auth.getIn(['login', 'error']),
+      result: state.auth.get('result'),
     }),
     dispatch => ({
       AuthActions: bindActionCreators(authActions, dispatch),
-      UserActions: bindActionCreators(userActions, dispatch)
+      UserActions: bindActionCreators(userActions, dispatch),
     })
   )(LoginContainer)
 );

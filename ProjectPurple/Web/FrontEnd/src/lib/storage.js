@@ -3,7 +3,7 @@ const storage = {
   set: (key, object) => {
     if (!localStorage) return;
     localStorage[key] =
-      typeof object === "string" ? object : JSON.stringify(object);
+      typeof object === 'string' ? object : JSON.stringify(object);
   },
   get: key => {
     if (!localStorage) return null;
@@ -22,7 +22,7 @@ const storage = {
     if (localStorage[key]) {
       localStorage.removeItem(key);
     }
-  }
+  },
 };
 
 export default storage;
