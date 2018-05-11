@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	<update id="incrementSfCount" parameterType="Integer">
+		UPDATE PLANT_USER 
+		SET SF_CNT=SF_CNT-1 
+		WHERE USER_CODE=#{userCode}
+	</update>
+	
+	<update id="decrementSfCount" parameterType="hashmap">
+		UPDATE PLANT_USER 
+		SET SF_CNT=SF_CNT-#{count}
+		WHERE USER_CODE=#{userCode}
+	</update>
+</mapper>
