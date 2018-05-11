@@ -26,15 +26,9 @@ import com.spring.smart_plant.user.domain.UserInfoDTO;
 
 public class DAO {
 	JdbcTemplate template;
-	TransactionTemplate transaction;
 
 	public DAO() {
 		template = ConstantJDBCTemplate.getTemplate();
-	}
-
-	@Autowired
-	public void setTransaction(TransactionTemplate transaction) {
-		this.transaction = transaction;
 	}
 
 	// 로그인할때 사용자 존재 여부 확인하기 위해 사용
@@ -80,7 +74,6 @@ public class DAO {
 		String query = "SELECT * FROM PLANT_USER WHERE EMAIL=?";
 		Object[] params = { email };
 		int[] types = { Types.VARCHAR };
-		System.out.println(email);
 		return template.query(query, params, types, new BeanPropertyRowMapper<UserInfoDTO>(UserInfoDTO.class)).size();
 		// 결과가 존재한다면 1반환
 	}
@@ -88,7 +81,6 @@ public class DAO {
 	// AP등록시에 사용
 	public void insertAP(APInfoDTO dto) {
 		String query = "INSERT INTO AP(AP_PUBLIC_IP,AP_SSID,USER_CODE) VALUES(?,?,?)";
-		System.out.println("insert ap");
 		template.update(query, new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement arg0) throws SQLException {
@@ -126,12 +118,12 @@ public class DAO {
 
 	public void deleteAP(String apPublicIp) {
 		String query = "DELETE FROM AP WHERE AP_PUBLIC_IP=?";
-		System.out.println("delete ap");
 		template.update(query, new PreparedStatementSetter() {
+			
 			@Override
-			public void setValues(PreparedStatement arg0) throws SQLException {
+			public void setValues(PreparedStatement ps) throws SQLException {
 				// TODO Auto-generated method stub
-				arg0.setString(1, apPublicIp);
+				ps.setString(1, apPublicIp);
 			}
 		});
 	}
@@ -151,14 +143,14 @@ public class DAO {
 				arg0.setString(3, ip);
 			}
 		});
-		query="UPDATE USER SET 1+SF_CNT WHERE USER_CODE=?";
-		template.update(query, new PreparedStatementSetter() {
+		/*String subQuery="UPDATE PLANT_USER SET SF_CNT=1+SF_CNT WHERE USER_CODE=?";
+		template.update(subQuery, new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
 				// TODO Auto-generated method stub
 				ps.setInt(1, userCode);
 			}
-		});
+		});*/
 	}
 
 	//수경재비기 한 대 삭제
@@ -172,14 +164,14 @@ public class DAO {
 				arg0.setInt(1, sfCode);
 			}
 		});
-		query="UPDATE USER SET SF_CNT-1 WHERE USER_CODE=?";
-		template.update(query, new PreparedStatementSetter() {
+		/*String subQuery="UPDATE PLANT_USER SET SF_CNT=SF_CNT-1 WHERE USER_CODE=?";
+		template.update(subQuery, new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
 				// TODO Auto-generated method stub
 				ps.setInt(1, userCode);
 			}
-		});
+		});*/
 	}
 	
 	//공유기에 연결된 모든 수경재배기 삭제
@@ -193,15 +185,15 @@ public class DAO {
 				arg0.setString(1, apPublicIp);
 			}
 		});
-		query="UPDATE USER SET SF_CNT-? WHERE USER_CODE=?";
-		template.update(query, new PreparedStatementSetter() {
+		/*String subQuery="UPDATE PLANT_USER SET SF_CNT=SF_CNT-? WHERE USER_CODE=?";
+		template.update(subQuery, new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
 				// TODO Auto-generated method stub
 				ps.setInt(1, count);
 				ps.setInt(2, userCode);
 			}
-		});
+		});*/
 		return count;
 	}
 

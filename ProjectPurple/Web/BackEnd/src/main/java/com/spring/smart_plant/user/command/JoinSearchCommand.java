@@ -6,7 +6,7 @@ import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.user.domain.EmailDTO;
 
-public class JoinSearchCommand implements UserCommand{
+public class JoinSearchCommand implements IUserCommand{
 	private final static int EMPTY_STRING=2;
 	
 	@Override

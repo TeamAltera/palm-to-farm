@@ -22,7 +22,6 @@ public class IpDTOValidator implements Validator{
 	public void validate(Object arg0, Errors errors) {
 		// TODO Auto-generated method stub
 		String ip=((IpDTO)arg0).getInnerIp();
-		System.out.println(ip);
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "innerIp", "invalid ip form");
 		//IPv4 정규표현식
 		String regex="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";

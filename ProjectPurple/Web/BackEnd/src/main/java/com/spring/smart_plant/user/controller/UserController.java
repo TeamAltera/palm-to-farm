@@ -27,7 +27,6 @@ import com.spring.smart_plant.user.command.JoinCommand;
 import com.spring.smart_plant.user.command.JoinSearchCommand;
 import com.spring.smart_plant.user.command.SigninCommand;
 import com.spring.smart_plant.user.command.SignoutCommand;
-import com.spring.smart_plant.user.domain.EmailDTO;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 

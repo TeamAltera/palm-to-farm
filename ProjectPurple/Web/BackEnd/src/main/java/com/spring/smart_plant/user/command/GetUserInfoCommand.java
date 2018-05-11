@@ -8,7 +8,7 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class GetUserInfoCommand implements UserCommand{
+public class GetUserInfoCommand implements IUserCommand{
 
 	@Override
 	public ResultDTO execute(Model model) {

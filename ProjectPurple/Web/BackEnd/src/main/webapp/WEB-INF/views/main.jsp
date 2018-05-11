@@ -59,16 +59,9 @@
 						}
 						$('#result_text').html('<p style="color:green">등록 가능한 IP주소 입니다.</p>'+str);
 					}
-					else{
-						$('#regist_btn').prop('disabled', true);
-						$('#result_text').html('<p style="color:red">이미 사용중인 공유기입니다.</p>');
-					}
-				},
-				error:function(){
-					$('#regist_btn').prop('disabled', true);
-					$('#result_text').html('<p style="color:red">등록 불가능한 IP주소 입니다.</p>');
 				}
-			}); */ <%--end ajax--%>
+			}); */
+			<%--end ajax--%>
   		}
   		function ip_validation(){
   			clearTimeout(checkIPSetTimeout);
@@ -88,7 +81,7 @@
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'POST',
-				url : 'device/add/manual',
+				url : 'device/add/ap/manual',
 				beforeSend: function(request) {
 				    request.setRequestHeader("Authorization", token);
 				  },
@@ -147,6 +140,25 @@
 				cache : false,
 				success : function(data) {
 					console.log('success');
+				}
+			});
+  		}
+  		
+  		function delete_all(){
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
+  			var sendData=JSON.stringify({innerIp : '203.250.35.169'});
+  			$.ajax({
+				type : 'POST',
+				url : 'device/delete/ap/manual',
+				data : sendData,
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
+				dataType : "json",
+				contentType : "application/json;charset=UTF-8",
+				cache : false,
+				success : function(data) {
+					console.log(data);
 				}
 			});
   		}
@@ -214,7 +226,8 @@
 	<button type="button" onclick="info();">정보</button><br>
 	<button type="button" onclick="user_info();">정보</button><br>
 	<button type="button" onclick="order(4);">led켜기</button><br>
-	<button type="button" onclick="order(5);">led끄기</button>
+	<button type="button" onclick="order(5);">led끄기</button><br>
+	<button type="button" onclick="delete_all()">공유기 삭제</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" role="dialog">

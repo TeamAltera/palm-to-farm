@@ -12,7 +12,7 @@ import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class SigninCommand implements UserCommand {
+public class SigninCommand implements IUserCommand {
 	private final String AUTH_HEADER="Authorization";
 	private final String KEY="member";
 	

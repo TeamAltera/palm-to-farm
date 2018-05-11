@@ -4,7 +4,7 @@ import org.springframework.ui.Model;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
 
-public class SignoutCommand implements UserCommand{
+public class SignoutCommand implements IUserCommand{
 
 	@Override
 	public ResultDTO execute(Model model) {

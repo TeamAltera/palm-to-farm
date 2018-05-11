@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSession;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.mail.domain.JoinCodeDTO;
 
-public class AuthCodeCheckCommand implements MailCommand{
+public class AuthCodeCheckCommand implements IMailCommand{
 
 	@Override
 	public ResultDTO execute(Object obj, HttpSession session) {

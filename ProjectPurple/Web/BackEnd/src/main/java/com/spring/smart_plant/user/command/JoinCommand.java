@@ -6,7 +6,7 @@ import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class JoinCommand implements UserCommand{
+public class JoinCommand implements IUserCommand{
 
 	@Override
 	public ResultDTO execute(Model model) {
