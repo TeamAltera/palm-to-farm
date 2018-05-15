@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
 import { Line } from 'react-chartjs-2';
-import socketIOClient from 'socket.io-client';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 class Graph extends Component {
   state = {
@@ -33,16 +34,29 @@ class Graph extends Component {
         },
       ],
     },
-    response: false,
-    endpoint: 'http://203.250.32.180/smart_plant/sensing_data',
   };
 
-  componentDidMount() {
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on('sensing_data', data => {
-      console.log(data);
+  connect() {
+    var subscribeCode = 0;
+    var stompClient = null;
+    var socket = new SockJS(
+      'http://203.250.32.180:9001/smart_plant/sensing_data'
+    );
+    stompClient = Stomp.over(socket);
+    stompClient.connect('manager', 'manager', function(frame) {
+      console.log('Connected: ' + frame);
+      stompClient.subscribe('/topic/messages' + subscribeCode, function(
+        message
+      ) {
+        var msg = JSON.stringify(message.body);
+        console.log(msg['t']);
+        //dataAdd(parseInt(msg['t']));
+      });
     });
+  }
+
+  componentDidMount() {
+    this.connect();
   }
 
   render() {
@@ -53,21 +67,6 @@ class Graph extends Component {
     );
   }
 }
-
-WebSocket(subsribeUrl, ArrayOfChannels) {
-  const socket = SockJS(subsribeUrl); //create wrapper
-  const stompClient = Stomp.over(socket);//connect using your client
-   stompClient.connect({}, () => {
-      ArrayOfChannels.forEach((channel) => {
-      stompClient.subscribe(channel.route, channel.callback);
-   });
- }, () => {
-   setTimeout(() => {
-   subscribeToSocket(subsribeUrl, ArrayOfChannels);
- }, 0);
- });
-}
-
 
 export default connect(
   state => ({}),
