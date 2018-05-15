@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="device">
+	<select id="getAllAP" resultType="hashmap"
+	parameterType="Integer"
+	>
+		SELECT * FROM AP 
+		WHERE USER_CODE=#{userCode}
+	</select>
+	
+	<select id="getAP" resultType="hashmap"
+	parameterType="String"
+	>
+		SELECT * 
+		FROM AP 
+		WHERE AP_PUBLIC_IP=#{ip}
+	</select>
+	
+	<select id="getAllSmartPlant" resultType="hashmap"
+	parameterType="Integer"
+	>
+		SELECT * 
+		FROM SF 
+		WHERE USER_CODE=#{userCode}
+	</select>
+	
+	<delete id="deleteAP" parameterType="String">
+		DELETE FROM AP 
+		WHERE AP_PUBLIC_IP=#{apPublicIp}
+	</delete>
+	
+	<insert id="insertAP" parameterType="com.spring.smart_plant.device.domain.APInfoDTO">
+		INSERT INTO AP
+		(AP_PUBLIC_IP,AP_SSID,USER_CODE) 
+		VALUES(#{apPublicIp},#{apSsid},#{userCode})
+	</insert>
+	
+	<insert id="insertSmartFarmDevice" parameterType="hashmap">
+		INSERT INTO SF 
+		(SF_CODE,SF_PORT_CNT, FLOOR_CNT,USER_CODE,COOLER_CNT,LED_CTRL_MODE,
+		TEMP_DELAY,HUMI_DELAY,ELUM_DELAY,WATER_TEMP_DELAY,WATER_LIM_DELAY,INNER_IP,AP_PUBLIC_IP)
+		VALUES (SF_SEQ.NEXTVAL,32,2,#{userCode},3,'Y',60,60,60,60,60,#{innerIp},#{ip})
+	</insert>
+	
+	<delete id="deleteSmartFarmDevice" parameterType="Integer">
+		DELETE FROM SF 
+		WHERE SF_CODE=#{sfCode}
+	</delete>
+	
+	<delete id="deleteSmartFarmAPAllDevice" parameterType="String">
+		DELETE FROM SF 
+		WHERE AP_PUBLIC_IP=#{apPublicIp}
+	</delete>
+</mapper>

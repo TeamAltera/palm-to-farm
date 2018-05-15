@@ -6,13 +6,14 @@ import org.json.JSONObject;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
+import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.CommandDTO;
 
-public class DeviceControlCommand implements DeviceCommand{
+public class DeviceControlCommand implements IDeviceCommand{
 	private final String PHP_FORWARD_URL = "/forward.php";
 	
 	@Override
-	public ResultDTO execute(Object obj) {
+	public ResultDTO execute(Object obj,DeviceDAO dao) {
 		// TODO Auto-generated method stub
 		CommandDTO commandSet=(CommandDTO)obj;
 		UrlConnectionCommand conn=new UrlConnectionCommand();

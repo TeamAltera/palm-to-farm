@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.service.jwt.JwtService;
-import com.spring.smart_plant.common.utills.ConstantJDBCTemplate;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.common.validators.LoginDTOValidator;
 import com.spring.smart_plant.common.validators.UserInfoDTOValidator;
@@ -27,7 +25,7 @@ import com.spring.smart_plant.user.command.JoinCommand;
 import com.spring.smart_plant.user.command.JoinSearchCommand;
 import com.spring.smart_plant.user.command.SigninCommand;
 import com.spring.smart_plant.user.command.SignoutCommand;
-import com.spring.smart_plant.user.domain.EmailDTO;
+import com.spring.smart_plant.user.dao.UserDAO;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
@@ -37,15 +35,10 @@ import com.spring.smart_plant.user.domain.UserInfoDTO;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-	private JdbcTemplate template = null;
 	private JwtService jwtService;
-
+	
 	@Autowired
-	public void setTemplate(JdbcTemplate template) {
-		this.template = template;
-		ConstantJDBCTemplate.setTemplate(template);
-	}
+	private UserDAO dao;
 	
 	@Autowired
 	public void setJwtService(JwtService jwtService) {
@@ -63,15 +56,37 @@ public class UserController {
 	protected void initUserInfoDTOBinder(WebDataBinder binder) {
 		binder.setValidator(new UserInfoDTOValidator());
 	}
-
-	// 로그아웃시 토큰 만료
+	
+	/**
+	 * <pre>
+	 * target: front
+	 * http://localhost:9001/smart_plant/user/signout
+	 * 로그아웃시 토큰 만료
+	 * </pre>
+	 * @param model
+	 * @return
+	 */
 	@PostMapping("/signout")
 	public ResultDTO signout(Model model) {
 		/*model.addAttribute("request", request);*/
-		return new SignoutCommand().execute(model);
+		return new SignoutCommand().execute(model,dao);
 	}
-
-	// 로그인 시도시 유효한 사용자라면 JWT토큰 발급
+	
+	/**
+	 * <pre>
+	 * target: front
+	 * http://localhost:9001/smart_plant/user/signin
+	 * {email: string, pwd: string}
+	 * -email: 이메일
+	 * -pwd: 패스워드
+	 * 로그인 시도시 유효한 사용자라면 JWT토큰 발급
+	 * </pre>
+	 * @param model
+	 * @param loginInfo
+	 * @param result
+	 * @param response
+	 * @return
+	 */
 	@PostMapping(value="/signin")
 	public ResultDTO login(Model model, @Valid @RequestBody LoginDTO loginInfo,
 			BindingResult result, HttpServletResponse response) {
@@ -79,29 +94,61 @@ public class UserController {
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		model.addAttribute("loginInfo", loginInfo);
 		model.addAttribute("response", response);
-		return new SigninCommand().execute(model);
+		return new SigninCommand().execute(model,dao);
 	}
 	
-	// 회원가입 동작 수행
+	/**
+	 * <pre>
+	 * target: front
+	 * http://localhost:9001/smart_plant/user/signup
+	 * {pwd: string, email: string, firstName: string, secondName: string}
+	 * -pwd: 패스워드
+	 * -email: 가입하고자 하는 이메일
+	 * -firstName: 성
+	 * -secondName: 이름
+	 * 회원가입 동작 수행 
+	 * </pre>
+	 * @param userInfo
+	 * @param result
+	 * @param model
+	 * @return
+	 */
 	@PostMapping(value = "/signup")
 	public ResultDTO memberJoinAction(@Valid @RequestBody UserInfoDTO userInfo, BindingResult result, Model model) {
 		if(result.hasErrors()) { //폼데이터의 유효성 검증결과에 따른 ResultDTO생성
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		}
 		model.addAttribute("userInfo", userInfo);
-		return new JoinCommand().execute(model);
+		return new JoinCommand().execute(model,dao);
 	}
 	
-	//JWT토큰으로 부터 사용자 정보 반환
+	/**
+	 * <pre>
+	 * target: front
+	 * http://localhost:9001/smart_plant/user/info
+	 * JWT토큰으로 부터 사용자 정보 반환
+	 * </pre>
+	 * @return
+	 */
 	@GetMapping(value="/info")
 	public ResultDTO getUserInfo() {
-		return new GetUserInfoCommand().execute(null);
+		return new GetUserInfoCommand().execute(null,dao);
 	}
 	
-	//회원가입 페이지에서 아이디조회를 위해 사용, 많은 커넥션이 요구되어지므로 validation제외
+	/**
+	 * <pre>
+	 * target: front
+	 * http://localhost:9001/smart_plant/user/find/{email}
+	 * 회원가입 페이지에서 아이디조회를 위해 사용, 많은 커넥션이 요구되어지므로 validation제외
+	 * -email: 이메일(string type)
+	 * </pre>
+	 * @param email
+	 * @param model
+	 * @return
+	 */
 	@GetMapping(value = "/find/{email}")
 	public ResultDTO userExist(@PathVariable String email, Model model){
 		model.addAttribute("emailInfo", email);
-		return new JoinSearchCommand().execute(model);
+		return new JoinSearchCommand().execute(model,dao);
 	}
 }

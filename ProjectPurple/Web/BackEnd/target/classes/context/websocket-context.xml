@@ -42,7 +42,7 @@
 	<!-- STOMP + SockJs -->
 	<websocket:message-broker
 		application-destination-prefix="/app" user-destination-prefix="/user" order="40">
-		<websocket:stomp-endpoint path="/sensing_data">
+		<websocket:stomp-endpoint path="/sensing_data" allowed-origins="*">
 			<websocket:sockjs />
 		</websocket:stomp-endpoint>
 		<!-- <websocket:simple-broker prefix="/topic, /queue"/> -->

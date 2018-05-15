@@ -1,18 +1,16 @@
 package com.spring.smart_plant.device.command;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
+import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.APStatusDTO;
-import com.spring.smart_plant.device.domain.IpDTO;
 
-public class ConfirmAPCommand implements DeviceCommand {
+public class ConfirmAPCommand implements IDeviceCommand {
 	private final String PHP_SEARCH_URL = "/search.php";
 	private final String SUCCESS_MSG="사용가능한 공유기 입니다.";
 	private final String FAIL_MSG="이미 사용중인 공유기 입니다.";
@@ -22,13 +20,13 @@ public class ConfirmAPCommand implements DeviceCommand {
 	private final int UNKNOWN_CODE=202;
 
 	@Override
-	public ResultDTO execute(Object obj) {
+	public ResultDTO execute(Object obj,DeviceDAO dao) {
 		// TODO Auto-generated method stub
 		String ip = (String) obj;
 		String msg=null;
 		APStatusDTO code=new APStatusDTO();
 		boolean httpStatus=true;
-		if (!isAPExist(ip)){//AP가 존재하지 않는다면
+		if (!isAPExist(ip,dao)){//AP가 존재하지 않는다면
 			try {
 				JSONObject json=new UrlConnectionCommand().request(ip, PHP_SEARCH_URL, "POST",null);
 	            if(json.get("state").equals("FAIL")) {//이미 사용중
@@ -55,7 +53,7 @@ public class ConfirmAPCommand implements DeviceCommand {
 		return ResultDTO.createInstance(httpStatus).setMsg(msg).setData(code);
 	}
 
-	private boolean isAPExist(String ip) {
-		return new DAO().getAP(ip); 
+	private boolean isAPExist(String ip,DeviceDAO dao) {
+		return dao.getAP(ip); 
 	}
 }

@@ -2,17 +2,16 @@ package com.spring.smart_plant.user.command;
 
 import org.springframework.ui.Model;
 
-import com.spring.smart_plant.common.dao.DAO;
 import com.spring.smart_plant.common.domain.ResultDTO;
+import com.spring.smart_plant.user.dao.UserDAO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class JoinCommand implements UserCommand{
+public class JoinCommand implements IUserCommand{
 
 	@Override
-	public ResultDTO execute(Model model) {
+	public ResultDTO execute(Model model,UserDAO dao) {
 		// TODO Auto-generated method stub
 		UserInfoDTO dto=(UserInfoDTO)model.asMap().get("userInfo");
-		DAO dao=new DAO();
 		dao.insertMember(dto);
 		return ResultDTO.createInstance(true);
 	}

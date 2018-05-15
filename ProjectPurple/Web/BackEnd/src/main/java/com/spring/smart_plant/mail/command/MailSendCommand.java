@@ -8,7 +8,7 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.utills.ConstantMailService;
 import com.spring.smart_plant.mail.domain.JoinEmailDTO;
 
-public class MailSendCommand implements MailCommand{
+public class MailSendCommand implements IMailCommand{
 	private static final String SUBJECT="수경재배 시스템 인증코드 발급입니다.";
 	private static final String PUBLISHER="sencom1028@gmail.com"; //추후 아마존 SES서비스 적용해야
 	

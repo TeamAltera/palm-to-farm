@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+
+	<!-- 사용자 보유 수경재배기 개수 증가 -->
+	<update id="incrementSfCount" parameterType="Integer">
+		UPDATE PLANT_USER 
+		SET SF_CNT=SF_CNT+1
+		WHERE USER_CODE=#{userCode}
+	</update>
+	
+	<!-- 사용자 보유 수경재배기 개수 감소 -->
+	<update id="decrementSfCount" parameterType="hashmap">
+		UPDATE PLANT_USER 
+		SET SF_CNT=SF_CNT-#{count}
+		WHERE USER_CODE=#{userCode}
+	</update>
+	
+	<!-- 계정 블락 횟수 초기화 -->
+	<update id="initBlockCount">
+		UPDATE PLANT_USER 
+		SET BLOCK=0
+		WHERE USER_CODE=#{userCode}
+	</update>
+	
+	<!-- 블락 횟수 증가, 5회 계정 로그인 실패시 블락 -->
+	<update id="incrementBlockCount" parameterType="String">
+		UPDATE PLANT_USER 
+		SET BLOCK=BLOCK+1
+		WHERE EMAIL=#{email}
+	</update>
+	
+	<!-- 로그인 시 사용자 존재 유뮤 조회-->
+	<select id="searchMember" resultMap="userInfo" parameterType="com.spring.smart_plant.user.domain.LoginDTO">
+		SELECT * FROM PLANT_USER 
+		WHERE PWD=#{pwd} AND EMAIL=#{email}
+	</select>
+	
+	<!-- 사용자 정보 조회 -->
+	<select id="getMemberInfo" resultMap="userInfo" parameterType="Integer">
+		SELECT * FROM PLANT_USER 
+		WHERE USER_CODE=#{userCode}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterType="com.spring.smart_plant.user.domain.UserInfoDTO">
+		INSERT INTO PLANT_USER
+		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT) 
+		VALUES
+		(PLANT_USER_SEQ.NEXTVAL,#{pwd},#{email},#{firstName},#{secondName},0,0)
+	</insert>
+	
+	<!-- 이메일 사용 여부 조회 -->
+	<select id="searchEmail" resultType="hashmap" parameterType="String">
+		SELECT * FROM PLANT_USER WHERE EMAIL=#{email}
+	</select>
+	
+	<!-- PLANT_USER 칼럼과 UserInfoDTO 변수명간의 매핑 -->
+	<resultMap id="userInfo" type="com.spring.smart_plant.user.domain.UserInfoDTO">
+		<result property="email" column="email"/>
+		<result property="firstName" column="first_name"/>
+		<result property="secondName" column="second_name"/>
+		<result property="pwd" column="pwd"/>
+		<result property="sfCnt" column="sf_cnt"/>
+		<result property="userCode" column="user_code"/>
+		<result property="block" column="block"/>
+	</resultMap>
+</mapper>
