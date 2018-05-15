@@ -13,7 +13,7 @@ boolean wifi_join = false;
 String bluetooth_cmd = "";
 String buffer = "";
 
-boolean automatic_led = true;	//LED 동작 지정변수. true : 자동, false : 수동
+boolean automatic_value[3] = { true, true, true };	//순서대로 LED, 펌프, 냉각팬
 
 int buffer_count = 0;
 
@@ -92,6 +92,19 @@ void change_led_state(boolean st) {
 	}
 }
 
+void send_control_val(int cmd) {								//수동 모드에서 장치 제어할 경우 호출
+	Serial.println(String("request to slave : ") + cmd);
+	Serial1.print(cmd);
+}
+
+void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변경할 경우 호출
+	if (automatic_value[device] == !stat) {
+		Serial.println(String("request to slave : ") + cmd);
+		Serial1.print(cmd);
+		automatic_value[device] = stat;
+	}
+}
+
 #if 1
 void esp8266_read() { //명령 라우팅
 	Serial2.flush();
@@ -113,30 +126,36 @@ void esp8266_read() { //명령 라우팅
 					//LED 자동설정
 				case 2:
 					content = "led_auto";
-					if (automatic_led == false) {
-						Serial.println(String("request to slave : ") + cmd);
-						Serial1.print(cmd);
-						automatic_led = true;
-					}
+					send_control_val(cmd, 0, true);	//LED 장치 제어
 					break;
 					//LED 수동설정
 				case 3:
 					content = "led_manual";
-					if (automatic_led == true) {
-						Serial.println(String("request to slave : ") + cmd);
-						Serial1.print(cmd);
-						automatic_led = false;
-					}
+					send_control_val(cmd, 0, false);
 					break;
 				case 4:
 					content = "led_on";
-					Serial.println(String("request to slave : ") + cmd);
-					Serial1.print(cmd);
+					send_control_val(cmd);
 					break;
 				case 5:
 					content = "led_off";
-					Serial.println(String("request to slave : ") + cmd);
-					Serial1.print(cmd);
+					send_control_val(cmd);
+					break;
+				case 6:
+					content = "pump_auto";
+					send_control_val(cmd, 1, true);
+					break;
+				case 7:
+					content = "pump_manual";
+					send_control_val(cmd, 1, false);
+					break;
+				case 8:
+					content = "pump_on";
+					send_control_val(cmd);
+					break;
+				case 9:
+					content = "pump_off";
+					send_control_val(cmd);
 					break;
 				default:
 					content = "err";
