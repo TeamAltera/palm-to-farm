@@ -22,7 +22,7 @@
   			console.log(ap_ip);
   			<%--공유기에 전송할 사용자코드값--%>
   			/* var sendData = JSON.stringify({user : ${sessionScope.userInfo.userCode}}); */
-  			var sendData = JSON.stringify({innerIp: ap_ip});
+  			var sendData = JSON.stringify({ip: ap_ip});
   			<%--ajax send이전에 대기 문구를 알려준다--%>
   			$('#result_text').html('<p style="color:orange">등록 여부 확인중...</p>');
   			<%--
@@ -77,7 +77,7 @@
 			},500);
   		}
   		function submit_ip(){
-  			var sendData = JSON.stringify({innerIp: ap_ip});
+  			var sendData = JSON.stringify({ip: ap_ip});
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'POST',
@@ -146,7 +146,7 @@
   		
   		function delete_all(){
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
-  			var sendData=JSON.stringify({innerIp : '203.250.35.169'});
+  			var sendData=JSON.stringify({ip : '203.250.35.169'});
   			$.ajax({
 				type : 'POST',
 				url : 'device/delete/ap/manual',

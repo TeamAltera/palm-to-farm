@@ -1,7 +1,7 @@
 package com.spring.smart_plant.device.domain;
 
 public class IpDTO {
-	private String innerIp;
+	private String ip;
 
 	/**
 	 * 
@@ -14,16 +14,16 @@ public class IpDTO {
 	/**
 	 * @param innerIp
 	 */
-	public IpDTO(String innerIp) {
+	public IpDTO(String ip) {
 		super();
-		this.innerIp = innerIp;
+		this.ip = ip;
 	}
 
-	public String getInnerIp() {
-		return innerIp;
+	public String getIp() {
+		return ip;
 	}
 
-	public void setInnerIp(String innerIp) {
-		this.innerIp = innerIp;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 }

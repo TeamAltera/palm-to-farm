@@ -18,7 +18,12 @@ public class AddDeviceAutoCommand implements IDeviceCommand{
 		int userCode=deviceInfo.getUserCode();
 		String publicIp=deviceInfo.getApInfo();
 		
-		dao.insertSmartFarmDevice(innerIp, userCode, publicIp);
+		try {
+			dao.insertSmartFarmDevice(innerIp, userCode, publicIp);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return ResultDTO.createInstance(true).setMsg("수경재배기 추가 실패");
+		}
 		return ResultDTO.createInstance(true).setMsg("수경재배기 추가 완료");
 	}
 

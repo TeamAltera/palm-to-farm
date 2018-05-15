@@ -23,7 +23,8 @@
 var subscribeCode=0;
 var stompClient = null;
 function connect() {
-    var socket = new SockJS('http://'+window.location.host+'/smart_plant/sensing_data');
+	console.log(window.location.host);
+    var socket = new SockJS('http://'+'203.250.32.180:9001'+'/smart_plant/sensing_data');
     stompClient = Stomp.over(socket);  
     stompClient.connect('manager','manager', function(frame) {
         console.log('Connected: ' + frame);

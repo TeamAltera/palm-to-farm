@@ -39,8 +39,13 @@ public class AddAPCommand implements IDeviceCommand {
 					if (arr != null) {
 						List<Object> list = arr.toList();// 연결된 수경재배기 IP들을 가져옴
 						for (Object innerIp : list) {// 수경재배기들을 등록
-							dao.insertSmartFarmDevice(((HashMap<String, Object>) innerIp).get("INNER_IP").toString(),
-									userCode, publicIP);
+							try {
+								dao.insertSmartFarmDevice(((HashMap<String, Object>) innerIp).get("INNER_IP").toString(),
+										userCode, publicIP);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								return ResultDTO.createInstance(false).setMsg("등록 오류입니다.");
+							}
 						}
 					}
 				}

@@ -4,17 +4,24 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.smart_plant.device.domain.APInfoDTO;
 import com.spring.smart_plant.device.domain.SmartFarmInfoDTO;
+import com.spring.smart_plant.user.dao.UserDAO;
 
 @Repository
-public class DeviceDAO {
+public class DeviceDAO{
 	
 	@Autowired
 	private SqlSession sql;
+	
+	@Autowired
+	private UserDAO userDao;
 	
 	private static final String namespace="device";
 	
@@ -44,12 +51,19 @@ public class DeviceDAO {
 	}
 	
 	// SF장비 추가, SF_SEQ로 SF코드생성
-	public void insertSmartFarmDevice(String innerIp, int userCode, String ip) {
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public void insertSmartFarmDevice(String innerIp, int userCode, String ip) throws Exception{
 		HashMap<String, Object> map=new HashMap<>();
 		map.put("innerIp", innerIp);
 		map.put("userCode", userCode);
 		map.put("ip", ip);
-		sql.insert(namespace+".insertSmartFarmDevice", map);
+		try {
+			sql.insert(namespace+".insertSmartFarmDevice", map);
+			userDao.incrementSfCount(userCode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw e;
+		}
 	}
 	
 	//수경재비기 한 대 삭제
@@ -58,7 +72,16 @@ public class DeviceDAO {
 	}
 	
 	//공유기에 연결된 모든 수경재배기 삭제
-	public int deleteSmartFarmAPAllDevice(String apPublicIp) {
-		return sql.delete(namespace+".deleteSmartFarmAPAllDevice",apPublicIp);
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public int deleteSmartFarmAPAllDevice(String apPublicIp, int userCode) throws Exception{
+		int count=0;
+		try {
+			count=sql.delete(namespace+".deleteSmartFarmAPAllDevice",apPublicIp);
+			userDao.decrementSfCount(count, userCode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw e;
+		}
+		return count;
 	}
 }
