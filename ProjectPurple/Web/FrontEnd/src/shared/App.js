@@ -19,12 +19,13 @@ class App extends Component {
 
     const { UserActions } = this.props;
     UserActions.setLoggedInfo(loggedInfo);
-    try {
-      await UserActions.checkStatus();
-    } catch (e) {
-      storage.remove('loggedInfo');
-      window.location.href = '/auth/login?expired';
-    }
+    //TODO 로그인유지중인지
+    // try {
+    //   await UserActions.checkStatus();
+    // } catch (e) {
+    //   storage.remove('loggedInfo');
+    //   window.location.href = '/auth/login?expired';
+    // }
   };
 
   componentDidMount() {

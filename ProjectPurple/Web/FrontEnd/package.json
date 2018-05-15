@@ -26,6 +26,8 @@
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.0",
     "socket.io": "^2.1.0",
+    "socket.io-client": "^2.1.0",
+    "stompjs": "^2.3.3",
     "validator": "^10.2.0"
   },
   "scripts": {
