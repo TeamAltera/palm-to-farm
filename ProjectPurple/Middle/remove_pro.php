@@ -1,4 +1,7 @@
+
 <?php
+
+// product_info 의 테이블의 내용만 삭제.
     header('Access-Control-Allow-Origin: * ');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Contentent-Type, Accept');
     header('Content-Type: application/json');
@@ -19,7 +22,10 @@
     $query = "DELETE FROM product_info";
     $result = mysqli_query($conn, $query) or die ('Error Querying database.');
 
+    $key = ['result'=>'OK'];
+    echo json_encode($key);
     echo "Delete product_info";
+
     //$str = file_get_contents('/var/www/html/user_code.json');
 
     //$json = json_decode($str, true);

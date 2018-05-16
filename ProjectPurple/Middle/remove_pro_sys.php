@@ -1,4 +1,7 @@
+
+
 <?php
+// product_info 와 Sys_info 두 개의 테이블의 내용을 삭제.
     header('Access-Control-Allow-Origin: * ');
     header('Access-Control-Allow-Headers: Origin, X-Requested-With, Contentent-Type, Accept');
     header('Content-Type: application/json');
@@ -10,17 +13,17 @@
 
     $conn = mysqli_connect($db_host, $db_user, $db_passwd, $db_name) or die("Connected Failed!!!!");
 
-    # Get JSON as a string
-    $json_str = file_get_contents('php://input');
+    $query_delete_pro = "DELETE FROM product_info";
+    $result = mysqli_query($conn, $query_delete_pro) or die ('Error Querying database.');
 
-    # Get as an object
-    $json_obj = json_decode($json_str);
+    $query_delete_sys = "DELETE FROM Sys_info";
+    $result1 = mysqli_query($conn, $query_delete_sys) or die ('Error Querying database.');
 
-    $query = "DELETE FROM Sys_info, product_info";
-    $result = mysqli_query($conn, $query) or die ('Error Querying database.');
+    $key = ['result'=>'OK'];
+    echo json_encode($key);
 
     echo "Delete Sys_info and product_info";
-        //$str = file_get_contents('/var/www/html/user_code.json');
+    //$str = file_get_contents('/var/www/html/user_code.json');
 
 	//$json = json_decode($str, true);
 
