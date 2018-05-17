@@ -21,6 +21,20 @@ void Relay_Control(int cmd) {
 	}
 }
 
+void fan_control(int cmd) {
+	if (cmd == 8) {
+		digitalWrite(fan1, HIGH);
+		digitalWrite(fan2, HIGH);
+		digitalWrite(fan3, HIGH);
+
+	}
+	else if (cmd == 9) {
+		digitalWrite(fan1, LOW);
+		digitalWrite(fan2, LOW);
+		digitalWrite(fan3, LOW);
+	}
+}
+
 void init() {
 	pinMode(fan1, OUTPUT);
 	pinMode(fan2, OUTPUT);
@@ -51,6 +65,12 @@ void loop()
 			break;
 		case 5:			//LED OFF
 			Relay_Control(5);
+			break;
+		case 8:			//FAN ON
+			fan_control(8);
+			break;
+		case 9:			//FAN OFF
+			fan_control(9);
 			break;
 		}
 	}

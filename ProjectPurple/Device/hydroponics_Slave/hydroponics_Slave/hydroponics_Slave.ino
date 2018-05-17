@@ -61,17 +61,13 @@ void fan_control(float temp) {
 	if (fan_state == 0) {
 		if (temp > 22.00) {
 			fan_state = 1;
-			digitalWrite(fan1, HIGH);
-			digitalWrite(fan2, HIGH);
-			digitalWrite(fan3, HIGH);
+			send_control_data("8");
 		}
 	}
 	else if (fan_state == 1) {
 		if (temp <= 20.00) {
 			fan_state = 0;
-			digitalWrite(fan1, LOW);
-			digitalWrite(fan2, LOW);
-			digitalWrite(fan3, LOW);
+			send_control_data("9");
 		}
 	}
 }
@@ -259,14 +255,6 @@ void get_masterData() {
 		case 3:
 			Serial.println("automatic_led = false");
 			automatic_led = false;
-			break;
-		case 4:
-			for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
-				digitalWrite(i, LOW);
-			break;
-		case 5:
-			for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
-				digitalWrite(i, HIGH);
 			break;
 		default:
 			Serial.println("request from master : error");
