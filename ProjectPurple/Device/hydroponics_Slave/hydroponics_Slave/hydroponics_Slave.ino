@@ -7,9 +7,6 @@
 #include <DHT_U.h>
 #include <DHT.h>		//DH11/22 센서 사용
 
-#define fan1 11
-#define fan2 12
-#define fan3 13		//냉각팬 핀번호
 #define DHT_pin 39
 #define WATER_LEVEL_echo 5	//초음파 수위센서(echo)
 #define WATER_LEVEL_trigger 6 //초음파 수위센서(trigger)
@@ -19,10 +16,6 @@
 #define POT2_pin 1
 #define POT3_pin 2
 #define POT4_pin 3		//조도센서 1,2,3,4(아날로그핀)
-#define RELAY_IN1 22
-#define RELAY_IN2 23
-#define RELAY_IN3 24
-#define RELAY_IN4 25
 #define DS18_pin 26
 
 DHT dht22(DHT_pin, DHT22);
@@ -30,6 +23,8 @@ OneWire DS18(DS18_pin);		//수온센서
 byte DS18_addr[8] = { 0 };	//수온센서 주소값
 
 boolean fan_state = 0;		//냉각팬 상태. 0 : OFF, 1 : ON
+boolean led_state = 0;		//LED 상태. 0 : OFF, 1 : ON
+
 boolean ds18_state = 0;		//연결상태. 0 : 연결X, 1 : 연결O
 
 
@@ -55,6 +50,11 @@ String uri = "/send.php"; //웹서버 uri경로
 String bluetooth_cmd = "";
 boolean wifi_join = false;
 boolean automatic_led = true;	//led 동작방법.(자동/수동)
+
+void send_control_data(String cmd) {
+	Serial.println("control data send to ControlBoard : " + cmd);
+	Serial3.print(cmd);
+}
 
 //냉각팬 제어 함수.
 void fan_control(float temp) {
@@ -140,29 +140,20 @@ void read_POT() {
 
 //조도센서 값에 따라 LED 제어용 릴레이 ON/OFF
 void Relay_Control() {
-	if (POT_val[4] <= 120)
-		for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
-			digitalWrite(i, LOW);
-	else if (POT_val[4] > 140)
-		for (int i = RELAY_IN1; i <= RELAY_IN4; i++)
-			digitalWrite(i, HIGH);
+	if (POT_val[4] <= 120 && led_state == 0) {		//LED 켜기
+		send_control_data("4");
+		led_state = 1;	//제어보드로 값 전송
+	}
+	else if (POT_val[4] > 140 && led_state == 1) {						//LED 끄기
+		send_control_data("5");
+		led_state = 0;	//제어보드로 값 전송
+	}
 }
 
 //각종 센서 핀모드 설정 및 초기화 함수
 void sensors_setup() {
-	pinMode(fan1, OUTPUT);
-	pinMode(fan2, OUTPUT);
-	pinMode(fan3, OUTPUT);		//냉각팬 핀모드 : 출력
 	pinMode(WATER_LEVEL_trigger, OUTPUT);
 	pinMode(WATER_LEVEL_echo, INPUT);		//초음파 센서 출력방향 설정.
-	pinMode(RELAY_IN1, OUTPUT);
-	pinMode(RELAY_IN2, OUTPUT);
-	pinMode(RELAY_IN3, OUTPUT);
-	pinMode(RELAY_IN4, OUTPUT);			//LED제어용 릴레이 핀모드.
-	for (int i = RELAY_IN1; i <= RELAY_IN4; i++) {
-		digitalWrite(i, HIGH);
-	}
-	Serial.begin(9600);
 	dht22.begin();
 	Connect_DS18();
 }
@@ -183,6 +174,7 @@ void esp8266Client_setup() {
 	Serial.begin(9600);
 	Serial1.begin(9600);
 	Serial2.begin(9600);
+	Serial3.begin(9600);		//제어보드 통신포트
 	delay(1000);
 	sendData("AT+RST\r\n", 3000, 0); //esp리셋
 	sendData("AT\r\n", 2000, 0); //esp테스트
