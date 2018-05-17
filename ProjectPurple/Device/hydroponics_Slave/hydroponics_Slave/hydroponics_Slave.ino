@@ -50,6 +50,7 @@ String uri = "/send.php"; //웹서버 uri경로
 String bluetooth_cmd = "";
 boolean wifi_join = false;
 boolean automatic_led = true;	//led 동작방법.(자동/수동)
+boolean automatic_fan = true;	//냉각팬 동작방법. (자동/수동)
 
 void send_control_data(String cmd) {
 	Serial.println("control data send to ControlBoard : " + cmd);
@@ -256,6 +257,14 @@ void get_masterData() {
 			Serial.println("automatic_led = false");
 			automatic_led = false;
 			break;
+		case 6:
+			Serial.println("automatic_fan = true");
+			automatic_fan = true;
+			break;
+		case 7:
+			Serial.println("automatic_fan = false");
+			automatic_fan = false;
+			break;
 		default:
 			Serial.println("request from master : error");
 			break;
@@ -277,9 +286,7 @@ void setup() {
 	bluetooth_set();//userName, AP ssid, AP PWD값 저장
 	esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
 	sensors_setup();
-	digitalWrite(fan1, LOW);
-	digitalWrite(fan2, LOW);
-	digitalWrite(fan3, LOW);
+
 }
 
 // the loop function runs over and over again until power down or reset

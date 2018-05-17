@@ -46,6 +46,9 @@ void init() {
 	for (int i = RELAY_IN1; i <= RELAY_IN4; i++) {
 		digitalWrite(i, HIGH);
 	}
+	digitalWrite(fan1, LOW);
+	digitalWrite(fan2, LOW);
+	digitalWrite(fan3, LOW);
 }
 
 void setup()
