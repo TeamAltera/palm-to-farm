@@ -1,9 +1,4 @@
-﻿/*
-Name:      IR_master.ino
-Created:   2018-02-12 오후 7:35:00
-Author:   AN
-*/
-#include <ArduinoJson.h>
+﻿#include <ArduinoJson.h>
 char* userName = "";
 char* ssid = ""; //AP's ssid
 char* psw = ""; // AP's password
@@ -118,7 +113,9 @@ void esp8266_read() { //명령 라우팅
 				buffer_count = 0;
 				unsigned int c_id = buffer.charAt(buffer.indexOf("+IPD,") + 5) - 48;
 				Serial.println(c_id);
-				int cmd = buffer.charAt(buffer.indexOf("cmd=") + 4) - 48;
+				int cmd_idx = buffer.indexOf("cmd=");
+				String cmd_str = buffer.substring(cmd_idx + 4);
+				int cmd = cmd_str.toInt();
 				Serial.println(String("cmd is : " + String(cmd)));
 				String content = "";
 				switch (cmd) //cmd 라우팅
