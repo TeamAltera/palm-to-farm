@@ -1,4 +1,5 @@
 ﻿#include <ArduinoJson.h>
+
 char* userName = "";
 char* ssid = ""; //AP's ssid
 char* psw = ""; // AP's password
@@ -139,19 +140,23 @@ void esp8266_read() { //명령 라우팅
 					send_control_val(cmd);
 					break;
 				case 6:
-					content = "pump_auto";
+					content = "fan_auto";
 					send_control_val(cmd, 1, true);
 					break;
 				case 7:
-					content = "pump_manual";
+					content = "fan_manual";
 					send_control_val(cmd, 1, false);
 					break;
 				case 8:
-					content = "pump_on";
+					content = "fan_on";
 					send_control_val(cmd);
 					break;
 				case 9:
-					content = "pump_off";
+					content = "fan_off";
+					send_control_val(cmd);
+					break;
+				case 15:
+					content = "test_button";
 					send_control_val(cmd);
 					break;
 				default:
@@ -174,7 +179,6 @@ void esp8266_read() { //명령 라우팅
 				Serial2.flush();
 			}
 		}
-		else buffer_count = 0;
 	}
 }
 #endif
