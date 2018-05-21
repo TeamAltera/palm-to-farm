@@ -1,8 +1,7 @@
 
 <?php
 // 아두이노에서 오는 IP를 받아서 자동으로 product_info 테이블에 장비를 추가해주는 코드. -->
-// userCode를 이용하여 데이터의 내용을 URL(203.250.32.180:9001/device/sf/auto)로 전송해야함 -->
-
+// userCode를 이용하여 데이터의 내용을 URL(203.250.32.157:9001/device/sf/auto)로 전송해야함 -->
 
     $db_host = "localhost";
     $db_user = "root";
@@ -13,9 +12,8 @@
 ?>
 
 <?php
-    require_once __DIR__ .'/vendor/autoload.php';
+    //require_once __DIR__ .'/vendor/autoload.php';
 
-    use Middle;
 
     $ip = $_GET['ip']; //Query_string
     //$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
@@ -31,9 +29,10 @@
 
     if( $ip ){
         //echo "get ip<br/>";
-        $led = 'N';
-        $state = 'N';
-        $register = 'N';
+        $led = 'N'; // led 수동'n' / 자동'y' 모드
+        $state = 'N'; // 수경재배기 펌프 최초 작동 상태. 'n' : 작동x, 'y':작동o.
+        $register = 'N'; //등록 상태
+        //데이터 베이스에 sfcode 추가하자.
 
         $query = "INSERT INTO product_info  VALUES ('$ip', '$led', '$state', '$register')";
         $result_ip = mysqli_query($conn, $query) or die ('Error database.. not connect product table.');
@@ -52,32 +51,29 @@
             $exist_query = "SELECT * FROM Sys_info";
             $exist_result = mysqli_query($conn, $exist_query) or die ("Error database.. not connect Sys_info 2 table.");
 
-            $row = mysqli_fetch_array($exist_result, MYSQLI_BOTH);
+            $row = mysqli_fetch_array($exist_result, MYSQLI_ASSOC);
 
             $user_code = $row['USER_CODE']; //user_code를 변수에 넣음.
             $sys_info_ip = $row['OUTER_IP']; //user_code의 ip를 변수에 넣음.
 
             $fields = array(
-                    'apInfo' => urlencode($sys_info_ip),
-                    'ipInfo' => urlencode($ip),
-                    'userCode' => urlencode($user_code)
+                    'apInfo' => $sys_info_ip,
+                    'ipInfo' => $ip,
+                    'userCode' => $user_code
             );
 
-            foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-            $fields_string = rtrim($fields_string,'&');
+            $url = 'http://203.250.32.157:9001/smart_plant/device/add/sf/auto'; //이것도 변경 가능성이 있음.
 
+            $c = curl_init($url);
 
-            //open connection
-            $ch = curl_init();
+            curl_setopt($c, CURLOPT_RETURNTRANSFER, true); // 요청 설정을 POST로 한다.
+            curl_setopt($c, CURLOPT_POST, true); // 요청을 JSON으로 전닳는 헤더 설정.
+            curl_setopt($c, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); //전송할 데이터를 JSON으로 가공하기.
+            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($fields));
 
-            //set the url, number of POST vars, POST data
-            curl_setopt($ch,CURLOPT_URL,$url);
-            curl_setopt($ch,CURLOPT_POST,count($fields));
-            curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+            print curl_exec($c);
 
-            //execute post
-            $result = curl_exec($ch);
-            print $result;
+            curl_close($c);
         }
 
         else {
