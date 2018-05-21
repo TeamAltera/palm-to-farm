@@ -8,8 +8,8 @@
 #include <DHT.h>		//DH11/22 센서 사용
 
 #define DHT_pin 39
-#define WATER_LEVEL_echo 5	//초음파 수위센서(echo)
-#define WATER_LEVEL_trigger 6 //초음파 수위센서(trigger)
+#define WATER_LEVEL_echo 22	//초음파 수위센서(echo)
+#define WATER_LEVEL_trigger 23 //초음파 수위센서(trigger)
 #define TANK_HEIGHT 20	//물탱크 최대 크기(cm)
 #define MAX_WATER_LEVEL 15	//수위 최대 레벨(cm)
 #define POT1_pin 0
@@ -51,6 +51,7 @@ String bluetooth_cmd = "";
 boolean wifi_join = false;
 boolean automatic_led = true;	//led 동작방법.(자동/수동)
 boolean automatic_fan = true;	//냉각팬 동작방법. (자동/수동)
+boolean automatic_pump = true;	//펌프 동작방법. (자동/수동)
 
 void send_control_data(String cmd) {
 	Serial.println("control data send to ControlBoard : " + cmd);
@@ -169,8 +170,8 @@ void Connect_DS18() {
 
 void esp8266Client_setup() {
 	Serial.begin(9600);
-	Serial1.begin(9600);
-	Serial2.begin(9600);
+	Serial1.begin(9600);		//마스터보드 통신포트
+	Serial2.begin(9600);		//esp 통신포트
 	Serial3.begin(9600);		//제어보드 통신포트
 	delay(1000);
 	sendData("AT+RST\r\n", 3000, 0); //esp리셋
@@ -302,10 +303,12 @@ void loop() {
 	get_masterData();		//마스터보드에서 전송한 제어값 수신.
 	Serial1.flush();
 
-	fan_control(water_temp);			//수온에 따른 냉각팬 제어
+	//냉각팬 자동/수동 설정 if문
+	if(automatic_fan == true)
+		fan_control(water_temp);			//수온에 따른 냉각팬 제어
 
 	//LED 자동설정/수동설정 if문
-	if(automatic_led == true)
+	if(automatic_led == true)		
 		Relay_Control();
 
 	if (wifi_join) {
@@ -316,6 +319,7 @@ void loop() {
 			Serial.print(String("DHT Humidity : ") + DHT_humi + "\n");
 			Serial.print(String("Fan State : ") + fan_state + "\n");
 			Serial.print(String("POT Value : ") + POT_val[0] + " " + POT_val[1] + " " + POT_val[2] + " " + POT_val[3] + " " + POT_val[4] + "\n");
+			Serial.print(String("LED state : ") + led_state + "\n");
 			Serial.print(String("Water Level : ") + water_level + "%");
 			Serial.println();
 			Serial.println();
