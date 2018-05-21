@@ -35,7 +35,10 @@ void fan_control(int cmd) {
 	}
 }
 
-void init() {
+void setup()
+{
+	Serial.begin(9600);		//슬레이브 보드와 통신
+	Serial_M.begin(9600);	//마스터보 보드와 통신
 	pinMode(fan1, OUTPUT);
 	pinMode(fan2, OUTPUT);
 	pinMode(fan3, OUTPUT);		//냉각팬 핀모드 : 출력
@@ -49,13 +52,6 @@ void init() {
 	digitalWrite(fan1, LOW);
 	digitalWrite(fan2, LOW);
 	digitalWrite(fan3, LOW);
-}
-
-void setup()
-{
-	Serial.begin(9600);		//슬레이브 보드와 통신
-	Serial_M.begin(9600);	//마스터보 보드와 통신
-	init();
 }
 
 void loop()
