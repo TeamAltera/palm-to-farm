@@ -1,6 +1,7 @@
 
 <?php
 //Sys_info 를 웹서버에서 수동으로 추가해주는 부분.
+//자동으로 추가해주는 부분을 만들어 보자.
 
 	header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
