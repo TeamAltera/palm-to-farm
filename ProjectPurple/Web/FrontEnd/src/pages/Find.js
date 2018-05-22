@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 class Find extends Component {
   render() {
     return (
       <div>
-        <h2>Find page</h2>
+        <Fragment>Find page</Fragment>
       </div>
     );
   }

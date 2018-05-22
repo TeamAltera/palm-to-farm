@@ -1,8 +1,8 @@
-import React from "react";
-import "./AuthWrapper.css";
+import React, { Fragment } from 'react';
+import './AuthWrapper.css';
 
 const AuthWrapper = ({ children }) => (
-  <div className="AuthWrapper">{children}</div>
+  <Fragment className="AuthWrapper">{children}</Fragment>
 );
 
 export default AuthWrapper;

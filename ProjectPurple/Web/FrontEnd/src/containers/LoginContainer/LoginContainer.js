@@ -71,9 +71,9 @@ class LoginContainer extends Component {
     return (
       <AuthWrapper>
         <Grid className="login__grid">
-          <Grid.Column style={{ minWidth: 300 }}>
+          <Grid.Column style={{ minWidth: 370 }}>
             <Form>
-              <Segment raised>
+              <Segment>
                 <Header as="h1" color="purple" textAlign="center">
                   로그인 Purple로 이동
                 </Header>

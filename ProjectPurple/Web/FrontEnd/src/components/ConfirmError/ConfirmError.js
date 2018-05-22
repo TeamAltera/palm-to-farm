@@ -1,4 +1,4 @@
-import React from "react";
-const ConfirmError = ({ children }) => <div>{children}</div>;
+import React, { Fragment } from 'react';
+const ConfirmError = ({ children }) => <Fragment>{children}</Fragment>;
 
 export default ConfirmError;

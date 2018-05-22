@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { MainContainer } from '../containers';
+import { Navbar, Nav, NavItem } from 'reactstrap';
 
-class Home extends Component {
+class SideBar extends Component {
   render() {
     return (
       <Fragment>
-        <MainContainer />
+        <Navbar />
       </Fragment>
     );
   }
 }
 
-export default Home;
+export default SideBar;

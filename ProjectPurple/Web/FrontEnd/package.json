@@ -5,6 +5,7 @@
   "dependencies": {
     "ajv": "^6.5.0",
     "axios": "^0.18.0",
+    "bootstrap": "^4.1.1",
     "chart.js": "^2.7.2",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
@@ -19,6 +20,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.1.1",
+    "reactstrap": "^6.0.1",
     "redux": "^3.7.2",
     "redux-actions": "^2.3.2",
     "redux-form": "^7.3.0",

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 export default class Chart extends Component {
   render() {
-    return <div>chartjs</div>;
+    return <Fragment>chartjs</Fragment>;
   }
 }

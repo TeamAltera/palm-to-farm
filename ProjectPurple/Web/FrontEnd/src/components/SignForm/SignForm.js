@@ -1,9 +1,9 @@
-import React from "react";
-import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
-import "./SignForm.css";
+import React, { Fragment } from 'react';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react';
+import './SignForm.css';
 
 const SignForm = () => (
-  <div className="sign-form">
+  <Fragment className="sign-form">
     <Grid className="sign__grid">
       <Grid.Column style={{ minWidth: 450 }}>
         <Form>
@@ -46,7 +46,7 @@ const SignForm = () => (
         </Form>
       </Grid.Column>
     </Grid>
-  </div>
+  </Fragment>
 );
 
 export default SignForm;

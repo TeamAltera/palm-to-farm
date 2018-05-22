@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { SignupContainer } from '../containers';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,9 +13,9 @@ class Signup extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <SignupContainer />
-      </div>
+      </Fragment>
     );
   }
 }
