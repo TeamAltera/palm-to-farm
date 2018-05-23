@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
@@ -12,12 +14,16 @@ import com.spring.smart_plant.user.dao.UserDAO;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class SigninCommand implements IUserCommand {
+@Service("signinService")
+public class SigninServiceImpl implements IUserService {
 	private final String AUTH_HEADER = "Authorization";
 	private final String KEY = "member";
 
+	@Autowired
+	private UserDAO dao;
+	
 	@Override
-	public ResultDTO execute(Model model, UserDAO dao) {
+	public ResultDTO execute(Model model) {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = model.asMap();
 		LoginDTO loginInfo = (LoginDTO) map.get("loginInfo");

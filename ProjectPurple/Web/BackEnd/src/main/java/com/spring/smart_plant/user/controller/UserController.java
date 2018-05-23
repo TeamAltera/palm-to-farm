@@ -20,12 +20,11 @@ import com.spring.smart_plant.common.service.jwt.JwtService;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.common.validators.LoginDTOValidator;
 import com.spring.smart_plant.common.validators.UserInfoDTOValidator;
-import com.spring.smart_plant.user.command.GetUserInfoCommand;
-import com.spring.smart_plant.user.command.JoinCommand;
-import com.spring.smart_plant.user.command.JoinSearchCommand;
-import com.spring.smart_plant.user.command.SigninCommand;
-import com.spring.smart_plant.user.command.SignoutCommand;
-import com.spring.smart_plant.user.dao.UserDAO;
+import com.spring.smart_plant.user.command.GetUserInfoServiceImpl;
+import com.spring.smart_plant.user.command.JoinSearchServiceImpl;
+import com.spring.smart_plant.user.command.JoinServiceImpl;
+import com.spring.smart_plant.user.command.SigninServiceImpl;
+import com.spring.smart_plant.user.command.SignoutServiceImpl;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
@@ -38,13 +37,25 @@ public class UserController {
 	private JwtService jwtService;
 	
 	@Autowired
-	private UserDAO dao;
-	
-	@Autowired
 	public void setJwtService(JwtService jwtService) {
 		this.jwtService = jwtService;
 		ConstantJwtService.setJwtService(jwtService);
 	}
+	
+	@Autowired
+	private SignoutServiceImpl signoutService;
+	
+	@Autowired
+	private SigninServiceImpl signinService;
+	
+	@Autowired
+	private JoinServiceImpl joinService;
+	
+	@Autowired
+	private JoinSearchServiceImpl joinSearchService;
+	
+	@Autowired
+	private GetUserInfoServiceImpl getUserInfoService;
 	
 	// initBinder에 검증하고자하는 타입을 명시해줘야, 그러지 안으면 전체 검사 첫 문자는 소문자
 	@InitBinder("loginDTO")
@@ -69,7 +80,7 @@ public class UserController {
 	@PostMapping("/signout")
 	public ResultDTO signout(Model model) {
 		/*model.addAttribute("request", request);*/
-		return new SignoutCommand().execute(model,dao);
+		return signoutService.execute(model);
 	}
 	
 	/**
@@ -94,7 +105,7 @@ public class UserController {
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		model.addAttribute("loginInfo", loginInfo);
 		model.addAttribute("response", response);
-		return new SigninCommand().execute(model,dao);
+		return signinService.execute(model);
 	}
 	
 	/**
@@ -119,7 +130,7 @@ public class UserController {
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		}
 		model.addAttribute("userInfo", userInfo);
-		return new JoinCommand().execute(model,dao);
+		return joinService.execute(model);
 	}
 	
 	/**
@@ -132,7 +143,7 @@ public class UserController {
 	 */
 	@GetMapping(value="/info")
 	public ResultDTO getUserInfo() {
-		return new GetUserInfoCommand().execute(null,dao);
+		return getUserInfoService.execute(null);
 	}
 	
 	/**
@@ -149,6 +160,6 @@ public class UserController {
 	@GetMapping(value = "/find/{email}")
 	public ResultDTO userExist(@PathVariable String email, Model model){
 		model.addAttribute("emailInfo", email);
-		return new JoinSearchCommand().execute(model,dao);
+		return joinSearchService.execute(model);
 	}
 }
