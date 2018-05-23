@@ -11,8 +11,11 @@
 	<context:component-scan base-package="com.spring.smart_plant.**.dao"/>
 
 	<!-- db and mybatis setting -->
+	<!-- org.springframework.jdbc.datasource.DriverManagerDataSource -->
 	<bean name="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close"
+		>
 		<property name="driverClassName" value="${dbms.driverClassName}" />
 		<property name="url" value="${dbms.url}" />
 		<property name="username" value="${dbms.user}" />
@@ -33,7 +36,7 @@
 		</property> -->
 	</bean>
 	
-	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
 	</bean>
 	

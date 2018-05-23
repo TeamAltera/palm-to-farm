@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="log">
+	<insert id="insertLog" parameterType="com.spring.smart_plant.log.domain.DeviceLogDTO">
+		INSERT INTO DEVICE_LOG
+		(USED_DT, SF_CODE, ACT_NAME, USED_IP, USED_RES)
+		VALUES 
+		(#{usedDate},#{sfCode},#{actName},#{usedIp},#{result})
+	</insert>
+</mapper>

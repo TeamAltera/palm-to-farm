@@ -17,8 +17,8 @@ public class UrlConnectionCommand {
 		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setDoOutput(true);
 		conn.setRequestMethod(reqMethod);
-		//conn.setConnectTimeout(6000);
-		//conn.setReadTimeout(6000);
+		conn.setConnectTimeout(6000); //6초간 최대 pending
+		conn.setReadTimeout(6000);
 
 		if (sendData != null) {
 			OutputStream os = conn.getOutputStream();

@@ -11,12 +11,7 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 @RequestMapping("/log")
 public class DeviceLogController {
 	
-	@GetMapping("/latest/{sfCode}")
-	public ResultDTO getLatestLog(@PathVariable int sfCode) {
-		return null;
-	}
-	
-	@GetMapping("/all/{sfCode}")
+	@GetMapping("/day/{sfCode}")
 	public ResultDTO getAllLog(@PathVariable int sfCode) {
 		return null;
 	} 

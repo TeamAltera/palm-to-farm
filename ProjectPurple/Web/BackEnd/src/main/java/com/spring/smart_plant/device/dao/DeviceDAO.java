@@ -3,8 +3,7 @@ package com.spring.smart_plant.device.dao;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,12 +17,12 @@ import com.spring.smart_plant.user.dao.UserDAO;
 public class DeviceDAO{
 	
 	@Autowired
-	private SqlSession sql;
+	private SqlSessionTemplate sql;
 	
 	@Autowired
 	private UserDAO userDao;
 	
-	private static final String namespace="device";
+	private final String namespace="device";
 	
 	//사용자의 모든 AP정보 알아내기 위해서 사용
 	public List<APInfoDTO> getAllAP(int userCode){

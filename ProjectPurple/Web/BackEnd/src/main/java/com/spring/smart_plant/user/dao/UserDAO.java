@@ -2,7 +2,7 @@ package com.spring.smart_plant.user.dao;
 
 import java.util.HashMap;
 
-import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import com.spring.smart_plant.user.domain.UserInfoDTO;
 @Repository
 public class UserDAO {
 	@Autowired
-	private SqlSession sql;
+	private SqlSessionTemplate sql;
 	
 	private static final String namespace="user";
 	
@@ -31,6 +31,7 @@ public class UserDAO {
 	
 	//로그인 시 사용자 존재 유무 조회
 	public UserInfoDTO searchMember(LoginDTO dto) {
+		System.out.println("st");
 		return sql.selectOne(namespace+".searchMember",dto);
 	}
 	
@@ -39,8 +40,8 @@ public class UserDAO {
 		sql.update(namespace+".incrementBlockCount",email);
 	}
 	
-	public void initBlockCount() {
-		sql.update(namespace+".initBlockCount");
+	public void initBlockCount(int userCode) {
+		sql.update(namespace+".initBlockCount",userCode);
 	}
 	
 	public UserInfoDTO getMemberInfo(int userCode) {

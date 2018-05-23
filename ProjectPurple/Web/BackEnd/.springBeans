@@ -11,6 +11,7 @@
 		<config>src/main/resources/context/websocket-context.xml</config>
 		<config>src/main/resources/context/mail-context.xml</config>
 		<config>src/main/resources/context/dbms-context.xml</config>
+		<config>src/main/resources/context/serviceBean-context.xml</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>

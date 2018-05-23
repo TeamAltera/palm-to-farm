@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.validators.CommandDTOValidator;
 import com.spring.smart_plant.common.validators.IpDTOValidator;
-import com.spring.smart_plant.device.command.AddAPCommand;
-import com.spring.smart_plant.device.command.AddDeviceAutoCommand;
-import com.spring.smart_plant.device.command.ConfirmAPCommand;
-import com.spring.smart_plant.device.command.DeleteApCommand;
-import com.spring.smart_plant.device.command.DeleteDeviceCommand;
-import com.spring.smart_plant.device.command.DeviceControlCommand;
-import com.spring.smart_plant.device.command.getDeviceCommand;
+import com.spring.smart_plant.device.command.AddAPServiceImpl;
+import com.spring.smart_plant.device.command.AddDeviceAutoServiceImpl;
+import com.spring.smart_plant.device.command.ConfirmAPServiceImpl;
+import com.spring.smart_plant.device.command.DeleteApServiceImpl;
+import com.spring.smart_plant.device.command.DeleteDeviceServiceImpl;
+import com.spring.smart_plant.device.command.DeviceControlServiceImpl;
+import com.spring.smart_plant.device.command.GetDeviceServiceImpl;
 import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.CommandDTO;
 import com.spring.smart_plant.device.domain.DeviceInfoDTO;
@@ -33,7 +33,25 @@ import com.spring.smart_plant.device.domain.IpDTO;
 public class DeviceController {
 	
 	@Autowired
-	private DeviceDAO dao;
+	private DeviceControlServiceImpl deviceControlService;
+	
+	@Autowired
+	private AddAPServiceImpl addAPService;
+	
+	@Autowired
+	private AddDeviceAutoServiceImpl addDeviceAutoService; 
+	
+	@Autowired
+	private ConfirmAPServiceImpl confirmAPService;
+	
+	@Autowired
+	private DeleteApServiceImpl deleteApService;
+	
+	@Autowired
+	private DeleteDeviceServiceImpl deleteDeviceService; 
+	
+	@Autowired
+	private GetDeviceServiceImpl getDeviceService;
 	
 	//InnerIpDTO에 대한 유효성 검사, 첫글자는 반드시 소문자여야 
 	@InitBinder("ipDTO")
@@ -63,7 +81,7 @@ public class DeviceController {
 	public ResultDTO addAPAndDevice(@RequestBody @Valid IpDTO pubIp, BindingResult result){
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("올바른 IP주소가 아닙니다.").setData(result.getAllErrors());
-		return new AddAPCommand().execute(pubIp.getIp(), dao);
+		return addAPService.execute(pubIp.getIp());
 	}
 	
 	/**
@@ -71,19 +89,16 @@ public class DeviceController {
 	 * target: device
 	 * http://localhost:9001/smart_plant/device/add/sf/auto
 	 * 공유기 등록되어진 상태에서, 수경재배기 개별 자동추가
+	 * {apInfo: 공유기ip, ipInfo: 수경재배기ip , userCode: 유저코드}
 	 * </pre>
 	 * @param deviceInfo
 	 * @param result
 	 * @return
 	 */
 	@PostMapping(value="/add/sf/auto")
-	public ResultDTO addDeviceAuto(@RequestBody DeviceInfoDTO deviceInfo, BindingResult result) {
+	public ResultDTO addDeviceAuto(@RequestBody DeviceInfoDTO deviceInfo) {
 		System.out.println("add auto");
-		IpDTOValidator validator=new IpDTOValidator();
-		validator.validate(deviceInfo.getIpInfo(), result);
-		if(result.hasErrors())
-			return ResultDTO.createInstance(false).setMsg("올바른 IP주소가 아닙니다.").setData(result.getAllErrors());
-		return new AddDeviceAutoCommand().execute(deviceInfo, dao);
+		return addDeviceAutoService.execute(deviceInfo);
 	}
 	
 	/**
@@ -98,7 +113,7 @@ public class DeviceController {
 	 */
 	@PostMapping(value = "/delete/sf/manual/{sfCode}")
 	public ResultDTO deleteDevice(@PathVariable int sfCode){
-		return new DeleteDeviceCommand().execute(sfCode, dao);
+		return deleteDeviceService.execute(sfCode);
 	}
 	
 	/**
@@ -117,7 +132,7 @@ public class DeviceController {
 	public ResultDTO deleteAPAndDevice(@RequestBody @Valid IpDTO pubIp, BindingResult result){
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("올바른 IP주소가 아닙니다.").setData(result.getAllErrors());
-		return new DeleteApCommand().execute(pubIp, dao);
+		return deleteApService.execute(pubIp);
 	}
 	
 	/**
@@ -143,7 +158,7 @@ public class DeviceController {
 	 */
 	@GetMapping(value= "/info")
 	public ResultDTO getDeviceInfo() {
-		return new getDeviceCommand().execute(null, dao);
+		return getDeviceService.execute(null);
 	}
 	
 	/**
@@ -163,7 +178,7 @@ public class DeviceController {
 		//폼데이터의 유효성 검증결과
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
-		return new ConfirmAPCommand().execute(pubIp.getIp(), dao);
+		return confirmAPService.execute(pubIp.getIp());
 	}
 	
 	/**
@@ -171,10 +186,16 @@ public class DeviceController {
 	 * target: front
 	 * http://localhost:9001/smart_plant/device/control
 	 * 기계 제어 명령, JWT토큰 필요
-	 * {middle: string, dest: string, cmd: number}
+	 * {middle: string, dest: string, cmd: number, sfCode: number, usedIp: string}
 	 * -middle: 공유기 ip주소(public ip)
 	 * -dest: 수경재배기 ip주소(inner ip)
-	 * -number: 제어코드
+	 * -cmd: 제어코드
+	 * -sfCode: 수경재배기 코드 device/info에서 받은 정보에서 추출해서 사용해야
+	 * -usedIp: 명령을 수행한 클라이언트 ip
+	 * 2: LED자동
+	 * 3: LED수동
+	 * 4: LED켜기
+	 * 5: LED끄기
 	 * </pre>
 	 * @param command
 	 * @param result
@@ -184,7 +205,7 @@ public class DeviceController {
 	public ResultDTO deviceControl(@RequestBody @Valid CommandDTO command, BindingResult result) {
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("잘못된 명령 입니다.").setData(result.getAllErrors());
-		return new DeviceControlCommand().execute(command, dao);
+		return deviceControlService.execute(command);
 	}
 	
 	//테스트 나중에 지워야함
