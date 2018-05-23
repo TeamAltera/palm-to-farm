@@ -8,11 +8,8 @@ AP란?
 
 즉, 공유기와 비슷한 역할을 하게 된다고 합니다.
 ```
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ref
 https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md
 
@@ -109,17 +106,12 @@ To add a Raspberry Pi-based access point to an existing network, see this sectio
 ```
 sudo apt-get update  
 sudo apt-get upgrade
-<<<<<<< HEAD
 
 sudo apt-get install dnsmasq hostapd
 
-=======
 ```
+
 ```
-sudo apt-get install dnsmasq hostapd
-```
-```
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 sudo systemctl stop dnsmasq  
 sudo systemctl stop hostapd
 ```
@@ -154,17 +146,6 @@ The DHCP service is provided by dnsmasq.
 By default, the configuration file contains a lot of information that is not needed, 
 
 and it is easier to start from scratch. Rename this configuration file, and edit a new one:
-<<<<<<< HEAD
-
-```
-sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig 
- 
-sudo nano /etc/dnsmasq.conf
-```
-
-Type or copy the following information into the dnsmasq configuration file and save it:
-
-=======
 ```
 sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig 
 ```
@@ -172,7 +153,6 @@ sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 sudo nano /etc/dnsmasq.conf
 ```
 Type or copy the following information into the dnsmasq configuration file and save it:
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 interface=wlan0      # Use the require wireless interface - usually wlan0
   
@@ -188,10 +168,6 @@ You need to edit the hostapd configuration file, located at /etc/hostapd/hostapd
 
 sudo nano /etc/hostapd/hostapd.conf
 Add the information below to the configuration file. This configuration assumes we are using channel 7, with a network name of NameOfNetwork, and a password AardvarkBadgerHedgehog. Note that the name and password should not have quotes around them.
-<<<<<<< HEAD
-
-=======
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 interface=wlan0
 driver=nl80211
@@ -208,13 +184,9 @@ wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 ```
-<<<<<<< HEAD
 
 We now need to tell the system where to find this configuration file.
 
-=======
-We now need to tell the system where to find this configuration file.
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 sudo nano /etc/default/hostapd
 ```
@@ -230,7 +202,6 @@ Now start up the remaining services:
 ```
 sudo systemctl start hostapd
 
-<<<<<<< HEAD
 ```
 sudo systemctl start hostapd
 
@@ -240,13 +211,6 @@ sudo systemctl start dnsmasq
 ADD ROUTING AND MASQUERADE
 
 Edit ```/etc/sysctl.conf``` and uncomment this line:
-=======
-sudo systemctl start dnsmasq
-```
-ADD ROUTING AND MASQUERADE
-
-Edit /etc/sysctl.conf and uncomment this line:
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 
 ```
 net.ipv4.ip_forward=1
@@ -256,7 +220,6 @@ Add a masquerade for outbound traffic on eth0:
 ```
 sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
 ```
-<<<<<<< HEAD
 
 Save the iptables rule.
 
@@ -266,13 +229,6 @@ sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 Edit /etc/rc.local and add this just above "exit 0" to install these rules on boot.
 
-=======
-Save the iptables rule.
-```
-sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
-```
-Edit /etc/rc.local and add this just above "exit 0" to install these rules on boot.
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 iptables-restore < /etc/iptables.ipv4.nat
 ```
