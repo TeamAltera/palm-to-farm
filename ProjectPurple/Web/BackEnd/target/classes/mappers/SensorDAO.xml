@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sensor">
+	<!-- 센싱되는 데이터셋 삽입 -->
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO SENSOR_DATA 
+		(CALC_DT,SF_CODE,TEMP,HUMI,ELUM,WATER_TEMP,WATER_LIM)
+		VALUES 
+		(#{date},#{sfCode},#{t},#{h},#{e},#{wt},#{wl})
+	</insert>
+	
+	<!-- 해당공유기의 가장 최근 날짜의 데이터 가져오기 -->
+	<!-- max는 오라클 함수 -->
+	<select id="getLatestData" resultMap="dataset" parameterType="Integer">
+		SELECT MAX(CALC_DT) FROM SENSOR_DATA 
+		WHERE SF_CODE=#{sfCode}
+	</select>
+	
+	<!-- 특정 날짜의 데이터 가져오기 -->
+	<select id="getDayData" parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM SENSOR_DATA
+		WHERE SF_CODE=#{sfCode} AND CALC_DT=#{date}
+	</select>
+	
+	<resultMap type="com.spring.smart_plant.sensor.domain.SensorDataDTO" id="dataset">
+		<result property="date" column="calc_dt"/>
+		<result property="sfCode" column="sf_code"/>
+		<result property="temp" column="temp"/>
+		<result property="humi" column="humi"/>
+		<result property="elum" column="elum"/>
+		<result property="waterTemp" column="water_temp"/>
+		<result property="waterLim" column="water_lim"/>
+	</resultMap>
+</mapper>

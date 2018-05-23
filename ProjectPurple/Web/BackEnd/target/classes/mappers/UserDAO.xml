@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	</update>
 	
 	<!-- 계정 블락 횟수 초기화 -->
-	<update id="initBlockCount">
+	<update id="initBlockCount" parameterType="Integer">
 		UPDATE PLANT_USER 
 		SET BLOCK=0
 		WHERE USER_CODE=#{userCode}

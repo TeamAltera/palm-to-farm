@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- log -->
+	<bean id="insertLogService" class="com.spring.smart_plant.log.command.InsertLogServiceImpl"/>
+	
+	<!-- device -->
+	<bean id="deviceControlService" class="com.spring.smart_plant.device.command.DeviceControlServiceImpl"/>
+	<bean id="addAPService" class="com.spring.smart_plant.device.command.AddAPServiceImpl"/>
+	<bean id="addDeviceAutoService" class="com.spring.smart_plant.device.command.AddDeviceAutoServiceImpl"/>
+	<bean id="confirmAPService" class="com.spring.smart_plant.device.command.ConfirmAPServiceImpl"/>
+	<bean id="deleteApService" class="com.spring.smart_plant.device.command.DeleteApServiceImpl"/>
+	<bean id="deleteDeviceService" class="com.spring.smart_plant.device.command.DeleteDeviceServiceImpl"/>
+	<bean id="getDeviceService" class="com.spring.smart_plant.device.command.GetDeviceServiceImpl"/>
+</beans>
