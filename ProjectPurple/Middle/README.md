@@ -291,17 +291,14 @@ The network SSID you specified in the hostapd configuration should now be presen
 그래서 StackOverFlow를 통하여 검색하면서 해결하여보았다.
 
 일단 재부팅만 한다고 해서 바로 AP모드로 작동하는 것은 아닌 것 같다.
-<<<<<<< HEAD
 
 ```
 $sudo hostapd /etc/hostapd/hostapd.conf
 ```
 
-=======
 ```
 sudo hostapd /etc/hostapd/hostapd.conf
 ```
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 하면
 
 AP모드가 작동하지 않고 ERROR가 발생하게 되었다.
@@ -321,10 +318,7 @@ Hostapd building instruction. 이라고 링크에 들어갈 수 있다.
 
 라이브러리가 필요하다고 하니까 이것도 설치를 해주자.
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 sudo apt-get install libssl-dev
 ```
@@ -337,7 +331,6 @@ https://wireless.wiki.kernel.org/en/users/Documentation/hostapd
 
 ```
 git clone git://w1.fi/srv/git/hostap.git
-<<<<<<< HEAD
 
 cd hostap/hostapd
 ```
@@ -378,7 +371,6 @@ Next, compile hostapd:
 make
 ```
 
-=======
 ```
 ```
 cd hostap/hostapd
@@ -410,18 +402,14 @@ Next, compile hostapd:
 ```
 make
 ```
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 컴파일을 해준다. 여기서 분명 안되는 것 처럼?? 나오는 걸로 알고있다. 
 
 ../src/drivers/driver_nl080211.c:17:31: fatal error~~ 에러가 뜨는데 딱히 신경 쓰지말자..
 
 여기서 이제
 ```
-<<<<<<< HEAD
 $sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
-=======
 sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
->>>>>>> 7e79b9cc3d2438dd8684ac3242e86e253afc8114
 ```
 ```
 $sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf 도 같은 거라고 생각하면 될 것 같다.
