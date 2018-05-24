@@ -91,4 +91,5 @@ C:\Users\力龋\AppData\Local\Temp\VMBuilds\hydroponics_master\mega_atmega2560\Deb
  C:\Users\力龋\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/isInteger.hpp \
  C:\Users\力龋\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/parseFloat.hpp \
  C:\Users\力龋\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/parseInteger.hpp \
- C:\Users\力龋\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Serialization/JsonSerializerImpl.hpp
+ C:\Users\力龋\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Serialization/JsonSerializerImpl.hpp \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src/SoftwareSerial.h

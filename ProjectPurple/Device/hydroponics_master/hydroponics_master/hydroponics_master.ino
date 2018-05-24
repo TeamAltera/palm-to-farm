@@ -1,4 +1,5 @@
 ﻿#include <ArduinoJson.h>
+#include <SoftwareSerial.h>
 
 char* userName = "";
 char* ssid = ""; //AP's ssid
@@ -11,6 +12,8 @@ String buffer = "";
 
 boolean automatic_value[3] = { true, true, true };	//순서대로 LED, 펌프, 냉각팬
 
+SoftwareSerial Serial_C(11, 10);
+
 int buffer_count = 0;
 
 const int success_led = 3;
@@ -21,6 +24,7 @@ void esp8266Server_setup() {
 	Serial.begin(9600);
 	Serial1.begin(9600);
 	Serial2.begin(9600);
+	Serial_C.begin(9600);
 	delay(1000);
 	sendData("AT+RST\r\n", 3000, 0);
 	sendData("AT\r\n", 2000, 0);
@@ -89,8 +93,8 @@ void change_led_state(boolean st) {
 }
 
 void send_control_val(int cmd) {								//수동 모드에서 장치 제어할 경우 호출
-	Serial.println(String("request to slave : ") + cmd);
-	Serial1.print(cmd);
+	Serial.println(String("request to control board : ") + cmd);
+	Serial_C.print(cmd);
 }
 
 void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변경할 경우 호출
