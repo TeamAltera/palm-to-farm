@@ -19,7 +19,7 @@ dnsmasq와 hostapd가 무엇인지부터 알아봐야겠네요??
 
 dnsmasq : 1000클라이언트 이하의 로컬 네트워크에서 활용할 수 있는 간단한 DHCP/DNS 서버라고 하네요.
 
-핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 하네요.!
+핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 하네요.
 
 즉, 와이파이를 사용하고자 하는 사용자가 오면 그 사용자에게 IP와 DNS를 할당해주는 패키지라고 생각하면 편할 것 같아요.
 
@@ -49,7 +49,7 @@ IP주소를 사용할수 있다고 하고 더 사용하고자 하면 기간연�
 
 
 
-DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻하죠??
+DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻한ㄷ.
 
 
 
@@ -57,13 +57,9 @@ DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻
 
 
 
-그럼 hostapd는 또 무엇일까요??
-
-hostapd와 관련된 내용은 영문으로 된 위키백과를 참고하였는데요
-
+그럼 hostapd는 또 무엇?
+hostapd와 관련된 내용은 영문으로 된 위키백과를 참고
 설명으로는 
-
-
 
 hostapd is a user space daemon for wireless access point and authentication servers. There are three implementations: Jouni Malinen's hostapd, OpenBSD's hostapd and Devicescape's hostapd.
 
@@ -73,13 +69,8 @@ Contents  [hide]
 
 AP와 인증 서버를 위한 사용자 공간 데몬이라고 하네요?? 데몬은 흔히 백그라운도 프로세스라고 불리고..
 
-자세하겐 잘 안나와있어서 알기가 힘드네요 ㅋㅋ..
-
 그냥 무선 네트워크 인터페이스는 AP모드로 전환하여 서비스를 하게 해주는 패키지라고 생각하면 될 것 같아요.
 
-
-
-번역 극혐..
 
 The Raspberry Pi can be used as a wireless access point, running a standalone network. 
 This can be done using the inbuilt wireless features of the Raspberry Pi 3 or Raspberry Pi Zero W, or by using a suitable USB wireless dongle that supports access points.
