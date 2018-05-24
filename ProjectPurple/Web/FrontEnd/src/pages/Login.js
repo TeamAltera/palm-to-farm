@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { LoginContainer } from '../containers';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -13,9 +13,9 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <LoginContainer />
-      </div>
+      </Fragment>
     );
   }
 }

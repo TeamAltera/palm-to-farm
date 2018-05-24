@@ -5,10 +5,9 @@ import java.sql.Timestamp;
 public class DeviceLogDTO {
 	private Timestamp usedDate;
 	private int sfCode;
-	private String apPublicIp;
-	private String orderIp; //명령을 내린 사용자Ip주소
+	private String usedIp; //명령을 내린 사용자Ip주소
 	private String actName;
-	private String result;
+	private char result;
 	/**
 	 * 
 	 */
@@ -19,18 +18,16 @@ public class DeviceLogDTO {
 	/**
 	 * @param usedDate
 	 * @param sfCode
-	 * @param apPublicIp
-	 * @param orderIp
+	 * @param usedIp
 	 * @param actName
 	 * @param result
 	 */
-	public DeviceLogDTO(Timestamp usedDate, int sfCode, String apPublicIp, String orderIp, String actName,
-			String result) {
+	public DeviceLogDTO(Timestamp usedDate, int sfCode, String usedIp, String actName,
+			char result) {
 		super();
 		this.usedDate = usedDate;
 		this.sfCode = sfCode;
-		this.apPublicIp = apPublicIp;
-		this.orderIp = orderIp;
+		this.usedIp = usedIp;
 		this.actName = actName;
 		this.result = result;
 	}
@@ -46,28 +43,23 @@ public class DeviceLogDTO {
 	public void setSfCode(int sfCode) {
 		this.sfCode = sfCode;
 	}
-	public String getApPublicIp() {
-		return apPublicIp;
-	}
-	public void setApPublicIp(String apPublicIp) {
-		this.apPublicIp = apPublicIp;
-	}
-	public String getOrderIp() {
-		return orderIp;
-	}
-	public void setOrderIp(String orderIp) {
-		this.orderIp = orderIp;
-	}
 	public String getActName() {
 		return actName;
 	}
 	public void setActName(String actName) {
 		this.actName = actName;
 	}
-	public String getResult() {
+	public String getUsedIp() {
+		return usedIp;
+	}
+	public void setUsedIp(String usedIp) {
+		this.usedIp = usedIp;
+	}
+	public char getResult() {
 		return result;
 	}
-	public void setResult(String result) {
+	public void setResult(char result) {
 		this.result = result;
 	}
+	
 }

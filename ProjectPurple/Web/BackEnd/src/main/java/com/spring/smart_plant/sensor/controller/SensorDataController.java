@@ -15,7 +15,7 @@ public class SensorDataController {
 		return ResultDTO.createInstance(true);
 	}
 	
-	@GetMapping("/get/all")
+	@GetMapping("/get/day")
 	public ResultDTO getAllDataSet() {
 		return ResultDTO.createInstance(true);
 	}

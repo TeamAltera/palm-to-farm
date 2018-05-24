@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Form,
@@ -7,13 +7,13 @@ import {
   Header,
   Message,
   Segment,
-  Divider
-} from "semantic-ui-react";
-import "./LoginForm.css";
-import PropTypes from "prop-types";
+  Divider,
+} from 'semantic-ui-react';
+import './LoginForm.css';
+import PropTypes from 'prop-types';
 
 const LoginForm = ({ login }) => (
-  <div className="login-form">
+  <Fragment className="login-form">
     <Grid className="login__grid">
       <Grid.Column style={{ minWidth: 300 }}>
         <Form>
@@ -40,8 +40,7 @@ const LoginForm = ({ login }) => (
               size="large"
               onClick={() => {
                 login();
-              }}
-            >
+              }}>
               로그인
             </Button>
           </Segment>
@@ -53,11 +52,11 @@ const LoginForm = ({ login }) => (
         </Message>
       </Grid.Column>
     </Grid>
-  </div>
+  </Fragment>
 );
 
 LoginForm.proptypes = {
-  login: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

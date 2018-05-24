@@ -28,7 +28,7 @@ public class SigninCommand implements IUserCommand {
 		if (dto != null) {// 로그인 email, pwd가 일치한다면
 			if (dto.getBlock() < 5) {//계정 로그인 실패횟수가 5회가 아니라면
 				
-				dao.initBlockCount();//블락 횟수 초기화
+				dao.initBlockCount(dto.getUserCode());//블락 횟수 초기화
 				dto.setBlock(0);
 				
 				dto.setPwd(null);

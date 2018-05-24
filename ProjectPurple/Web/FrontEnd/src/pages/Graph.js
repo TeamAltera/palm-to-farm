@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as baseActions from 'redux/modules/base';
@@ -61,9 +61,9 @@ class Graph extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <Line data={this.state.data} height="720" width="800" />
-      </div>
+      </Fragment>
     );
   }
 }

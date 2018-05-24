@@ -1,4 +1,4 @@
-import React from "react";
-const AuthError = ({ children }) => <div>{children}</div>;
+import React, { Fragment } from 'react';
+const AuthError = ({ children }) => <Fragment>{children}</Fragment>;
 
 export default AuthError;

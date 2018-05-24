@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
 
+import com.spring.smart_plant.sensor.dao.SensorDAO;
+
 @Component
 public class RabbitMessageListenerImpl{
 
@@ -14,9 +16,13 @@ public class RabbitMessageListenerImpl{
 	/*private RabbitMessagingTemplate rabbitTemplate;*/
 	
 	@Autowired
+	private SensorDAO dao;
+	
+	@Autowired
 	public void setMessagingTemplate(MessageSendingOperations<String> messagingTemplate) {
 		this.messagingTemplate = messagingTemplate;
 	}
+	
 	
 	/*@Autowired
 	public void setRabbitTemplate(RabbitMessagingTemplate rabbitTemplate) {
@@ -30,7 +36,7 @@ public class RabbitMessageListenerImpl{
 		System.out.println(new Date());
 		/*rabbitTemplate.convertAndSend("/topic/messages"+income.get("id"),income);*/
 		this.messagingTemplate.convertAndSend("/topic/messages"+income.get("id"),income);
-		
+		//dao.insertData(income);
 		/*t: temp
 		 * wt: water temp
 		 * wl: water lim

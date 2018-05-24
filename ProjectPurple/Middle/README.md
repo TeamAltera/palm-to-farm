@@ -1,12 +1,14 @@
 # RaspberryPi 3  B Model AP Mode
 
 Hello. How to access point RapsberryPi.
-
+```
 AP란?
 
 * Access Point : 와이파이를 이용한 관련 표준을 이용하여 무선 장치들을 유선 장치에 연결할 수 있게 하는 장치.
 
 즉, 공유기와 비슷한 역할을 하게 된다고 합니다.
+```
+
 
 ref
 https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md
@@ -17,7 +19,7 @@ dnsmasq와 hostapd가 무엇인지부터 알아봐야겠네요??
 
 dnsmasq : 1000클라이언트 이하의 로컬 네트워크에서 활용할 수 있는 간단한 DHCP/DNS 서버라고 하네요.
 
-핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 하네요.!
+핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 하네요.
 
 즉, 와이파이를 사용하고자 하는 사용자가 오면 그 사용자에게 IP와 DNS를 할당해주는 패키지라고 생각하면 편할 것 같아요.
 
@@ -47,7 +49,7 @@ IP주소를 사용할수 있다고 하고 더 사용하고자 하면 기간연�
 
 
 
-DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻하죠??
+DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻한ㄷ.
 
 
 
@@ -55,13 +57,9 @@ DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻
 
 
 
-그럼 hostapd는 또 무엇일까요??
-
-hostapd와 관련된 내용은 영문으로 된 위키백과를 참고하였는데요
-
+그럼 hostapd는 또 무엇?
+hostapd와 관련된 내용은 영문으로 된 위키백과를 참고
 설명으로는 
-
-
 
 hostapd is a user space daemon for wireless access point and authentication servers. There are three implementations: Jouni Malinen's hostapd, OpenBSD's hostapd and Devicescape's hostapd.
 
@@ -71,13 +69,8 @@ Contents  [hide]
 
 AP와 인증 서버를 위한 사용자 공간 데몬이라고 하네요?? 데몬은 흔히 백그라운도 프로세스라고 불리고..
 
-자세하겐 잘 안나와있어서 알기가 힘드네요 ㅋㅋ..
-
 그냥 무선 네트워크 인터페이스는 AP모드로 전환하여 서비스를 하게 해주는 패키지라고 생각하면 될 것 같아요.
 
-
-
-번역 극혐..
 
 The Raspberry Pi can be used as a wireless access point, running a standalone network. 
 This can be done using the inbuilt wireless features of the Raspberry Pi 3 or Raspberry Pi Zero W, or by using a suitable USB wireless dongle that supports access points.
@@ -101,15 +94,18 @@ To add a Raspberry Pi-based access point to an existing network, see this sectio
 
 (바로 내려가다보면 큰 글씨로 USING the raspberrypi ~~ 이 단락부분을 말한다.)
 
+```
+sudo apt-get update  
+sudo apt-get upgrade
 
-####sudo apt-get update  
-####sudo apt-get upgrade
+sudo apt-get install dnsmasq hostapd
 
-####sudo apt-get install dnsmasq hostapd
+```
 
-####sudo systemctl stop dnsmasq  
-####sudo systemctl stop hostapd
-
+```
+sudo systemctl stop dnsmasq  
+sudo systemctl stop hostapd
+```
 
 # Configuring a static IP - 고정 IP 설정.
 We are configuring a standalone network to act as a server, so the Raspberry Pi needs to have a static IP address assigned to the wireless port. 
@@ -122,34 +118,39 @@ It is also assumed that the wireless device being used is wlan0.
 
 To configure the static IP address, edit the dhcpcd configuration file with:
 
-####sudo nano /etc/dhcpcd.conf
+```
+sudo nano /etc/dhcpcd.conf
+```
 
 Go to the end of the file and edit it so that it looks like the following:
-
-####interface wlan0
+```
+interface wlan0
     static ip_address=192.168.4.1/24
+```
 Now restart the dhcpcd daemon and set up the new wlan0 configuration:
-
+```
 sudo systemctl restart dhcpcd
-
+```
 #Configuring the DHCP server (dnsmasq)
 The DHCP service is provided by dnsmasq. 
 
 By default, the configuration file contains a lot of information that is not needed, 
 
 and it is easier to start from scratch. Rename this configuration file, and edit a new one:
-
-####sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig 
- 
-####sudo nano /etc/dnsmasq.conf
-
+```
+sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig 
+```
+```
+sudo nano /etc/dnsmasq.conf
+```
 Type or copy the following information into the dnsmasq configuration file and save it:
-
-####interface=wlan0      # Use the require wireless interface - usually wlan0
+```
+interface=wlan0      # Use the require wireless interface - usually wlan0
   
-####  dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+```
 
-So for wlan0, we are going to provide IP addresses between 192.168.4.2 and 192.168.4.20, with a lease time of 24 hours. If you are providing DHCP services for other network devices (e.g. eth0), you could add more sections with the appropriate interface header, with the range of addresses you intend to provide to that interface.
+So for wlan0, we are going to provide IP addresses between ```192.168.4.2``` and ```192.168.4.20```, with a lease time of 24 hours. If you are providing DHCP services for other network devices (e.g. eth0), you could add more sections with the appropriate interface header, with the range of addresses you intend to provide to that interface.
 
 There are many more options for dnsmasq; see the dnsmasq documentation for more details.
 
@@ -158,74 +159,71 @@ You need to edit the hostapd configuration file, located at /etc/hostapd/hostapd
 
 sudo nano /etc/hostapd/hostapd.conf
 Add the information below to the configuration file. This configuration assumes we are using channel 7, with a network name of NameOfNetwork, and a password AardvarkBadgerHedgehog. Note that the name and password should not have quotes around them.
-
-####interface=wlan0
-
-####driver=nl80211
-
-####ssid=NameOfNetwork
-
-####hw_mode=g
-
-####channel=7
-
-####wmm_enabled=0
-
-####macaddr_acl=0
-
-####auth_algs=1
-
-####ignore_broadcast_ssid=0
-
-####wpa=2
-
-####wpa_passphrase=AardvarkBadgerHedgehog
-
-####wpa_key_mgmt=WPA-PSK
-
-####wpa_pairwise=TKIP
-
-####rsn_pairwise=CCMP
+```
+interface=wlan0
+driver=nl80211
+ssid=NameOfNetwork
+hw_mode=g
+channel=7
+wmm_enabled=0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=AardvarkBadgerHedgehog
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+```
 
 We now need to tell the system where to find this configuration file.
 
-####sudo nano /etc/default/hostapd
-
+```
+sudo nano /etc/default/hostapd
+```
 
 Find the line with #DAEMON_CONF, and replace it with this:
 
-
+```
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
-
+```
 Start it up
 
 Now start up the remaining services:
+```
+sudo systemctl start hostapd
 
-####sudo systemctl start hostapd
-
-####sudo systemctl start dnsmasq
+sudo systemctl start dnsmasq
+```
 
 ADD ROUTING AND MASQUERADE
 
-Edit /etc/sysctl.conf and uncomment this line:
+Edit ```/etc/sysctl.conf``` and uncomment this line:
 
-
-####net.ipv4.ip_forward=1
-
+```
+net.ipv4.ip_forward=1
+```
 Add a masquerade for outbound traffic on eth0:
 
-
-####sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+```
+sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+```
 
 Save the iptables rule.
 
-####sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+```
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+```
 
 Edit /etc/rc.local and add this just above "exit 0" to install these rules on boot.
 
-####iptables-restore < /etc/iptables.ipv4.nat
+```
+iptables-restore < /etc/iptables.ipv4.nat
+```
 
-####Reboot
+```
+Reboot
+```
 
 Using a wireless device, search for networks.
 
@@ -240,8 +238,13 @@ The network SSID you specified in the hostapd configuration should now be presen
 
 일단 재부팅만 한다고 해서 바로 AP모드로 작동하는 것은 아닌 것 같다.
 
-$sudo hostapd /etc/hostapd/hostapd.conf
+```
+sudo hostapd /etc/hostapd/hostapd.conf
+```
 
+```
+sudo hostapd /etc/hostapd/hostapd.conf
+```
 하면
 
 AP모드가 작동하지 않고 ERROR가 발생하게 되었다.
@@ -249,7 +252,6 @@ AP모드가 작동하지 않고 ERROR가 발생하게 되었다.
 에러는 Line2 : invalid/unknown driver 'nl80211'
 
 이라고 하면서 앞에서 hostapd.conf에서 설정을 해준 'nl80211'이 뭐가 잘 안되는 것을 느꼈다.
-
 
 
 https://askubuntu.com/questions/288437/how-fix-hostapd-invalid-unknown-driver-nl80211-error
@@ -263,9 +265,9 @@ Hostapd building instruction. 이라고 링크에 들어갈 수 있다.
 라이브러리가 필요하다고 하니까 이것도 설치를 해주자.
 
 
-
-####sudo apt-get install libssl-dev
-
+```
+sudo apt-get install libssl-dev
+```
 
 
 https://wireless.wiki.kernel.org/en/users/Documentation/hostapd
@@ -273,48 +275,101 @@ https://wireless.wiki.kernel.org/en/users/Documentation/hostapd
 이 링크가 뜨게 되는데 hostapd에 대해 주구장창 설명을 해놓았다. 일단. nl80211 이라는 것을 아예 못찾는 것 같으니까 다운로드부터 받도록하자.
 
 
+```
+git clone git://w1.fi/srv/git/hostap.git
 
-####git clone git://w1.fi/srv/git/hostap.git
-
-####cd hostap/hostapd
+cd hostap/hostapd
+```
 
 Or you can get a stable release (0.6.8 or later recommended) by downloading the tarball from http://w1.fi/hostapd/ as follows:
 
 http://w1.fi/hostapd/ 이 링크에 들어가면 2018.02.21. 기준으로 가장 최근버젼인 2.6 버젼을 다운로드 받도록 하자
 
-####wget http://w1.fi/releases/hostapd-x.y.z.tar.gz
+```
+wget http://w1.fi/releases/hostapd-x.y.z.tar.gz
 
-####tar xzvf hostapd-x.y.z.tar.gz
+tar xzvf hostapd-x.y.z.tar.gz
 
-####cd hostapd-x.y.z/hostapd
+cd hostapd-x.y.z/hostapd
+```
 
 여기서 x.y.z.는 버젼이다. 나는 ~ hostapd-2.6.tar.gz 라고 해주었다.
 
 상황에 따라 맞게 타이핑 쳐주자.
 
-####cp defconfig .config
+```
+cp defconfig .config
 
-####nano .config
+nano .config
+```
 
-.config 파일로 들어가서 찾아준다.
+```.config ```파일로 들어가서 찾아준다.
 
-####/#CONFIG_DRIVER_NL80211=y
+```
+/#CONFIG_DRIVER_NL80211=y
+```
 
 /#부분을 없앤다. 최근버젼인 2.6버젼에는 애초에 #이 없었다. /는 깃허브에 올릴려고 추가적으로 붙인 것이니 원래 없는 부분... 신경쓰지 말자!!
 
 Next, compile hostapd:
 
-####make
+```
+make
+```
+
+```
+cd hostap/hostapd
+```
+
+Or you can get a stable release (0.6.8 or later recommended) by downloading the tarball from http://w1.fi/hostapd/ as follows:
+
+http://w1.fi/hostapd/ 이 링크에 들어가면 2018.02.21. 기준으로 가장 최근버젼인 2.6 버젼을 다운로드 받도록 하자
+```
+wget http://w1.fi/releases/hostapd-x.y.z.tar.gz
+tar xzvf hostapd-x.y.z.tar.gz
+cd hostapd-x.y.z/hostapd
+```
+
+여기서 x.y.z.는 버젼이다. 나는 ~ hostapd-2.6.tar.gz 라고 해주었다.
+
+상황에 따라 맞게 타이핑 쳐주자.
+
+```
+cp defconfig .config
+```
+
+```
+nano .config
+```
+
+.config 파일로 들어가서 찾아준다.
+
+```
+/#CONFIG_DRIVER_NL80211=y
+```
+
+/#부분을 없앤다. 최근버젼인 2.6버젼에는 애초에 #이 없었다. /는 깃허브에 올릴려고 추가적으로 붙인 것이니 원래 없는 부분... 신경쓰지 말자!!
+
+Next, compile hostapd:
+
+```
+make
+```
+
 컴파일을 해준다. 여기서 분명 안되는 것 처럼?? 나오는 걸로 알고있다. 
 
 ../src/drivers/driver_nl080211.c:17:31: fatal error~~ 에러가 뜨는데 딱히 신경 쓰지말자..
 
 여기서 이제
 
-####$sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
+```
+$sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
+sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
+```
 
-####$sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf 도 같은 거라고 생각하면 될 것 같다.
-
+```
+$sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf 도 같은 거라고 생각하면 될 것 같다.
+```
 
 드디어!! 성공!!
 
