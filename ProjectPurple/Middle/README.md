@@ -202,9 +202,6 @@ Now start up the remaining services:
 ```
 sudo systemctl start hostapd
 
-```
-sudo systemctl start hostapd
-
 sudo systemctl start dnsmasq
 ```
 
@@ -232,9 +229,11 @@ Edit /etc/rc.local and add this just above "exit 0" to install these rules on bo
 ```
 iptables-restore < /etc/iptables.ipv4.nat
 ```
+
 ```
 Reboot
 ```
+
 Using a wireless device, search for networks.
 
 The network SSID you specified in the hostapd configuration should now be present, and it should be accessible with the specified password.
@@ -249,7 +248,7 @@ The network SSID you specified in the hostapd configuration should now be presen
 일단 재부팅만 한다고 해서 바로 AP모드로 작동하는 것은 아닌 것 같다.
 
 ```
-$sudo hostapd /etc/hostapd/hostapd.conf
+sudo hostapd /etc/hostapd/hostapd.conf
 ```
 
 ```
@@ -328,9 +327,9 @@ make
 ```
 
 ```
-```
 cd hostap/hostapd
 ```
+
 Or you can get a stable release (0.6.8 or later recommended) by downloading the tarball from http://w1.fi/hostapd/ as follows:
 
 http://w1.fi/hostapd/ 이 링크에 들어가면 2018.02.21. 기준으로 가장 최근버젼인 2.6 버젼을 다운로드 받도록 하자
@@ -339,34 +338,44 @@ wget http://w1.fi/releases/hostapd-x.y.z.tar.gz
 tar xzvf hostapd-x.y.z.tar.gz
 cd hostapd-x.y.z/hostapd
 ```
+
 여기서 x.y.z.는 버젼이다. 나는 ~ hostapd-2.6.tar.gz 라고 해주었다.
 
 상황에 따라 맞게 타이핑 쳐주자.
+
 ```
 cp defconfig .config
 ```
+
 ```
 nano .config
 ```
+
 .config 파일로 들어가서 찾아준다.
+
 ```
 /#CONFIG_DRIVER_NL80211=y
 ```
+
 /#부분을 없앤다. 최근버젼인 2.6버젼에는 애초에 #이 없었다. /는 깃허브에 올릴려고 추가적으로 붙인 것이니 원래 없는 부분... 신경쓰지 말자!!
 
 Next, compile hostapd:
+
 ```
 make
 ```
+
 컴파일을 해준다. 여기서 분명 안되는 것 처럼?? 나오는 걸로 알고있다. 
 
 ../src/drivers/driver_nl080211.c:17:31: fatal error~~ 에러가 뜨는데 딱히 신경 쓰지말자..
 
 여기서 이제
+
 ```
 $sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
 sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
 ```
+
 ```
 $sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf 도 같은 거라고 생각하면 될 것 같다.
 ```
