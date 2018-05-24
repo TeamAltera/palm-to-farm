@@ -10,4 +10,17 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		VALUES 
 		(#{usedDate},#{sfCode},#{actName},#{usedIp},#{result})
 	</insert>
+	<select id="getLog" parameterType="com.spring.smart_plant.log.domain.DeviceLogSearchDTO"
+	resultMap="logDto">
+		SELECT * FROM DEVICE_LOG
+		WHERE  USED_DT=#{date} AND SF_CODE=#{sfCode}
+	</select>
+	
+	<resultMap type="com.spring.smart_plant.log.domain.DeviceLogDTO" id="logDto">
+		<result property="usedDate" column="used_dt"/>
+		<result property="sfCode" column="sf_code"/>
+		<result property="actName" column="act_name"/>
+		<result property="usedIp" column="used_ip"/>
+		<result property="result" column="used_res"/>
+	</resultMap>
 </mapper>

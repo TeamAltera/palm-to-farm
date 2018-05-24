@@ -14,7 +14,7 @@ public class UserDAO {
 	@Autowired
 	private SqlSessionTemplate sql;
 	
-	private static final String namespace="user";
+	private final String namespace="user";
 	
 	//수경재배기 추가시 사용자의 수경재배기 보유 갯수 증가
 	public void incrementSfCount(int userCode) {

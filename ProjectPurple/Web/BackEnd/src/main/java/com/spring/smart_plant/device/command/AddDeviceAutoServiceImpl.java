@@ -25,14 +25,15 @@ public class AddDeviceAutoServiceImpl implements IDeviceService{
 		int userCode=deviceInfo.getUserCode();
 		String publicIp=deviceInfo.getApInfo();
 		System.out.println(innerIp+","+userCode+","+publicIp);
+		int sfCode=-1;
 		
 		try {
-			dao.insertSmartFarmDevice(innerIp, userCode, publicIp);
+			sfCode=dao.insertSmartFarmDevice(innerIp, userCode, publicIp);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			return ResultDTO.createInstance(false).setMsg("수경재배기 추가 실패");
 		}
-		return ResultDTO.createInstance(true).setMsg("수경재배기 추가 완료");
+		return ResultDTO.createInstance(true).setMsg("수경재배기 추가 완료").setData(sfCode);//data에 sfCode포함하여 전송
 	}
 
 }
