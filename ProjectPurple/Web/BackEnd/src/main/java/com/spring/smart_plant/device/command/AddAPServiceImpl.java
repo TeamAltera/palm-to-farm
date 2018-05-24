@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
@@ -40,7 +42,7 @@ public class AddAPServiceImpl implements IDeviceService {
 				StringBuilder sb = new StringBuilder();
 				//pre
 				sb.append("{\"user_code\":\"").append(userCode).append("\",\"submit_ip\":\"").append(publicIP)
-						.append("\",\"sf_code\":\"[");
+						.append("\",\"sf_code\":[");
 				dao.insertAP(new APInfoDTO(publicIP, (String) json.get("ssid"), userCode));
 				//append sfCode each ip
 				JSONArray arr = (JSONArray) json.get("inner_ip");
@@ -64,8 +66,9 @@ public class AddAPServiceImpl implements IDeviceService {
 					}
 				}
 				//post
-				sb.append("]\"}");
+				sb.append("]}");
 				//데이터 전송
+				System.out.println(sb);
 				conn.request(publicIP, PHP_ADD_URL, "POST", sb.toString());//.get("result");
 				return ResultDTO.createInstance(true).setMsg("정상적으로 등록되었습니다.");
 			}
