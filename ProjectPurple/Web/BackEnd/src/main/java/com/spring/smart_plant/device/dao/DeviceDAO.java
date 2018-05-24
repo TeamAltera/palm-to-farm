@@ -51,18 +51,20 @@ public class DeviceDAO{
 	
 	// SF장비 추가, SF_SEQ로 SF코드생성
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public void insertSmartFarmDevice(String innerIp, int userCode, String ip) throws Exception{
+	public int insertSmartFarmDevice(String innerIp, int userCode, String ip) throws Exception{
+		int sfCode=-1;
 		HashMap<String, Object> map=new HashMap<>();
 		map.put("innerIp", innerIp);
 		map.put("userCode", userCode);
 		map.put("ip", ip);
 		try {
-			sql.insert(namespace+".insertSmartFarmDevice", map);
+			sfCode=sql.insert(namespace+".insertSmartFarmDevice", map);
 			userDao.incrementSfCount(userCode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw e;
 		}
+		return sfCode;
 	}
 	
 	//수경재비기 한 대 삭제

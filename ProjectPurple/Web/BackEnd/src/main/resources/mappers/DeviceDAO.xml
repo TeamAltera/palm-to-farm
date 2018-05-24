@@ -43,6 +43,10 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		(SF_CODE,SF_PORT_CNT, FLOOR_CNT,USER_CODE,COOLER_CNT,LED_CTRL_MODE,
 		TEMP_DELAY,HUMI_DELAY,ELUM_DELAY,WATER_TEMP_DELAY,WATER_LIM_DELAY,INNER_IP,AP_PUBLIC_IP)
 		VALUES (SF_SEQ.NEXTVAL,32,2,#{userCode},3,'Y',60,60,60,60,60,#{innerIp},#{ip})
+		<!-- sfCode값 추출 -->
+		<selectKey keyProperty="SF_CODE" resultType="Integer" order="AFTER">
+			SELECT SF_SEQ.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 	
 	<delete id="deleteSmartFarmDevice" parameterType="Integer">

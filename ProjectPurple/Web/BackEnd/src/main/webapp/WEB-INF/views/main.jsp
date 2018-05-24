@@ -183,6 +183,25 @@
 				}
 			});
   		}
+  		
+  		function getLog(){
+  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
+  			var sendData=JSON.stringify({dateFormat:'2018/05/23', sfCode: 79});
+  			$.ajax({
+				type : 'POST',
+				url : 'log/day',
+				beforeSend: function(request) {
+				    request.setRequestHeader("Authorization", token);
+				  },
+				data : sendData,
+				dataType : "json",
+				contentType : "application/json;charset=UTF-8",
+				cache : false,
+				success : function(data) {
+					console.log(data);
+				}
+			});
+  		}
   </script>
 </head>
 <body>
@@ -228,7 +247,8 @@
 	<button type="button" onclick="order(3);">수동</button><br>
 	<button type="button" onclick="order(4);">led켜기</button><br>
 	<button type="button" onclick="order(5);">led끄기</button><br>
-	<button type="button" onclick="delete_all()">공유기 삭제</button>
+	<button type="button" onclick="delete_all()">공유기 삭제</button><br>
+	<button type="button" onclick="getLog()">로그</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" role="dialog">
