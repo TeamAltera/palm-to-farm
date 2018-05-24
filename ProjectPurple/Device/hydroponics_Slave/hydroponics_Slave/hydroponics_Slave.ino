@@ -266,6 +266,13 @@ void get_masterData() {
 			Serial.println("automatic_fan = false");
 			automatic_fan = false;
 			break;
+		case 10:
+			Serial.println("automatic_pump = true");
+			automatic_pump = true;
+			break;
+		case 11:
+			Serial.println("automatic_pump = false");
+			automatic_pump = false;
 		default:
 			Serial.println("request from master : error");
 			break;
@@ -314,12 +321,12 @@ void loop() {
 	if (wifi_join) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
 			Serial.println(String("LED mode : ") + automatic_led);
+			Serial.print(String("LED state : ") + led_state + "\n");
+			Serial.print(String("Fan State : ") + fan_state + "\n");
 			Serial.print(String("Water Temperature : ") + water_temp + "\n");
 			Serial.print(String("DHT Temperature : ") + DHT_temp + "\n");
 			Serial.print(String("DHT Humidity : ") + DHT_humi + "\n");
-			Serial.print(String("Fan State : ") + fan_state + "\n");
 			Serial.print(String("POT Value : ") + POT_val[0] + " " + POT_val[1] + " " + POT_val[2] + " " + POT_val[3] + " " + POT_val[4] + "\n");
-			Serial.print(String("LED state : ") + led_state + "\n");
 			Serial.print(String("Water Level : ") + water_level + "%");
 			Serial.println();
 			Serial.println();
