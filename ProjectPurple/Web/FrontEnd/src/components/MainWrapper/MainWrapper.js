@@ -1,5 +1,5 @@
-import React from "react";
-import "./MainWrapper.css";
+import React from 'react';
+import './MainWrapper.css';
 
 const MainWrapper = ({ children }) => (
   <div className="MainWrapper">{children}</div>

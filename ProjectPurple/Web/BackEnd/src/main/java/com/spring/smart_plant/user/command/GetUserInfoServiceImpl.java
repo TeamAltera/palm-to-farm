@@ -2,6 +2,8 @@ package com.spring.smart_plant.user.command;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
@@ -9,10 +11,14 @@ import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.user.dao.UserDAO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
-public class GetUserInfoCommand implements IUserCommand{
+@Service("getUserInfoService")
+public class GetUserInfoServiceImpl implements IUserService{
 
+	@Autowired
+	private UserDAO dao;
+	
 	@Override
-	public ResultDTO execute(Model mode, UserDAO dao) {
+	public ResultDTO execute(Model mode) {
 		// TODO Auto-generated method stub
 		Map<String, Object> map=ConstantJwtService.getJwtService().get("member");
 		int userCode=(int)map.get("userCode");

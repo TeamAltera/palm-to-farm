@@ -5,6 +5,9 @@ import AuthError from './AuthError/AuthError';
 import MainWrapper from './MainWrapper/MainWrapper';
 import ConfirmError from './ConfirmError/ConfirmError';
 import Footer from './Footer/Footer';
+import Header from './Header/Header';
+import DashBoard from './DashBoard/DashBoard';
+import BottonGroup from './BottonGroup/BottonGroup';
 
 export {
   AuthWrapper,
@@ -14,4 +17,7 @@ export {
   MainWrapper,
   ConfirmError,
   Footer,
+  Header,
+  DashBoard,
+  BottonGroup,
 };

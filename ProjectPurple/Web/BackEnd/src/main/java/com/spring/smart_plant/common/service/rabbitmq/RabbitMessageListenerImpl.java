@@ -35,6 +35,7 @@ public class RabbitMessageListenerImpl{
 		// TODO Auto-generated method stub
 		System.out.println(new Date());
 		/*rabbitTemplate.convertAndSend("/topic/messages"+income.get("id"),income);*/
+		System.out.println(income.get("d"));
 		this.messagingTemplate.convertAndSend("/topic/messages"+income.get("id"),income);
 		//dao.insertData(income);
 		/*t: temp

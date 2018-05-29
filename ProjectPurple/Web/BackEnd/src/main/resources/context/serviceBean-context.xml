@@ -5,6 +5,7 @@
 	
 	<!-- log -->
 	<bean id="insertLogService" class="com.spring.smart_plant.log.command.InsertLogServiceImpl"/>
+	<bean id="getLogService" class="com.spring.smart_plant.log.command.GetLogServiceImpl"/>
 	
 	<!-- device -->
 	<bean id="deviceControlService" class="com.spring.smart_plant.device.command.DeviceControlServiceImpl"/>
@@ -14,4 +15,11 @@
 	<bean id="deleteApService" class="com.spring.smart_plant.device.command.DeleteApServiceImpl"/>
 	<bean id="deleteDeviceService" class="com.spring.smart_plant.device.command.DeleteDeviceServiceImpl"/>
 	<bean id="getDeviceService" class="com.spring.smart_plant.device.command.GetDeviceServiceImpl"/>
+	
+	<!-- user -->
+	<bean id="getUserInfoService" class="com.spring.smart_plant.user.command.GetUserInfoServiceImpl"/>
+	<bean id="joinService" class="com.spring.smart_plant.user.command.JoinServiceImpl"/>
+	<bean id="joinSearchService" class="com.spring.smart_plant.user.command.JoinSearchServiceImpl"/>
+	<bean id="signinService" class="com.spring.smart_plant.user.command.SigninServiceImpl"/>
+	<bean id="signoutService" class="com.spring.smart_plant.user.command.SignoutServiceImpl"/>
 </beans>
