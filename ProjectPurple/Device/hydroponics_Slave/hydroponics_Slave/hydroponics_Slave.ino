@@ -29,7 +29,8 @@ boolean ds18_state = 0;		//연결상태. 0 : 연결X, 1 : 연결O
 
 
 int POT_val[5] = { 0, };	//val1, val2, val3, val4, avg
-float water_level = 0.0;	//수위
+int water_level = 0.0;	//수위
+int water_level_arr[10] = { 0 };
 
 unsigned long sensor_previousTime = 0;
 unsigned long data_send_previousTime = 0;
@@ -54,20 +55,19 @@ boolean automatic_led = true;	//led 동작방법.(자동/수동)
 boolean automatic_fan = true;	//냉각팬 동작방법. (자동/수동)
 boolean automatic_pump = true;	//펌프 동작방법. (자동/수동)
 
-void send_control_data(String cmd) {
+void send_control_data(String cmd, int type) {		//자동모드에서 수행되는 코드.
 	int time = millis();
 
 	Serial.println("control data send to ControlBoard : " + cmd);
 
 	Serial3.print(cmd);
 
-	while (!Serial3.available()) {
+	while (!Serial3.available()) {		//제어값 전송후, 결과값을 전달받지 못할경우,(timeout)
 		if ((time + timeout_interval) > millis()) {
 			Serial.println("timeout get value from control board.");
 			return;
 		}
 	}
-
 	int result = Serial3.parseInt();
 	Serial.print("get result value from control board : ");
 	Serial.println(result);
@@ -85,13 +85,13 @@ void fan_control(float temp) {
 	if (fan_state == 0) {
 		if (temp > 22.00) {
 			fan_state = 1;
-			send_control_data("8");
+			send_control_data("8", 2);
 		}
 	}
 	else if (fan_state == 1) {
 		if (temp <= 20.00) {
 			fan_state = 0;
-			send_control_data("9");
+			send_control_data("9", 2);
 		}
 	}
 }
@@ -132,8 +132,8 @@ float getTemp(void) {
 }
 
 //수위 측정함수. 
-float getWaterLevel(void) {
-	float distance = 0;
+int getWaterLevel(void) {
+	int distance = 0;
 
 	// 초음파를 보낸다. 다 보내면 echo가 HIGH 상태로 대기하게 된다.
 	digitalWrite(WATER_LEVEL_trigger, HIGH);
@@ -141,7 +141,7 @@ float getWaterLevel(void) {
 	digitalWrite(WATER_LEVEL_trigger, LOW);
 
 	// HIGH 였을 때 시간(초음파가 보냈다가 다시 들어온 시간)을 가지고 거리를 계산 한다.
-	distance = TANK_HEIGHT - ((float)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// cm단위로 바닥에서 물의 높이.
+	distance = TANK_HEIGHT - ((int)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// cm단위로 바닥에서 물의 높이.
 	distance = (distance / MAX_WATER_LEVEL) * 100;	//물의 높이를 %로 표현.
 
 	return distance;
@@ -161,10 +161,10 @@ void read_POT() {
 //조도센서 값에 따라 LED 제어용 릴레이 ON/OFF
 void Relay_Control() {
 	if (POT_val[4] <= 120 && led_state == 0) {		//LED 켜기
-		send_control_data("4");
+		send_control_data("4", 1);
 	}
 	else if (POT_val[4] > 140 && led_state == 1) {						//LED 끄기
-		send_control_data("5");
+		send_control_data("5", 1);
 	}
 }
 
@@ -304,12 +304,26 @@ void get_controlData(int type) {		//수동모드의 경우 수행되는 코드.
 		int result = Serial3.parseInt();
 		Serial.print("get result value from control board : ");
 		Serial.println(result);
-		if (result == 1)
-			led_state = 1;	//제어보드로 값 전송
-		else if (result == 0)
-			led_state = 0;
-		else
-			Serial.println("error get value from control board..");
+		switch (type) {
+		case 1:
+			if (result == 1)
+				led_state = 1;
+			else if (result == 0)
+				led_state = 0;
+			else
+				Serial.println("error get value from control board..");
+			break;
+		case 2:
+			if (result == 1)
+				fan_state = 1;
+			else if (result == 0)
+				fan_state = 0;
+			else
+				Serial.println("error get value from control board..");
+			break;
+		default:
+			Serial.println("undefined type value.");
+		}
 	}
 }
 
@@ -335,7 +349,12 @@ void loop() {
 	float DHT_temp = dht22.readTemperature();
 	float DHT_humi = dht22.readHumidity();
 	float water_temp = getTemp();		//수온측정
-	water_level = getWaterLevel();		//수위 측정. (%값으로 리턴)
+	for (int i = 0; i < 10; i++) {
+		water_level_arr[i] = getWaterLevel();		//수위 측정. (%값으로 리턴)
+		water_level += water_level_arr[i];
+	}
+	water_level /= 10;
+
 	unsigned long present_millis = millis();	//루프 시작시간
 	read_POT();							//조도센서값 배열에 저장.
 
