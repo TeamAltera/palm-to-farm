@@ -10,7 +10,7 @@ boolean wifi_join = false;
 String bluetooth_cmd = "";
 String buffer = "";
 
-boolean automatic_value[3] = { true, true, true };	//순서대로 LED, 펌프, 냉각팬
+boolean automatic_value[3] = { true, true, true };	//순서대로 LED, 냉각팬, 펌프.
 
 SoftwareSerial Serial_C(11, 10);
 
@@ -136,12 +136,20 @@ void esp8266_read() { //명령 라우팅
 					send_control_val(cmd, 0, false);
 					break;
 				case 4:
-					content = "led_on";
-					send_control_val(cmd);
+					if (automatic_value[0] != true) {
+						content = "led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
 					break;
 				case 5:
-					content = "led_off";
-					send_control_val(cmd);
+					if (automatic_value[0] != true) {
+						content = "led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
 					break;
 				case 6:
 					content = "fan_auto";
@@ -152,12 +160,20 @@ void esp8266_read() { //명령 라우팅
 					send_control_val(cmd, 1, false);
 					break;
 				case 8:
-					content = "fan_on";
-					send_control_val(cmd);
+					if (automatic_value[1] != true) {
+						content = "fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
 					break;
 				case 9:
-					content = "fan_off";
-					send_control_val(cmd);
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
 					break;
 				case 15:
 					content = "test_button";

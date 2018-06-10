@@ -35,6 +35,7 @@ unsigned long sensor_previousTime = 0;
 unsigned long data_send_previousTime = 0;
 unsigned long sensor_interval = 10000;		//센서 측정 시간.
 unsigned long data_send_interval = 15000;	//센서 전송 시간.
+unsigned long timeout_interval = 5000;
 
 char* userName = "";
 char* ssid = ""; //AP's ssid
@@ -54,8 +55,29 @@ boolean automatic_fan = true;	//냉각팬 동작방법. (자동/수동)
 boolean automatic_pump = true;	//펌프 동작방법. (자동/수동)
 
 void send_control_data(String cmd) {
+	int time = millis();
+
 	Serial.println("control data send to ControlBoard : " + cmd);
+
 	Serial3.print(cmd);
+
+	while (!Serial3.available()) {
+		if ((time + timeout_interval) > millis()) {
+			Serial.println("timeout get value from control board.");
+			return;
+		}
+	}
+
+	int result = Serial3.parseInt();
+	Serial.print("get result value from control board : ");
+	Serial.println(result);
+	if (result == 1)
+		led_state = 1;	//제어보드로 값 전송
+	else if (result == 0)
+		led_state = 0;
+	else
+		Serial.println("error get value from control board..");
+	return;
 }
 
 //냉각팬 제어 함수.
@@ -140,11 +162,9 @@ void read_POT() {
 void Relay_Control() {
 	if (POT_val[4] <= 120 && led_state == 0) {		//LED 켜기
 		send_control_data("4");
-		led_state = 1;	//제어보드로 값 전송
 	}
 	else if (POT_val[4] > 140 && led_state == 1) {						//LED 끄기
 		send_control_data("5");
-		led_state = 0;	//제어보드로 값 전송
 	}
 }
 
@@ -241,13 +261,11 @@ String sendData(String command, long timeout, boolean debug) {
 	return response;
 }
 
-int count = 0;
 //마스터보드에서 전송하는 값 받기.(수동/자동)
 void get_masterData() {
 	if (Serial1.available()) {
 		int cmd = Serial1.parseInt();	//마스터보드에서 전송되는 제어값 수신. 정수로 변환
-		count++;
-		Serial.print(String("request from master : ") + cmd + String("  count : ") + String(count) + "\n");
+		Serial.print(String("request from master : ") + cmd);
 		switch (cmd) {
 			//마스터에서 led 제어값 전송.
 		case 2:
@@ -281,6 +299,20 @@ void get_masterData() {
 	}
 }
 
+void get_controlData(int type) {		//수동모드의 경우 수행되는 코드.
+	if (Serial3.available()) {
+		int result = Serial3.parseInt();
+		Serial.print("get result value from control board : ");
+		Serial.println(result);
+		if (result == 1)
+			led_state = 1;	//제어보드로 값 전송
+		else if (result == 0)
+			led_state = 0;
+		else
+			Serial.println("error get value from control board..");
+	}
+}
+
 // the setup function runs once when you press reset or power the board
 void setup() {
 	esp8266Client_setup(); //esp설정
@@ -311,12 +343,16 @@ void loop() {
 	Serial1.flush();
 
 	//냉각팬 자동/수동 설정 if문
-	if(automatic_fan == true)
+	if (automatic_fan == true)
 		fan_control(water_temp);			//수온에 따른 냉각팬 제어
+	else
+		get_controlData(0);
 
 	//LED 자동설정/수동설정 if문
-	if(automatic_led == true)		
+	if (automatic_led == true)
 		Relay_Control();
+	else
+		get_controlData(1);
 
 	if (wifi_join) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
@@ -343,4 +379,6 @@ void loop() {
 			data_send_previousTime = millis();
 		}
 	}
+	else
+		Serial.println("fail wifi");
 }
