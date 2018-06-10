@@ -23,7 +23,6 @@ import com.spring.smart_plant.device.command.DeleteApServiceImpl;
 import com.spring.smart_plant.device.command.DeleteDeviceServiceImpl;
 import com.spring.smart_plant.device.command.DeviceControlServiceImpl;
 import com.spring.smart_plant.device.command.GetDeviceServiceImpl;
-import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.CommandDTO;
 import com.spring.smart_plant.device.domain.DeviceInfoDTO;
 import com.spring.smart_plant.device.domain.IpDTO;
@@ -81,7 +80,13 @@ public class DeviceController {
 	public ResultDTO addAPAndDevice(@RequestBody @Valid IpDTO pubIp, BindingResult result){
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("올바른 IP주소가 아닙니다.").setData(result.getAllErrors());
-		return addAPService.execute(pubIp.getIp());
+		try {
+			return addAPService.execute(pubIp.getIp());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResultDTO.createInstance(false).setMsg("등록 오류입니다.");
+		}
 	}
 	
 	/**
@@ -132,7 +137,12 @@ public class DeviceController {
 	public ResultDTO deleteAPAndDevice(@RequestBody @Valid IpDTO pubIp, BindingResult result){
 		if(result.hasErrors()) 
 			return ResultDTO.createInstance(false).setMsg("올바른 IP주소가 아닙니다.").setData(result.getAllErrors());
-		return deleteApService.execute(pubIp);
+		try {
+			return deleteApService.execute(pubIp);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return ResultDTO.createInstance(false).setMsg("삭제가 실패하였습니다.");
+		}
 	}
 	
 	/**

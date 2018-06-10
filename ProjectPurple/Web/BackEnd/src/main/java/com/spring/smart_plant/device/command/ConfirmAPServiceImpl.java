@@ -13,7 +13,7 @@ import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.APStatusDTO;
 
 @Service("confirmAPService")
-public class ConfirmAPServiceImpl implements IDeviceService {
+public class ConfirmAPServiceImpl implements IDeviceFrontService {
 	private final String PHP_SEARCH_URL = "/search.php";
 	private final String SUCCESS_MSG="사용가능한 공유기 입니다.";
 	private final String FAIL_MSG="이미 사용중인 공유기 입니다.";

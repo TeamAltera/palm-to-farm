@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		INSERT INTO SENSOR_DATA 
 		(CALC_DT,SF_CODE,TEMP,HUMI,ELUM,WATER_TEMP,WATER_LIM)
 		VALUES 
-		(#{date},#{sfCode},#{t},#{h},#{e},#{wt},#{wl})
+		(TO_DATE(#{d},'YYYY-MM-DD-HH24-MI-SS'),#{sf},#{t},#{h},#{e},#{wt},#{wl})
 	</insert>
 	
 	<!-- 해당공유기의 가장 최근 날짜의 데이터 가져오기 -->
@@ -20,9 +20,16 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	</select>
 	
 	<!-- 특정 날짜의 데이터 가져오기 -->
-	<select id="getDayData" parameterType="hashmap" resultType="hashmap">
+	<select id="getDayData" parameterType="com.spring.smart_plant.common.domain.DateSearchDTO" 
+	resultMap="dataset">
 		SELECT * FROM SENSOR_DATA
-		WHERE SF_CODE=#{sfCode} AND CALC_DT=#{date}
+		<!-- 부등호 태그를 인식하지 못하므로 CDATA를 추가해준다. -->
+		<![CDATA[
+		WHERE SF_CODE=#{sfCode}
+		AND CALC_DT >= TO_DATE(#{date},'YYYY-MM-DD')
+		AND CALC_DT  < TO_DATE(#{date},'YYYY-MM-DD')+1
+		]]>
+		ORDER BY CALC_DT ASC
 	</select>
 	
 	<resultMap type="com.spring.smart_plant.sensor.domain.SensorDataDTO" id="dataset">

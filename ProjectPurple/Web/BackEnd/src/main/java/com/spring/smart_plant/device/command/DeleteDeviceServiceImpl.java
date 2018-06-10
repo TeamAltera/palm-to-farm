@@ -7,7 +7,7 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.device.dao.DeviceDAO;
 
 @Service("deleteDeviceService")
-public class DeleteDeviceServiceImpl implements IDeviceService{
+public class DeleteDeviceServiceImpl implements IDeviceFrontService{
 	private final String PHP_DELETE_URL = "/add.php";
 	
 	@Autowired

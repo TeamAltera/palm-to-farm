@@ -16,7 +16,7 @@ import com.spring.smart_plant.log.command.InsertLogServiceImpl;
 import com.spring.smart_plant.log.domain.DeviceLogDTO;
 
 @Service("deviceControlService")
-public class DeviceControlServiceImpl implements IDeviceService{
+public class DeviceControlServiceImpl implements IDeviceFrontService{
 	private final String PHP_FORWARD_URL = "/forward.php";	
 	
 	@Autowired

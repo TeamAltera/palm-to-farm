@@ -58,4 +58,9 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		DELETE FROM SF 
 		WHERE AP_PUBLIC_IP=#{apPublicIp}
 	</delete>
+	
+	<!-- <resultMap type="com.spring.smart_plant.device.domain.DeviceHierarchyDTO" id="deviceHierarchyDTO">
+		<result property="apInfo" column=""/>
+		<result property="devices" column=""/>
+	</resultMap> -->
 </mapper>

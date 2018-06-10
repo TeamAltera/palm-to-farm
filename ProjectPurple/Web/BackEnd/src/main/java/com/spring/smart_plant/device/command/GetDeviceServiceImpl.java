@@ -12,7 +12,7 @@ import com.spring.smart_plant.device.domain.APInfoDTO;
 import com.spring.smart_plant.device.domain.SmartFarmInfoDTO;
 
 @Service("getDeviceService")
-public class GetDeviceServiceImpl implements IDeviceService{
+public class GetDeviceServiceImpl implements IDeviceFrontService{
 
 	@Autowired
 	private DeviceDAO dao;
@@ -21,22 +21,11 @@ public class GetDeviceServiceImpl implements IDeviceService{
 	public ResultDTO execute(Object obj) {
 		// TODO Auto-generated method stub
 		int userCode=(int)ConstantJwtService.getJwtService().get("member").get("userCode");
-		
-		
+		List<SmartFarmInfoDTO> plantDevices=dao.getAllSmartPlant(userCode);
+		List<APInfoDTO> raspAPDevices =dao.getAllAP(userCode);
 		return ResultDTO.createInstance(true)
 				.setMsg("계정에 등록되어진 공유기, 수경재배기 정보")
-				.setData(new Object(){
-			//SF테이블이랑 AP테이블의 데이터를 조인하여 가져올 수 있도록 해야
-			private List<SmartFarmInfoDTO> plantDevices=dao.getAllSmartPlant(userCode);
-			private List<APInfoDTO> raspAPDevices =dao.getAllAP(userCode);
-			
-			public List<SmartFarmInfoDTO> getPlantDevices() {
-				return plantDevices;
-			}
-			public List<APInfoDTO> getRaspAPDevices() {
-				return raspAPDevices;
-			}
-		});//모든 수경재배기, 공유기 정보 조회 결과
+				.setData(null);
 	}
 
 }

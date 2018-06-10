@@ -50,9 +50,6 @@
 		<property name="transactionManager" ref="transactionManager"></property>
 	</bean>
 	
-	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
-	<!-- <bean id="DeviceDAO" class="com.spring.smart_plant.device.dao.DeviceDAO"
-        p:sqlSessionTemplate-ref="sqlSession" /> -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 	
 </beans>

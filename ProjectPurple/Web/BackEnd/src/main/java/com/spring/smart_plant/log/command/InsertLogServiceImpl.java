@@ -18,5 +18,4 @@ public class InsertLogServiceImpl implements ILogService{
 		dao.insertLog((DeviceLogDTO)obj);//Y이면 성공 N이면 실패
 		return null;
 	}
-
 }

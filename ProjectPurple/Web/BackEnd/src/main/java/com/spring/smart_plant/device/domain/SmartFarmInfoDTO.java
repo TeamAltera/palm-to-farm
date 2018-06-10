@@ -12,7 +12,7 @@ public class SmartFarmInfoDTO {
 	private String elumDelay;
 	private String waterTempDelay;
 	private String waterLimDelay;
-	private String apPublicIp;
+	private int apCode;
 	private String innerIp;
 	
 	/**
@@ -34,7 +34,7 @@ public class SmartFarmInfoDTO {
 	 */
 	public SmartFarmInfoDTO(int sfCode, int sfPortCnt, int floorCnt, int userCode, int coolerCnt, char ledCtrlMode,
 			String tempDelay, String humiDelay, String elumDelay, String waterTempDelay, String waterLimDelay,
-			String apPublicIp,  String innerIp) {
+			int apCode,  String innerIp) {
 		super();
 		this.sfCode = sfCode;
 		this.sfPortCnt = sfPortCnt;
@@ -47,7 +47,7 @@ public class SmartFarmInfoDTO {
 		this.elumDelay = elumDelay;
 		this.waterTempDelay = waterTempDelay;
 		this.waterLimDelay = waterLimDelay;
-		this.apPublicIp = apPublicIp;
+		this.apCode = apCode;
 		this.innerIp = innerIp;
 	}
 	
@@ -127,11 +127,11 @@ public class SmartFarmInfoDTO {
 	public void setWaterLimDelay(String waterLimDelay) {
 		this.waterLimDelay = waterLimDelay;
 	}
-	public String getApPublicIp() {
-		return apPublicIp;
+	public int getApPublicIp() {
+		return apCode;
 	}
-	public void setApPublicIp(String apPublicIp) {
-		this.apPublicIp = apPublicIp;
+	public void setApPublicIp(int apPublicIp) {
+		this.apCode = apPublicIp;
 	}
 	public String getInnerIp() {
 		return innerIp;

@@ -75,7 +75,7 @@
   				}
   				$('#confirm_btn').prop('disabled', false);
 			},500);
-  		}
+  		} 
   		function submit_ip(){
   			var sendData = JSON.stringify({ip: ap_ip});
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
@@ -167,7 +167,7 @@
   			var middle='203.250.35.169';
   			var dest='192.168.4.11';
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
-  			var sendData=JSON.stringify({middle : middle, dest:dest, cmd:cmd, sfCode: 79, usedIp:'203.250.1.1'});
+  			var sendData=JSON.stringify({middle : middle, dest:dest, cmd:cmd, sfCode: 187, usedIp:'203.250.1.1'});
   			$.ajax({
 				type : 'POST',
 				url : 'device/control',
@@ -186,7 +186,7 @@
   		
   		function getLog(){
   			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
-  			var sendData=JSON.stringify({dateFormat:'2018/05/23', sfCode: 79});
+  			var sendData=JSON.stringify({date:'2018-06-09', sfCode: 187});
   			$.ajax({
 				type : 'POST',
 				url : 'log/day',
@@ -244,6 +244,7 @@
 	<button type="button" onclick="show()">수경재배기AP추가</button><br>
 	<button type="button" onclick="info();">정보</button><br>
 	<button type="button" onclick="user_info();">정보</button><br>
+	<button type="button" onclick="order(2);">자동</button><br>
 	<button type="button" onclick="order(3);">수동</button><br>
 	<button type="button" onclick="order(4);">led켜기</button><br>
 	<button type="button" onclick="order(5);">led끄기</button><br>

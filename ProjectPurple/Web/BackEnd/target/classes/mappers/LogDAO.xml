@@ -10,11 +10,33 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		VALUES 
 		(#{usedDate},#{sfCode},#{actName},#{usedIp},#{result})
 	</insert>
-	<select id="getLog" parameterType="com.spring.smart_plant.log.domain.DeviceLogSearchDTO"
+	<select id="getLog" parameterType="com.spring.smart_plant.common.domain.DateSearchDTO"
 	resultMap="logDto">
 		SELECT * FROM DEVICE_LOG
-		WHERE  USED_DT=#{date} AND SF_CODE=#{sfCode}
+		<!-- 부등호 태그를 인식하지 못하므로 CDATA를 추가해준다. -->
+		<![CDATA[
+		WHERE  USED_DT >= TO_DATE(#{date},'YYYY-MM-DD')
+		AND USED_DT  < TO_DATE(#{date},'YYYY-MM-DD')+1
+		AND SF_CODE=#{sfCode}
+		]]>
+		<!-- AND SF_CODE=#{sfCode} -->
 	</select>
+	
+	<delete id="deleteAllLog" parameterType="String">
+		DELETE FROM DEVICE_LOG L
+ 		WHERE
+ 		EXISTS (
+        	SELECT SF_CODE 
+        	FROM SF S,AP A
+			WHERE S.AP_PUBLIC_IP=A.AP_PUBLIC_IP 
+			AND A.AP_PUBLIC_IP=#{ip}
+		)
+	</delete>
+	
+	<delete id="deleteSingleLog" parameterType="Integer">
+		DELETE FROM DEVICE_LOG
+ 		WHERE SF_CODE=#{sfCode}
+	</delete>
 	
 	<resultMap type="com.spring.smart_plant.log.domain.DeviceLogDTO" id="logDto">
 		<result property="usedDate" column="used_dt"/>

@@ -15,18 +15,24 @@ import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.common.utills.ConstantJwtService;
 import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.APInfoDTO;
+import com.spring.smart_plant.user.dao.UserDAO;
 
 @Service("addAPService")
-public class AddAPServiceImpl implements IDeviceService {
+public class AddAPServiceImpl implements IDeviceFrontService {
 	private final String PHP_SEARCH_URL = "/search.php";
 	private final String PHP_ADD_URL = "/add.php";
 
 	@Autowired
 	private DeviceDAO dao;
+	
+	@Autowired
+	private UserDAO userDao;
 
 	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor = { Exception.class 
+			,IOException.class}) // 이 메소드를 트랜잭션 처리
 	@Override
-	public ResultDTO execute(Object obj) {
+	public ResultDTO execute(Object obj) throws Exception, IOException {
 		// TODO Auto-generated method stub
 		String publicIP = (String) obj;
 		UrlConnectionCommand conn = new UrlConnectionCommand();
@@ -54,6 +60,7 @@ public class AddAPServiceImpl implements IDeviceService {
 							HashMap<String, Object> map=(HashMap<String, Object>)innerIp;
 							int sfCode=dao.insertSmartFarmDevice(map.get("INNER_IP").toString(),
 									userCode, publicIP);
+							userDao.incrementSfCount(userCode);
 							sb.append("{\"ip\":\"").append(map.get("INNER_IP"))
 							.append("\",\"code\":\"").append(sfCode).append("\"}");
 							if(list.size()-1!=count)
@@ -61,7 +68,7 @@ public class AddAPServiceImpl implements IDeviceService {
 							count++;
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							return ResultDTO.createInstance(false).setMsg("등록 오류입니다.");
+							throw e;
 						}
 					}
 				}
@@ -74,7 +81,7 @@ public class AddAPServiceImpl implements IDeviceService {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 		return ResultDTO.createInstance(false).setMsg("등록 오류입니다.");
 	}

@@ -8,7 +8,7 @@ import com.spring.smart_plant.device.dao.DeviceDAO;
 import com.spring.smart_plant.device.domain.DeviceInfoDTO;
 
 @Service("addDeviceAutoService")
-public class AddDeviceAutoServiceImpl implements IDeviceService{
+public class AddDeviceAutoServiceImpl implements IDeviceFrontService{
 
 	@Autowired
 	private DeviceDAO dao;
@@ -24,7 +24,6 @@ public class AddDeviceAutoServiceImpl implements IDeviceService{
 		String innerIp=deviceInfo.getIpInfo();
 		int userCode=deviceInfo.getUserCode();
 		String publicIp=deviceInfo.getApInfo();
-		System.out.println(innerIp+","+userCode+","+publicIp);
 		int sfCode=-1;
 		
 		try {
@@ -33,7 +32,36 @@ public class AddDeviceAutoServiceImpl implements IDeviceService{
 			// TODO Auto-generated catch block
 			return ResultDTO.createInstance(false).setMsg("수경재배기 추가 실패");
 		}
-		return ResultDTO.createInstance(true).setMsg("수경재배기 추가 완료").setData(sfCode);//data에 sfCode포함하여 전송
+		System.out.println(sfCode);
+		return ResultDTO.createInstance(true)
+				.setData(new ResponseDTO(sfCode, innerIp));//data에 sfCode포함하여 전송
 	}
+	
+	class ResponseDTO{
+		private int code;
+		private String ip;
+		/**
+		 * 
+		 */
+		public ResponseDTO() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+		/**
+		 * @param code
+		 * @param ip
+		 */
+		public ResponseDTO(int code, String ip) {
+			super();
+			this.code = code;
+			this.ip = ip;
+		}
 
+		public int getCode() {
+			return code;
+		}
+		public String getIp() {
+			return ip;
+		}
+	}
 }
