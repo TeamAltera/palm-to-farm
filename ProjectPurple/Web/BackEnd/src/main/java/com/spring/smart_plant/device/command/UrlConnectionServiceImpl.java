@@ -8,8 +8,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
-public class UrlConnectionCommand {
+@Service("urlConnectionService")
+public class UrlConnectionServiceImpl {
 	public JSONObject request(String ip, String urlPath, String reqMethod, String sendData) throws IOException {
 		HttpURLConnection conn;
 		URL url = new URL("http://" + ip + urlPath);

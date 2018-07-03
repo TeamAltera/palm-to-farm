@@ -22,8 +22,11 @@ public class SensorDAO {
 		sql.insert(namespace+".insertData",map);
 	}
 	
-	public  SensorDataDTO getLatestData(int sfCode) {
-		return sql.selectOne(namespace+".getLatestData",sfCode);
+	public  SensorDataDTO getLatestData(int sfCode, int apCode) {
+		HashMap<String, Integer> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		return sql.selectOne(namespace+".getLatestData",map);
 	}
 	
 	public List<SensorDataDTO> getDayData(DateSearchDTO dto){

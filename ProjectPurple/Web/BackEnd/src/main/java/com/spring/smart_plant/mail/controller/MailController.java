@@ -15,6 +15,8 @@ import com.spring.smart_plant.mail.command.MailSendCommand;
 import com.spring.smart_plant.mail.domain.JoinCodeDTO;
 import com.spring.smart_plant.mail.domain.JoinEmailDTO;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/mail")
 public class MailController {
@@ -27,12 +29,14 @@ public class MailController {
 	}
 
 	//메일 발송 시 난수 생성
+	@ApiOperation(value = "인증 메일 발송, target:front")
 	@PostMapping(value="/send")
 	public  ResultDTO sendMail(JoinEmailDTO joinEmailInfo, HttpSession session) {
 		return new MailSendCommand().execute(joinEmailInfo, session);
 	}
 	
 	//세션에 등록해 놓은 체크코드 확인
+	@ApiOperation(value = "발송된 인증코드 확인, target:front")
 	@PostMapping(value = "/check")
 	public ResultDTO joinCodeCheck(JoinCodeDTO joinCodeInfo, HttpSession session){
 		return new AuthCodeCheckCommand().execute(joinCodeInfo,session);

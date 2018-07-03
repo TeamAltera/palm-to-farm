@@ -1,5 +1,6 @@
 package com.spring.smart_plant.log.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -32,8 +33,8 @@ public class LogDAO {
 	 * @param ip
 	 * @return
 	 */
-	public int deleteAllLog(String ip) {
-		return sql.delete(namespace+".deleteAllLog", ip);
+	public void deleteAllLog(int apCode) {
+		sql.delete(namespace+".deleteAllLog", apCode);
 	}
 	
 	
@@ -44,7 +45,10 @@ public class LogDAO {
 	 * @param sfCode
 	 * @return
 	 */
-	public int deleteSingleLog(int sfCode) {
-		return sql.delete(namespace+".deleteSingleLog", sfCode);
+	public int deleteSingleLog(int sfCode, int apCode) {
+		HashMap<String, Integer> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		return sql.delete(namespace+".deleteSingleLog", map);
 	}
 }

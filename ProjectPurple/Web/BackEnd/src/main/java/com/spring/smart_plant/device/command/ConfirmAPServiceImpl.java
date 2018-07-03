@@ -18,9 +18,9 @@ public class ConfirmAPServiceImpl implements IDeviceFrontService {
 	private final String SUCCESS_MSG="사용가능한 공유기 입니다.";
 	private final String FAIL_MSG="이미 사용중인 공유기 입니다.";
 	private final String UNKNOWN_MSG="존재하지 않는 공유기 입니다.";
-	private final int SUCCESS_CODE=200;
-	private final int FAIL_CODE=201;
-	private final int UNKNOWN_CODE=202;
+	private final int SUCCESS_CODE=200;//성공한 경우
+	private final int FAIL_CODE=201;//실패한 경우
+	private final int UNKNOWN_CODE=202;//pending, 존재하지 않는 공유기인 경우
 	
 	@Autowired
 	private DeviceDAO dao;
@@ -32,9 +32,9 @@ public class ConfirmAPServiceImpl implements IDeviceFrontService {
 		String msg=null;
 		APStatusDTO code=new APStatusDTO();
 		boolean httpStatus=true;
-		if (!isAPExist(ip,dao)){//AP가 존재하지 않는다면
+		if (!isAPExist(ip,dao)){//AP가 존재하지 않는다면 미들서버로부터 정보를 받아온다.
 			try {
-				JSONObject json=new UrlConnectionCommand().request(ip, PHP_SEARCH_URL, "POST",null);
+				JSONObject json=new UrlConnectionServiceImpl().request(ip, PHP_SEARCH_URL, "POST",null);
 	            if(json.get("state").equals("FAIL")) {//이미 사용중
 	            	code.setCode(FAIL_CODE);
 	            	msg=FAIL_MSG;

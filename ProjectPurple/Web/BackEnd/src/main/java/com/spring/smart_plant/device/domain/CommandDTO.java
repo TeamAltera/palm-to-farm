@@ -5,18 +5,20 @@ public class CommandDTO {
 	private String dest; //명령어가 도착해야 되는 목적지
 	private int cmd; //명령어의 종류
 	private int sfCode;
+	private int apCode;
 	private String usedIp;
 	
 	/**
 	 * @param dest
 	 * @param cmd
 	 */
-	public CommandDTO(String middle,String dest, int cmd, int sfCode, String usedIp) {
+	public CommandDTO(String middle,String dest, int cmd, int sfCode, int apCode, String usedIp) {
 		super();
 		this.middle=middle;
 		this.dest = dest;
 		this.cmd = cmd;
 		this.sfCode=sfCode;
+		this.apCode=apCode;
 		this.usedIp=usedIp;
 	}
 	/**
@@ -55,6 +57,12 @@ public class CommandDTO {
 	}
 	public void setUsedIp(String usedIp) {
 		this.usedIp = usedIp;
+	}
+	public int getApCode() {
+		return apCode;
+	}
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package com.spring.smart_plant.device.domain;
 
 public class APInfoDTO {
+	private int apCode;
 	private String apPublicIp;
 	private String apSsid;
 	private int userCode;
@@ -22,6 +23,14 @@ public class APInfoDTO {
 		this.apPublicIp = apPublicIp;
 		this.apSsid = apSsid;
 		this.userCode=userCode;
+	}
+
+	public int getApCode() {
+		return apCode;
+	}
+
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
 
 	public String getApPublicIp() {

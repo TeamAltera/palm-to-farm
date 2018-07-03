@@ -22,46 +22,15 @@ public class AddDeviceAutoServiceImpl implements IDeviceFrontService{
 		
 		DeviceInfoDTO deviceInfo=(DeviceInfoDTO)obj;
 		String innerIp=deviceInfo.getIpInfo();
-		int userCode=deviceInfo.getUserCode();
-		String publicIp=deviceInfo.getApInfo();
-		int sfCode=-1;
+		int apCode=deviceInfo.getApCode();
+		int sfCode=deviceInfo.getSfCode();
 		
 		try {
-			sfCode=dao.insertSmartFarmDevice(innerIp, userCode, publicIp);
+			dao.insertSmartFarmDevice(sfCode,innerIp, apCode);//DB에 수경재배기 정보 자동으로 추가 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			return ResultDTO.createInstance(false).setMsg("수경재배기 추가 실패");
 		}
-		System.out.println(sfCode);
-		return ResultDTO.createInstance(true)
-				.setData(new ResponseDTO(sfCode, innerIp));//data에 sfCode포함하여 전송
-	}
-	
-	class ResponseDTO{
-		private int code;
-		private String ip;
-		/**
-		 * 
-		 */
-		public ResponseDTO() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
-		/**
-		 * @param code
-		 * @param ip
-		 */
-		public ResponseDTO(int code, String ip) {
-			super();
-			this.code = code;
-			this.ip = ip;
-		}
-
-		public int getCode() {
-			return code;
-		}
-		public String getIp() {
-			return ip;
-		}
+		return ResultDTO.createInstance(true).setMsg("수경재배기 추가 성공");
 	}
 }

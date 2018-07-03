@@ -16,6 +16,7 @@
 	var inner_ip;
 	var ssid;
 	var xhr;
+	var tk="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjoyMywicHdkIjpudWxsLCJlbWFpbCI6InNlQG5hdmVyLmNvbSIsImZpcnN0TmFtZSI6Iu2ZjSIsInNlY29uZE5hbWUiOiLquLjrj5kiLCJzZkNudCI6MCwiYmxvY2siOjB9LCJpYXQiOjE1MzAwOTcxMjI1Njh9.KYhB18hHN7HVoown8QGyJ0rajtJnITTZZAlia94qR2Q";
   		function confirm_ip(){
   			<%--텍스트 박스에 입력한 값들을 ip문자열로 만든다--%>
   			ap_ip=$('#Aclass').val()+'.'+$('#Bclass').val()+'.'+$('#Cclass').val()+'.'+$('#Dclass').val()
@@ -78,12 +79,11 @@
   		} 
   		function submit_ip(){
   			var sendData = JSON.stringify({ip: ap_ip});
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'POST',
 				url : 'device/add/ap/manual',
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				dataType : "json",
 				data:sendData,
@@ -96,12 +96,11 @@
   		}
   		
   		function info(){
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'GET',
 				url : 'device/info',
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				dataType : "json",
 				contentType : "application/json;charset=UTF-8",
@@ -113,12 +112,11 @@
   		}
   		
   		function user_info(){
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			$.ajax({
 				type : 'GET',
 				url : 'user/info',
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				dataType : "json",
 				contentType : "application/json;charset=UTF-8",
@@ -145,14 +143,12 @@
   		}
   		
   		function delete_all(){
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
-  			var sendData=JSON.stringify({ip : '203.250.35.169'});
+  			var apCode=104;
   			$.ajax({
 				type : 'POST',
-				url : 'device/delete/ap/manual',
-				data : sendData,
+				url : 'device/delete/ap/manual/'+apCode,
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				dataType : "json",
 				contentType : "application/json;charset=UTF-8",
@@ -166,13 +162,12 @@
   		function order(cmd){
   			var middle='203.250.35.169';
   			var dest='192.168.4.11';
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			var sendData=JSON.stringify({middle : middle, dest:dest, cmd:cmd, sfCode: 187, usedIp:'203.250.1.1'});
   			$.ajax({
 				type : 'POST',
 				url : 'device/control',
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				data : sendData,
 				dataType : "json",
@@ -185,13 +180,12 @@
   		}
   		
   		function getLog(){
-  			var token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwibWVtYmVyIjp7InVzZXJDb2RlIjowLCJwd2QiOm51bGwsImVtYWlsIjoic2VAbmF2ZXIuY29tIiwiZmlyc3ROYW1lIjoi7ZmNICAgICAgICAgICAgICIsInNlY29uZE5hbWUiOiLquLjrj5kgICAgICAgICAgICAgICAgICAgICAgICAiLCJzZkNudCI6MH0sImlhdCI6MTUyNTUzODYwNjA4OH0.twd3p_NppbZN9Z16Lt2DgDAfzm1jWYu1y-eUdY32Dhk";
   			var sendData=JSON.stringify({date:'2018-06-09', sfCode: 187});
   			$.ajax({
 				type : 'POST',
 				url : 'log/day',
 				beforeSend: function(request) {
-				    request.setRequestHeader("Authorization", token);
+				    request.setRequestHeader("Authorization", tk);
 				  },
 				data : sendData,
 				dataType : "json",
@@ -208,7 +202,7 @@
 	<a href="logout">로그아웃</a>
 	<br> 최근로그인: 2018-00-00 00:00 PM
 	<!-- <br> 현재 로그인IP: <script type="text/javascript">document.write(ip());</script> -->
-	<hr>
+	<hr> 
 	<h2>사용자 정보</h2>
 	사용자코드:${sessionScope.userInfo.userCode}
 	<br> 아이디:${sessionScope.userInfo.memberId}

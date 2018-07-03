@@ -17,7 +17,10 @@ public class UserDAO {
 	private final String namespace="user";
 	
 	//수경재배기 추가시 사용자의 수경재배기 보유 갯수 증가
-	public void incrementSfCount(int userCode) {
+	public void incrementSfCount(int count, int userCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("count", count);
+		map.put("userCode", userCode);
 		sql.update(namespace+".incrementSfCount", userCode);
 	}
 	
@@ -31,7 +34,6 @@ public class UserDAO {
 	
 	//로그인 시 사용자 존재 유무 조회
 	public UserInfoDTO searchMember(LoginDTO dto) {
-		System.out.println("st");
 		return sql.selectOne(namespace+".searchMember",dto);
 	}
 	

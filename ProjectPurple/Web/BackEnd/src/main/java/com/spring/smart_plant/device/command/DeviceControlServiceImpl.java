@@ -29,7 +29,7 @@ public class DeviceControlServiceImpl implements IDeviceFrontService{
 	public ResultDTO execute(Object obj) {
 		// TODO Auto-generated method stub
 		CommandDTO commandSet=(CommandDTO)obj;
-		UrlConnectionCommand conn=new UrlConnectionCommand();
+		UrlConnectionServiceImpl conn=new UrlConnectionServiceImpl();
 		int cmd=commandSet.getCmd();
 		int userCode=(int)ConstantJwtService.getJwtService().get("member").get("userCode");
 		String requestData="{\"cmd\":\"" + cmd 
@@ -58,10 +58,11 @@ public class DeviceControlServiceImpl implements IDeviceFrontService{
 	private void saveLog(CommandDTO commandSet, String result) {
 		Timestamp ts=new Timestamp(new Date().getTime());
 		int sfCode=commandSet.getSfCode();
+		int apCode=commandSet.getApCode();
 		String usedIp=commandSet.getUsedIp();
 		String actName=getCommandType(commandSet.getCmd());
 		char res=getResult(result);
-		insertLogService.execute(new DeviceLogDTO(ts,sfCode,usedIp,actName,res));
+		insertLogService.execute(new DeviceLogDTO(ts,sfCode,apCode,usedIp,actName,res));
 	}
 	
 	private String getCommandType(int cmd) {

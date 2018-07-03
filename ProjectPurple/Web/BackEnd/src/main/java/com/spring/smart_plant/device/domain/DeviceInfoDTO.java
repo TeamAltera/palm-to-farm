@@ -1,9 +1,9 @@
 package com.spring.smart_plant.device.domain;
 
 public class DeviceInfoDTO {
-	private String apInfo;
+	private int apCode;
+	private int sfCode;
 	private String ipInfo;
-	private int userCode;
 	/**
 	 * 
 	 */
@@ -16,18 +16,18 @@ public class DeviceInfoDTO {
 	 * @param apInfo
 	 * @param ipInfo
 	 */
-	public DeviceInfoDTO(String apInfo, String ipInfo,int userCode) {
+	public DeviceInfoDTO(int apCode, int sfCode, String ipInfo) {
 		super();
-		this.apInfo = apInfo;
+		this.apCode = apCode;
+		this.sfCode = sfCode;
 		this.ipInfo = ipInfo;
-		this.userCode=userCode;
 	}
 	
-	public String getApInfo() {
-		return apInfo;
+	public int getApCode() {
+		return apCode;
 	}
-	public void setApInfo(String apInfo) {
-		this.apInfo = apInfo;
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
 	public String getIpInfo() {
 		return ipInfo;
@@ -35,13 +35,10 @@ public class DeviceInfoDTO {
 	public void setIpInfo(String ipInfo) {
 		this.ipInfo = ipInfo;
 	}
-
-	public int getUserCode() {
-		return userCode;
+	public int getSfCode() {
+		return sfCode;
 	}
-
-	public void setUserCode(int userCode) {
-		this.userCode = userCode;
+	public void setSfCode(int sfCode) {
+		this.sfCode = sfCode;
 	}
-	
 }

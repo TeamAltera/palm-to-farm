@@ -28,6 +28,8 @@ import com.spring.smart_plant.user.command.SignoutServiceImpl;
 import com.spring.smart_plant.user.domain.LoginDTO;
 import com.spring.smart_plant.user.domain.UserInfoDTO;
 
+import io.swagger.annotations.ApiOperation;
+
 /**
  * Handles requests for the application home page.
  */
@@ -77,6 +79,7 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
+	@ApiOperation(value = "로그아웃, target:front")
 	@PostMapping("/signout")
 	public ResultDTO signout(Model model) {
 		/*model.addAttribute("request", request);*/
@@ -98,6 +101,7 @@ public class UserController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation(value = "로그인, target:front")
 	@PostMapping(value="/signin")
 	public ResultDTO login(Model model, @Valid @RequestBody LoginDTO loginInfo,
 			BindingResult result, HttpServletResponse response) {
@@ -124,6 +128,7 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
+	@ApiOperation(value = "회원 가입, target:front")
 	@PostMapping(value = "/signup")
 	public ResultDTO memberJoinAction(@Valid @RequestBody UserInfoDTO userInfo, BindingResult result, Model model) {
 		if(result.hasErrors()) { //폼데이터의 유효성 검증결과에 따른 ResultDTO생성
@@ -141,6 +146,7 @@ public class UserController {
 	 * </pre>
 	 * @return
 	 */
+	@ApiOperation(value = "사용자 정보 조회, target:front")
 	@GetMapping(value="/info")
 	public ResultDTO getUserInfo() {
 		return getUserInfoService.execute(null);
@@ -157,6 +163,7 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
+	@ApiOperation(value = "등록된 이메일 인지 조회, target:front")
 	@GetMapping(value = "/find/{email}")
 	public ResultDTO userExist(@PathVariable String email, Model model){
 		model.addAttribute("emailInfo", email);
