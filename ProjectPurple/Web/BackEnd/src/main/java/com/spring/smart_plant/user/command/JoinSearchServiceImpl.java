@@ -18,7 +18,8 @@ public class JoinSearchServiceImpl implements IUserService{
 	@Override
 	public ResultDTO execute(Model model) {
 		// TODO Auto-generated method stub
-		String email=((EmailDTO)model.asMap().get("emailInfo")).getEmail();
+		String email=model.asMap().get("emailInfo").toString();
+		System.out.println(email);
 		ResultDTO result=null;
 		if(!email.isEmpty()) //공백이 아닌 경우
 			result=ResultDTO.createInstance(true).setData(dao.searchEmail(email));

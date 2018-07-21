@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.smart_plant.common.domain.ResultDTO;
@@ -164,8 +165,8 @@ public class UserController {
 	 * @return
 	 */
 	@ApiOperation(value = "등록된 이메일 인지 조회, target:front")
-	@GetMapping(value = "/find/{email}")
-	public ResultDTO userExist(@PathVariable String email, Model model){
+	@GetMapping(value = "/find")
+	public ResultDTO userExist(@RequestParam("email") String email, Model model){
 		model.addAttribute("emailInfo", email);
 		return joinSearchService.execute(model);
 	}

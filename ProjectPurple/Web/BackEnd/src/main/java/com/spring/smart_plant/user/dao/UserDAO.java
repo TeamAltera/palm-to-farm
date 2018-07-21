@@ -38,8 +38,11 @@ public class UserDAO {
 	}
 	
 	//로그인 실패시 해당 계정 블락 횟수 증가
-	public void incrementBlockCount(String email) {
-		sql.update(namespace+".incrementBlockCount",email);
+	public Object incrementBlockCount(String email) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("email", email);
+		sql.update(namespace+".incrementBlockCount",map);
+		return map.get("block");
 	}
 	
 	public void initBlockCount(int userCode) {
@@ -58,5 +61,10 @@ public class UserDAO {
 	public int searchEmail(String email) {
 		//결과가 있다면 1 반환
 		return sql.selectList(namespace+".searchEmail",email).size();
+	}
+	
+	public int searchBlock(String email) {
+		//결과가 있다면 1 반환
+		return sql.selectOne(namespace+".searchBlock",email);
 	}
 }

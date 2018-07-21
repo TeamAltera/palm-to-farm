@@ -36,9 +36,9 @@
 
 	<context:component-scan base-package="com.spring.smart_plant.test" />
 	<context:component-scan base-package="com.spring.smart_plant.common.service" />
-	<context:component-scan base-package="com.spring.smart_plant.common.swagger" />
-	<context:component-scan base-package="com.spring.smart_plant.common.security" />
+	<context:component-scan base-package="com.spring.smart_plant.common.config" />
 	<context:component-scan base-package="com.spring.smart_plant.**.controller" />
+	<context:component-scan base-package="com.spring.smart_plant.mail.command" />
 
 	<beans:bean class="com.spring.smart_plant.common.service.jwt.JwtServiceImpl"/>
 
@@ -48,14 +48,18 @@
 			<!-- path여러개 추가가능 -->
 			<mapping path="/**" />
 			<exclude-mapping path="/user/signin"/>
+			<exclude-mapping path="/user/find/**"/>
 			<exclude-mapping path="/user/signup"/>
+			<exclude-mapping path="/mail/send"/>
+			<exclude-mapping path="/mail/check"/>
+			
 			<!-- 나중에 지워야 -->
 			<exclude-mapping path="/device/confirm"/>
 			<exclude-mapping path="/device/add/sf/auto"/>
 			
 			<!-- 나중에 지워야 -->
 			<exclude-mapping path="/resources/**"/>
-			<exclude-mapping path="/sensing_data"/>
+			<exclude-mapping path="/sensing_data/**"/>
 			
 			<exclude-mapping path="/topic/**"/>
 			<exclude-mapping path="/login"/>

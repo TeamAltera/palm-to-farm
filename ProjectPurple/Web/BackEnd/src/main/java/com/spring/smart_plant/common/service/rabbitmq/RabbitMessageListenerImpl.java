@@ -41,9 +41,9 @@ public class RabbitMessageListenerImpl{
 		/*rabbitTemplate.convertAndSend("/topic/messages"+income.get("id"),income);*/
 		
 		try {
-			System.out.println(income.get("d"));
-			//this.messagingTemplate.convertAndSend("/topic/messages"+income.get("id"),income);
-			insertSensorService.execute(income);//센싱 데이터 저장
+			System.out.println(income.toString());
+			this.messagingTemplate.convertAndSend("/topic/messages"+income.get("ap")+income.get("sf"),income);
+			//insertSensorService.execute(income);//센싱 데이터 저장
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

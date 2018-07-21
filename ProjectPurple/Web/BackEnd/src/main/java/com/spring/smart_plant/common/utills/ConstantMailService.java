@@ -1,15 +1,15 @@
 package com.spring.smart_plant.common.utills;
 
-import com.spring.smart_plant.common.service.mail.MailService;
+import com.spring.smart_plant.common.service.mail.MailSenderService;
 
 public class ConstantMailService {
-	private static MailService mailService;
+	private static MailSenderService mailService;
 
-	public static MailService getMailService() {
+	public static MailSenderService getMailService() {
 		return mailService;
 	}
 
-	public static void setMailService(MailService mailService) {
+	public static void setMailService(MailSenderService mailService) {
 		ConstantMailService.mailService = mailService;
 	}
 }

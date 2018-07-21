@@ -23,8 +23,8 @@ public class UserInfoDTOValidator implements Validator{
 		// TODO Auto-generated method stub
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "이메일 입력칸이 공백입니다.");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "패스워드 입력칸이 공백입니다.");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "성 입력칸이 공백입니다.");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "secondName", "이름 입력칸이 공백입니다.");
+		//ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "성 입력칸이 공백입니다.");
+		//ValidationUtils.rejectIfEmptyOrWhitespace(errors, "secondName", "이름 입력칸이 공백입니다.");
 		
 		UserInfoDTO dto=(UserInfoDTO)obj;
 		String email=dto.getEmail();
@@ -34,8 +34,8 @@ public class UserInfoDTOValidator implements Validator{
 		
 		emailValidation(email, errors);
 		pwdValidation(pwd, errors);
-		firstNameValidation(firstName, errors);
-		secondNameValidation(secondName, errors);
+		//firstNameValidation(firstName, errors);
+		//secondNameValidation(secondName, errors);
 	}
 	
 	private void emailValidation(String email, Errors errors) {

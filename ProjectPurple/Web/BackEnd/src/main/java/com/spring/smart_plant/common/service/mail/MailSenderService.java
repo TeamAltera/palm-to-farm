@@ -1,6 +1,6 @@
 package com.spring.smart_plant.common.service.mail;
 
-public interface MailService {
+public interface MailSenderService {
 	/** 
      *  @param subject 제목
      *  @param text 내용

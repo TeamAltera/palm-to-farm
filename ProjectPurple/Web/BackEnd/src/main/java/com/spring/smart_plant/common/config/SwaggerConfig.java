@@ -1,4 +1,4 @@
-package com.spring.smart_plant.common.swagger;
+package com.spring.smart_plant.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

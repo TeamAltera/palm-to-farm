@@ -1,4 +1,4 @@
-package com.spring.smart_plant.common.security;
+package com.spring.smart_plant.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

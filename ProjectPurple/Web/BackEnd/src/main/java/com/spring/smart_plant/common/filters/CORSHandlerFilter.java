@@ -45,7 +45,7 @@ public class CORSHandlerFilter implements Filter {
 		//CORS Handle을 처리해주는 코드
 		HttpServletResponse res=(HttpServletResponse)response;
 		//if(!commandExtraction((HttpServletRequest)request).equals("/sensing_data")) {
-			res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");
 			res.setHeader("Access-Control-Max-Age", "3600");
 			res.setHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type");
