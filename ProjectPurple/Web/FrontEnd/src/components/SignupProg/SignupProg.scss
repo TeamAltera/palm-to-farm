@@ -1,0 +1,70 @@
+/* The progress bar */
+.SignupProg-progress-bar {
+    width: 100%;
+    height: 14px;
+    display: flex;
+    margin: 0;
+    align-items: center;
+  
+    & .dot {
+      background-color: #aaa;
+      max-width: 14px;
+      height: 14px;
+      flex-grow: 1;
+      border-radius: 50%;
+      border: 3px solid #fff;
+    }
+  
+    & .bar {
+      background-color: #ddd;
+      flex-grow: 1;
+      height: 2px;
+    }
+    
+    /* Color */
+    & .blue {
+      background-color: dodgerblue;
+    }
+  }//.progress-bar
+  
+  
+  /* Give some paddings */
+  .SignupProg-progress-bar {
+    padding: 80px 50px 0 50px;
+    box-sizing: border-box;
+  }
+  
+  /* Note */
+  p {
+    display: block;
+    width: 260px;
+    height: 40px;
+    line-height: 40px;
+    margin: 30px auto;
+    text-align: center;
+    font-family: sans-serif;
+    color: #fff;
+    font-size: 14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  
+  /* Put an arrow on the top of P tag */
+  .arrow_box {
+      position: relative;
+      background: dodgerblue;
+    border-radius: 3px;
+  }
+  .arrow_box:after {
+      bottom: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: dodgerblue;
+      border-width: 5px;
+      margin-left: -5px;
+  }

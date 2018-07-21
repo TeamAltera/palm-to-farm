@@ -1,5 +1,5 @@
-import LoginContainer from './LoginContainer/LoginContainer';
+import SigninContainer from './SigninContainer/SigninContainer';
 import SignupContainer from './SignupContainer/SignupContainer';
 import MainContainer from './MainContainer/MainContainer';
 
-export { LoginContainer, SignupContainer, MainContainer };
+export { SigninContainer, SignupContainer, MainContainer };

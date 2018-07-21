@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
-import { Button, Form, Modal, Image } from 'semantic-ui-react';
-import { MainWrapper, DashBoard } from '../../components';
-import raz_router from '../../assets/images/raz_router.png';
-import * as MainApi from '../../lib/api/main';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { AuthWrapper, AuthHeader, AuthBody, Input, Button } from '../../components';
 
 class MainContainer extends Component {
-  render() {
-    return (
-      <MainWrapper>
-        <DashBoard />
-      </MainWrapper>
-    );
-  }
+
+    //출력
+    render() {
+
+        const {user} = this.props;
+
+        return (
+            <div>
+                {console.log(user)}
+            </div>
+        );
+    }
 }
 
-export default MainContainer;
+export default withRouter(
+    connect(
+        state => ({
+            user: state.auth.get('user'),
+        }),
+        dispatch => ({
+        })
+    )(MainContainer)
+);
