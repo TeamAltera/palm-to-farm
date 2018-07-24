@@ -16,11 +16,11 @@ const SET_AUTENTICATED = 'auth/AUTENTICATED';//인증 여부 설정
 const CHANGE_PASSWORD_SCORE = 'auth/CHANGE_PASSWORD_SCORE';//인증 여부 설정
 const CHECK_EMAIL_EXISTS = 'auth/CHECK_EMAIL_EXISTS'; // 이메일 중복 확인
 const CHANGE_EMAIL_EXISTS = 'auth/CHANGE_EMAIL_EXISTS';// emailExists 초기화
-const CHANGE_PASSWORD_CONFIRM='auth/CHANGE_PASSWORD_CONFIRM';
-const SEND_AUTHCODE='auth/SEND_AUTHCODE'; // 인증코드 이메일 전송
-const CHECK_AUTHCODE='auth/CHECK_AUTHCODE';// 인증코드 확인
-const SET_SPINNER_LOADING='auth/SET_SPINNER_LOADING'
-const SET_AUTHCODE_CONFIRM='auth/SET_AUTHCODE_CONFIRM'
+const CHANGE_PASSWORD_CONFIRM = 'auth/CHANGE_PASSWORD_CONFIRM';
+const SEND_AUTHCODE = 'auth/SEND_AUTHCODE'; // 인증코드 이메일 전송
+const CHECK_AUTHCODE = 'auth/CHECK_AUTHCODE';// 인증코드 확인
+const SET_SPINNER_LOADING = 'auth/SET_SPINNER_LOADING'
+const SET_AUTHCODE_CONFIRM = 'auth/SET_AUTHCODE_CONFIRM'
 
 //action 생성
 export const changeInput = createAction(CHANGE_INPUT); //  { form, name, value }
@@ -32,14 +32,14 @@ export const setCurrentUser = createAction(SET_CURRENT_USER);
 export const setAutenticated = createAction(SET_AUTENTICATED);
 export const changePasswordScore = createAction(CHANGE_PASSWORD_SCORE);
 export const checkEmailExists = createAction(
-  CHECK_EMAIL_EXISTS,AuthApi.checkEmailExists
+  CHECK_EMAIL_EXISTS, AuthApi.checkEmailExists
 ); // email
 export const changeEmailExists = createAction(CHANGE_EMAIL_EXISTS); // email
 export const changePasswordConfirm = createAction(CHANGE_PASSWORD_CONFIRM); // password confirm
-export const sendAuthCode = createAction(SEND_AUTHCODE,AuthApi.sendAuthCode); // email
-export const checkAuthCode = createAction(CHECK_AUTHCODE,AuthApi.checkAuthCode); // email
-export const setSpinnerLoading= createAction(SET_SPINNER_LOADING);
-export const setAuthCodeConfirm= createAction(SET_AUTHCODE_CONFIRM);
+export const sendAuthCode = createAction(SEND_AUTHCODE, AuthApi.sendAuthCode); // email
+export const checkAuthCode = createAction(CHECK_AUTHCODE, AuthApi.checkAuthCode); // email
+export const setSpinnerLoading = createAction(SET_SPINNER_LOADING);
+export const setAuthCodeConfirm = createAction(SET_AUTHCODE_CONFIRM);
 
 //state 정의
 const initialState = Map({
@@ -50,7 +50,7 @@ const initialState = Map({
     }),
     error: null,
     isAutenticated: false,
-    spinnerLoading:false,
+    spinnerLoading: false,
   }),
   signup: Map({
     form: Map({
@@ -61,15 +61,15 @@ const initialState = Map({
       passwordConfirm: '',
       authCode: '',
     }),
-    passwordScore:0,
+    passwordScore: 0,
     isAutenticated: false,
-    spinnerLoading:false,
+    spinnerLoading: false,
     isPasswordConfirm: 0,
     isAuthCodeConfirm: 6,
     isExists: 0,
     error: Map({
-      msg:null,
-      locaction:0,
+      msg: null,
+      locaction: 0,
     }),
   }),
   result: Map({}),
@@ -143,15 +143,15 @@ export default handleActions(
 
     ...pender({
       type: CHECK_EMAIL_EXISTS,
-      onSuccess: (state, action) =>{
+      onSuccess: (state, action) => {
         return state.setIn(
           ['signup', 'isExists'], action.payload.data.data);
-        }
+      }
     }),
 
     ...pender({
       type: SEND_AUTHCODE,
-      onFairue: (state, action)  =>
+      onFairue: (state, action) =>
         state.setIn(['signup', 'error'], {
           msg: '인증 이메일 전송이 실패하였습니다.',
           location: 1

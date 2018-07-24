@@ -1,20 +1,47 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { AuthWrapper, AuthHeader, AuthBody, Input, Button } from '../../components';
+import { bindActionCreators } from 'redux';
+import * as mainActions from '../../redux/modules/main';
+import {
+    AuthWrapper,
+    AuthHeader,
+    AuthBody,
+    Input,
+    Button,
+    SideBar,
+    PageContent,
+    Header,
+    MainWrapper,
+} from '../../components';
 
 class MainContainer extends Component {
 
+    _sidebarControl=()=>{
+        const { MainActions, toggleState } = this.props;
+        MainActions.changeToggleState(!toggleState);
+    }
+
+    // componentWillUnmount() {
+    //     const { AuthActions, isAutenticated, history } = this.props;
+    //     //if (isAutenticated) {
+    //     //    history.push('/main');
+    //     //}
+    //     AuthActions.initializeForm('signin');
+    // }
+
     //출력
     render() {
-
-        const {user} = this.props;
+        const { toggleState } = this.props;
 
         return (
-            <div>
-                {console.log(user)}
-            </div>
+            <MainWrapper option={toggleState}>
+                <SideBar />
+                <PageContent>
+                    <Header onClick={this._sidebarControl}/>
+                </PageContent>
+            </MainWrapper>
+
         );
     }
 }
@@ -22,9 +49,10 @@ class MainContainer extends Component {
 export default withRouter(
     connect(
         state => ({
-            user: state.auth.get('user'),
+            toggleState: state.main.get('toggleState'),
         }),
         dispatch => ({
+            MainActions: bindActionCreators(mainActions, dispatch),
         })
     )(MainContainer)
 );

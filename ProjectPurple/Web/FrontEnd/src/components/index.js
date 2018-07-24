@@ -14,6 +14,10 @@ import PageLink from './PageLink/PageLink';
 import PageHeader from './PageHeader/PageHeader';
 import PasswordProg from './PasswordProg/PasswordProg';
 import SignupProg from './SignupProg/SignupProg';
+import SideBar from './SideBar/SideBar';
+import Header from './Header/Header';
+import PageContent from './PageContent/PageContent';
+import MainWrapper from './MainWrapper/MainWrapper';
 
 export {
   Container,
@@ -32,4 +36,8 @@ export {
   PageHeader,
   PasswordProg,
   SignupProg,
+  SideBar,
+  Header,
+  PageContent,
+  MainWrapper,
 };
