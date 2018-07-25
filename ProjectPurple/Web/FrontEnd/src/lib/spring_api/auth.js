@@ -24,7 +24,7 @@ export const signin = (email, password) => {
                 }
             }
             return response;
-        })
+        }).catch();
 };
 
 //signup function
@@ -49,7 +49,12 @@ export const sendAuthCode = (email) =>{
     return axios
       .post(DOMAIN + MAIL_NAMESPACE + 'send',{
             email: email,
-      });
+      }).then(
+          res=>{
+              console.log(res);
+            return res;
+          }
+      );
 }
 
 //인증 코드 확인

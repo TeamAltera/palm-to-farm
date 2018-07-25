@@ -13,7 +13,7 @@ const Button = ({ children, onClick, option, disabled }) => {
         className={"btn btn-"+option+" btn-block"} 
         onClick={onClick} 
         value={children}
-        disabled={res}
+        disabled={res}zz
         />)
     };
 

@@ -18,6 +18,8 @@ import SideBar from './SideBar/SideBar';
 import Header from './Header/Header';
 import PageContent from './PageContent/PageContent';
 import MainWrapper from './MainWrapper/MainWrapper';
+import Footer from './Footer/Footer';
+import PageBody from './PageBody/PageBody';
 
 export {
   Container,
@@ -40,4 +42,6 @@ export {
   Header,
   PageContent,
   MainWrapper,
+  Footer,
+  PageBody
 };

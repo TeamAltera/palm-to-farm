@@ -13,13 +13,20 @@ import {
     PageContent,
     Header,
     MainWrapper,
+    Footer,
+    PageBody
 } from '../../components';
 
 class MainContainer extends Component {
 
-    _sidebarControl=()=>{
+    _sidebarControl = () => {
         const { MainActions, toggleState } = this.props;
         MainActions.changeToggleState(!toggleState);
+    }
+
+    _headerUserButtonControl = () => {
+        const { MainActions, popoverState } = this.props;
+        MainActions.changePopoverState(!popoverState);
     }
 
     // componentWillUnmount() {
@@ -32,13 +39,18 @@ class MainContainer extends Component {
 
     //출력
     render() {
-        const { toggleState } = this.props;
+        const { toggleState, popoverState } = this.props;
 
         return (
             <MainWrapper option={toggleState}>
                 <SideBar />
                 <PageContent>
-                    <Header onClick={this._sidebarControl}/>
+                    <Header 
+                        onClick={[this._sidebarControl, this._headerUserButtonControl]} 
+                        direction={toggleState} popover={popoverState}
+                    />
+                    <PageBody/>
+                    {/* <Footer /> */}
                 </PageContent>
             </MainWrapper>
 
@@ -50,6 +62,7 @@ export default withRouter(
     connect(
         state => ({
             toggleState: state.main.get('toggleState'),
+            popoverState: state.main.get('popoverState'),
         }),
         dispatch => ({
             MainActions: bindActionCreators(mainActions, dispatch),

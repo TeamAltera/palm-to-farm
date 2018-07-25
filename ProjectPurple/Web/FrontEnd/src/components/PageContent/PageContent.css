@@ -1,12 +1,12 @@
 #page-content-wrapper {
-    width: 100%;
-    position: absolute;
-    padding: 15px;
-  }
+  width: 100%;
+  position: relative;
+  padding: 0px;
+}
 
-  @media(min-width:768px) {
-    #page-content-wrapper {
-      padding: 20px;
-      position: relative;
-    }
+@media(min-width:768px) {
+  #page-content-wrapper {
+    padding: 0px;
+    position: relative;
   }
+}
