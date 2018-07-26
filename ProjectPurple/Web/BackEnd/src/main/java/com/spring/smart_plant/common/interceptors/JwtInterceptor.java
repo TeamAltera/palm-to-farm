@@ -34,6 +34,7 @@ public class JwtInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
 		final String token = request.getHeader(HEADER_AUTH); //요청 헤더로 부터 token을 가져옴
+		System.out.println("token: "+token );
 		if(token != null && jwtService.isUsable(token)){ //토큰 검사 수행
 			System.out.println("type: "+jwtService.get("member"));
             return true;

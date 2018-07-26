@@ -37,21 +37,26 @@ public class CORSHandlerFilter implements Filter {
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		// place your code here
 		// pass the request along the filter chain
 		//CORS Handle을 처리해주는 코드
-		HttpServletResponse res=(HttpServletResponse)response;
-		//if(!commandExtraction((HttpServletRequest)request).equals("/sensing_data")) {
-			res.setHeader("Access-Control-Allow-Origin", "*");
-			res.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");
-			res.setHeader("Access-Control-Max-Age", "3600");
-			res.setHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type");
-			res.setHeader("Access-Control-Allow-Credentials", "true");
-		//}
-		chain.doFilter(request, response);
+		HttpServletResponse response = (HttpServletResponse) resp;
+		HttpServletRequest request = (HttpServletRequest) req;
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Max-Age", "3600");
+	    response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Headers",
+				"x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
+
+		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+			response.setStatus(HttpServletResponse.SC_OK);
+		} else {
+			chain.doFilter(req, resp);
+		}
 	}
 
 	/**
