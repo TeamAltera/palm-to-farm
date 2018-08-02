@@ -32,6 +32,9 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 
 	@Autowired
 	UrlConnectionServiceImpl urlConnectionService;
+	
+	@Autowired
+	private GetDeviceServiceImpl deviceService;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class }) // 이 메소드를 트랜잭션 처리
 	@Override
@@ -74,7 +77,7 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					userDao.incrementSfCount(count, userCode);// 사용자 수경재배기 갯수 증가
 				}
 
-				String msg = "정상적으로 공유기 1대와 수경재배기 " + count + "대가 등록되었습니다.";
+				String msg = "공유기 1대와 수경재배기 " + count + "대가 등록되었습니다.";
 
 				// add.php로 apCode를 전송
 				String reqMsg = 
@@ -83,7 +86,13 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					+ "\"}";
 				urlConnectionService.request(publicIP, PHP_ADD_URL, "POST", reqMsg);
 
-				return ResultDTO.createInstance(true).setMsg(msg);//상태 값 반환
+				return ResultDTO.createInstance(true).setMsg(msg).setData(new Object() {
+					private Object deviceInfo=deviceService.selectDevices();
+
+					public Object getDeviceInfo() {
+						return deviceInfo;
+					}
+				});//상태 값 반환
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

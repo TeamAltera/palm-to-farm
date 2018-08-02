@@ -27,6 +27,9 @@ public class DeleteApServiceImpl implements IDeviceFrontService {
 	@Autowired
 	private LogDAO logDao;
 	
+	@Autowired
+	private GetDeviceServiceImpl deviceService;
+	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor = { Exception.class }) // 이 메소드를 트랜잭션 처리
 	public ResultDTO execute(Object obj) throws Exception {
@@ -54,11 +57,14 @@ public class DeleteApServiceImpl implements IDeviceFrontService {
 				return ResultDTO.createInstance(true).setMsg("공유기 한 대랑 수경재배기 " + count + "대가 삭제 되었습니다.")
 						.setData(new Object() {
 							private int deleteSfCnt = count;
-
-							@SuppressWarnings("unused")
+							private Object deviceInfo=deviceService.selectDevices();
 							public int getDeleteSfCnt() {
 								return deleteSfCnt;
 							}
+							public Object getDeviceInfo() {
+								return deviceInfo;
+							}
+							
 						});
 			}
 			else {

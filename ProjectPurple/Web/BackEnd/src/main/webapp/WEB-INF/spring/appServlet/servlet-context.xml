@@ -54,7 +54,6 @@
 			<exclude-mapping path="/mail/check"/>
 			
 			<!-- 나중에 지워야 -->
-			<exclude-mapping path="/device/confirm"/>
 			<exclude-mapping path="/device/add/sf/auto"/>
 			
 			<!-- 나중에 지워야 -->
