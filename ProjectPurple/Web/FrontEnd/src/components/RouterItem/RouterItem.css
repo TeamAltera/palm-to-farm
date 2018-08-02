@@ -1,0 +1,65 @@
+.RouterItem {
+    /* background-color: #24c9eb; */
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+    transition-timing-function: ease-in-out;
+    transition-duration: .2s;
+    transition-property: transform,box-shadow;
+    transform: translateY(2px);
+}
+
+.smaller {
+    font-size: 0.7rem;
+}
+
+.smaller.size-8 {
+    font-size: 0.8rem;
+}
+
+.smaller.size-9 {
+    font-size: 0.9rem;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.RouterItem-action{
+    color: white;
+    /* background-color:#89bf04; */
+    background-color:#ffb024;
+    border-radius: 3px;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+
+.RouterItem-clear-btn{
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+}
+
+.RouterItem-clear-btn:hover{
+    background-color: #e30714;
+}
+
+.item-right{
+    float: right;
+}
+
+#nopadding{
+    padding: 0px;
+}
+
+#nopadding-right{
+    padding-right: 0px;
+}
+
+#nopadding-top{
+    padding-top: 0px;
+}
+
+.border-top{
+    border-top: 1px solid rgba(0,0,0,.125);
+}

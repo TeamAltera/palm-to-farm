@@ -1,62 +1,21 @@
 import React from 'react';
-import { Collapse } from 'reactstrap';
 
-const PageBody = () => {
+const PageBody = ({ children }) => {
     return (
-        <div>
-            <div className="mt-0">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <a href="#">장치 정보</a>
-                    </li>
-                    <li className="breadcrumb-item active">My Dashboard</li>
-                </ol>
-            </div>
-
-            <div className="card mt-3 mb-2 ml-5 mr-5">
-                <div className="list-group list-group-flush small">
-                    <a className="list-group-item list-group-item-action" href="#">
-                        <div className="media">
-                            <img className="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="" />
-                            <div className="media-body">
-                                <strong>David Miller</strong>posted a new article to
-                                        <strong>David Miller Website</strong>.
-                            <div className="text-muted smaller">Today at 5:43 PM - 5m ago</div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {/* <Collapse isOpen={true}>
-                    <div className="card m-2">
-                        <div className="list-group list-group-flush small">
-                            <a className="list-group-item list-group-item-action" href="#">
-                                <div className="media">
-                                    <img className="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="" />
-                                    <div className="media-body">
-                                        <strong>David Miller</strong>posted a new article to
-                                        <strong>David Miller Website</strong>.
-                            <div className="text-muted smaller">Today at 5:43 PM - 5m ago</div>
-                                    </div>
-                                </div>
-                            </a>
+        <div className="container">
+            <div className="row">
+                {/* <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+                    <div class="card h-100">
+                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt="" /></a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">Project One</a>
+                            </h4>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur eum quasi sapiente nesciunt? Voluptatibus sit, repellat sequi itaque deserunt, dolores in, nesciunt, illum tempora ex quae? Nihil, dolorem!</p>
                         </div>
                     </div>
-                </Collapse> */}
-            </div>
-
-            <div className="card mt-3 mb-2 ml-5 mr-5">
-                <div className="list-group list-group-flush small">
-                    <a className="list-group-item list-group-item-action" href="#">
-                        <div className="media">
-                            <img className="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="" />
-                            <div className="media-body">
-                                <strong>David Miller</strong>posted a new article to
-                                        <strong>David Miller Website</strong>.
-                            <div className="text-muted smaller">Today at 5:43 PM - 5m ago</div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                </div> */}
+                {children}
             </div>
         </div>
     )

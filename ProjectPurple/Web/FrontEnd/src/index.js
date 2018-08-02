@@ -8,7 +8,12 @@ import Promise from 'promise-polyfill';
 import setAuthorizationToken from './utils/setAuthorizationToken';
 import { setCurrentUser } from './redux/modules/auth';
 import jwt from 'jsonwebtoken';
-import './index.css'
+import './resources/css/sb-admin.css';
+// import './resources/css/animate.min.css';
+// import './resources/css/light-bootstrap-dashboard.css?v=1.4.0';
+// import './resources/css/demo.css';
+import './index.css';
+
 
 /*
     리덕스 스토어 구성

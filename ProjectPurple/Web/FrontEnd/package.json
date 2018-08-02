@@ -49,6 +49,8 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-spinners": "^0.3.2",
+    "react-sweet-progress": "^1.1.2",
+    "react-toastify": "^4.1.0",
     "reactstrap": "^6.3.0",
     "redux": "^4.0.0",
     "redux-actions": "^2.4.0",

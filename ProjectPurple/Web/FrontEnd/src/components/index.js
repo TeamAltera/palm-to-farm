@@ -20,6 +20,10 @@ import PageContent from './PageContent/PageContent';
 import MainWrapper from './MainWrapper/MainWrapper';
 import Footer from './Footer/Footer';
 import PageBody from './PageBody/PageBody';
+import RouterItem from './RouterItem/RouterItem';
+import RouterAddButton from './RouterAddButton/RouterAddButton';
+import MainToolBar from './MainToolBar/MainToolBar';
+import RouterAddModal from './RouterAddModal/RouterAddModal';
 
 export {
   Container,
@@ -43,5 +47,9 @@ export {
   PageContent,
   MainWrapper,
   Footer,
-  PageBody
+  PageBody,
+  RouterItem,
+  RouterAddButton,
+  MainToolBar,
+  RouterAddModal,
 };

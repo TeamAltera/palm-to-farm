@@ -1,0 +1,53 @@
+.MainToolBar-container{
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.MainToolBar-box-left{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 30%;
+    justify-content: flex-start;
+}
+
+.MainToolBar-box-right{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 70%;
+    justify-content: flex-end;
+}
+
+
+
+.smaller {
+    font-size: 0.7rem;
+}
+
+.smaller.size-8 {
+    font-size: 0.8rem;
+}
+
+.smaller.size-9 {
+    font-size: 0.9rem;
+}
+
+.MainToolBar-btn{
+    border: 1px solid rgba(0,0,0,.125);
+    color: #696f7a;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.MainToolBar-btn:hover{
+    background-color: #2ca8ff;
+    border: 1px solid #2ca8ff;
+    color: white;
+    text-decoration: none;
+}

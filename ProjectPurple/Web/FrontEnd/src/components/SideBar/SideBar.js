@@ -18,11 +18,11 @@ const SideBar = () => {
                     </span>
                 </TextCenter>
             </nav>
-            <ul className="sidebar-nav">
+            <ul className="sidebar-nav" id="nanum-gothic">
                 <li className="mt-3">
                     <Link to="/main">
                         <MdDeviceHub size="30" />
-                        <span className="ml-3">장치 정보</span>
+                        <span className="ml-3">디바이스 정보</span>
                     </Link>
                 </li>
                 <li className="mt-3">
@@ -41,5 +41,9 @@ const SideBar = () => {
         </div>
     )
 };
+
+SideBar.propTypes = {
+
+}
 
 export default SideBar;

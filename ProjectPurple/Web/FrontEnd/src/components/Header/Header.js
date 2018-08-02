@@ -4,20 +4,24 @@ import PropTypes from 'prop-types';
 import { MdChevronRight, MdChevronLeft, MdAccountCircle } from 'react-icons/lib/md';
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 
-const Header = ({ onClick, direction, popover }) => {
+const Header = ({ onClick, direction, popover, title }) => {
     return (
-        <nav className="absolute-top navbar navbar-absolute navbar-expand-lg"
+        <nav className="absolute-top navbar navbar-absolute navbar-expand-lg
+         nopadding-top nopadding-bottom"
             id="Header">
-            <div className="container-fluid" id="Header-wrapper">
-                <div className="col-10">
+            <div className="Header-container">
+                <div className="Header-box-left">
                     <a className="Header-toggle"
                         onClick={onClick[0]}
                     >
                         {!direction && <MdChevronRight size={35} color="#2ca8ff" />}
                         {direction && <MdChevronLeft size={35} color="#2ca8ff" />}
                     </a>
+                    <div className="Header-title ml-2" id="nanum-gothic">
+                        {title}
+                    </div>
                 </div>
-                <div className="col-2">
+                <div className="Header-box-right">
                     <a className="Header-toggle" onClick={onClick[1]} id="Popover1">
                         <MdAccountCircle size={35} color="#2ca8ff" />
                     </a>
@@ -39,6 +43,7 @@ Header.propTypes = {
     direction: PropTypes.bool.isRequired,
     onClick: PropTypes.array.isRequired,
     popover: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
 }
 
 export default Header;

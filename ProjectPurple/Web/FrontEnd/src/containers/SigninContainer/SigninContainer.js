@@ -91,7 +91,7 @@ class SigninContainer extends Component {
 
         let error = SigninValidator(email, password);
         
-        AuthActions.setSpinnerLoading(true);
+        //AuthActions.setSpinnerLoading(true);
         if (!error) {
             //비밀번호 해싱 수행(단방향 해시)
             let pwd = setHashing(password);
@@ -122,7 +122,7 @@ class SigninContainer extends Component {
         else {
             this._setErrorMessage(error.msg, error.location);
         }
-        AuthActions.setSpinnerLoading(false);
+        //AuthActions.setSpinnerLoading(false);
     };
 
     _renderFormError(error, loc) {
