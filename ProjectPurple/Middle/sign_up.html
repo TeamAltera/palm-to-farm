@@ -1,0 +1,96 @@
+<?php
+include ("config_db.php");
+?>
+
+<html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width" initial-scale="1">
+            <link rel="stylesheet" href="css/bootstrap.css">
+        </head>
+
+        <body>
+
+        <!--<style type="text/css">
+            .jumbotron{
+                background-image: url("images/sign_up.jpg");
+                background-size: cover;
+                text-shadow: black 0.2em 0.2em 0.2em;
+                color: white;
+            }
+        </style>-->
+
+        <nav class="navbar navbar-default">
+            <div class = "container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapsed" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only"> </span>
+                        <span class="icon-bar"> </span>
+                    </button>
+                    <a class="navbar-brand" href="/login.html">공유기 관리 페이지</a>
+                </div>
+
+            </div>
+        </nav>
+
+
+        <div class="container">
+            <div class="jumbotron">
+                <div class="form-group">
+                    <h1 class="text-center"> 회원가입 </h1>
+                    <p class="text-center"> 회원가입 정보를 입력해주세요.</p>
+
+                    <form class="form-horizontal" method="post" action="sign_up.php">
+                        <label for="id_label" class="col-sm-2 control-label"> ID </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="id_label" name="id" placeholder="ID" size="30">
+                        </div>
+
+                        <label for="pwd_label" class="col-sm-2 control-label"> PASSWORD </label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="pwd_label" name="pwd" placeholder="PASSWORD" size="30">
+                        </div>
+
+                        <label for="pwd2_label" class="col-sm-2 control-label"> CONFIRM PASSWORD </label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="pwd2_label" name="pwd2" placeholder="CONFIRM PASSWORD" size="30">
+                        </div>
+
+                        <label for="email_label" class="col-sm-2 control-label"> E-MAIL </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="email_label" name="email" placeholder="E-MAIL" size="30">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="join_submit" href="sign_up.php"> 회원가입 </button>
+                    </form>
+
+                </div>
+            </div>
+                <!--
+            <h1 class="text-left"> 회원가입 </h1>
+                <form class="col-sm-6 col-md-offset-3" name="join" method="post" action="./sign_up.php">
+                    <table border="1">
+                        <tr>
+                            <td>ID</td>
+                            <td><input class="form-control" type="text" size="30" name="id"></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td><input class="form-control" type="password" size="30" name="pwd"></td>
+                        </tr>
+                        <tr>
+                            <td>Confirm Password</td>
+                            <td><input class="form-control" type="password" size="30" name="pwd2"></td>
+                        </tr>
+                        <tr>
+                            <td>e-mail</td>
+                            <td><input class="form-control" type="text" size="30" name="email"></td>
+                        </tr>
+                        <input type=submit value="submit"><input type=reset value="rewrite">
+                    </table>
+                </form> -->
+            </div>
+        </div>
+
+        </body>
+
+    </html>
