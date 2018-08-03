@@ -1,10 +1,14 @@
 package com.spring.smart_plant.device.domain;
 
+import java.sql.Timestamp;
+
 public class APInfoDTO {
 	private int apCode;
 	private String apPublicIp;
 	private String apSsid;
 	private int userCode;
+	private int apSfCnt;
+	private Timestamp apRegDate;
 
 	/**
 	 * 
@@ -18,11 +22,12 @@ public class APInfoDTO {
 	 * @param apPublicIp
 	 * @param apSsid
 	 */
-	public APInfoDTO(String apPublicIp, String apSsid, int userCode) {
+	public APInfoDTO(String apPublicIp, String apSsid, int userCode, int apSfCnt) {
 		super();
 		this.apPublicIp = apPublicIp;
 		this.apSsid = apSsid;
 		this.userCode=userCode;
+		this.apSfCnt=apSfCnt;
 	}
 
 	public int getApCode() {
@@ -52,6 +57,22 @@ public class APInfoDTO {
 
 	public void setUserCode(int userCode) {
 		this.userCode = userCode;
+	}
+
+	public int getApSfCnt() {
+		return apSfCnt;
+	}
+
+	public void setApSfCnt(int apSfCnt) {
+		this.apSfCnt = apSfCnt;
+	}
+
+	public Timestamp getApRegDate() {
+		return apRegDate;
+	}
+
+	public void setApRegDate(Timestamp apRegDate) {
+		this.apRegDate = apRegDate;
 	}
 	
 }

@@ -15,9 +15,9 @@ import com.spring.smart_plant.device.domain.APStatusDTO;
 @Service("confirmAPService")
 public class ConfirmAPServiceImpl implements IDeviceFrontService {
 	private final String PHP_SEARCH_URL = "/search.php";
-	private final String SUCCESS_MSG="사용가능한 공유기 입니다.";
-	private final String FAIL_MSG="이미 사용중인 공유기 입니다.";
-	private final String UNKNOWN_MSG="존재하지 않는 공유기 입니다.";
+	private final String SUCCESS_MSG="사용가능한 라우터 입니다.";
+	private final String FAIL_MSG="이미 사용중인 라우터 입니다.";
+	private final String UNKNOWN_MSG="존재하지 않는 라우터 입니다.";
 	private final int SUCCESS_CODE=200;//성공한 경우
 	private final int FAIL_CODE=201;//실패한 경우
 	private final int UNKNOWN_CODE=202;//pending, 존재하지 않는 공유기인 경우

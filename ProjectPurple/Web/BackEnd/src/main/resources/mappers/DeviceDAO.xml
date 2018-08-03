@@ -41,8 +41,8 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			SELECT AP_SEQ.NEXTVAL AS ID FROM DUAL
 		</selectKey>
 		INSERT INTO AP
-		(AP_CODE,AP_PUBLIC_IP,AP_SSID,USER_CODE)
-		VALUES(#{id},#{apPublicIp},#{apSsid},#{userCode})
+		(AP_CODE,AP_PUBLIC_IP,AP_SSID,USER_CODE, AP_SF_CNT, AP_REG_DATE)
+		VALUES(#{id},#{apPublicIp},#{apSsid},#{userCode},#{apSfCnt}, SYSDATE)
 	</insert>
 
 	<insert id="insertSmartFarmDeviceList" parameterType="java.util.HashMap">

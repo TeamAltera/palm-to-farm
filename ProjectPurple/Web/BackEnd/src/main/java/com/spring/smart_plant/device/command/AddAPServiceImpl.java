@@ -49,12 +49,12 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 				// JWT로 부터 usercode를 알아냄
 				int userCode = (int) ConstantJwtService.getJwtService().get("member").get("userCode");
 
-				// DB에 공유기정보 삽입, 삽입 후 공유기 코드(apCode) 받아옴.
-				Integer apCode = deviceDao.insertAP(new APInfoDTO(publicIP, (String) json.get("ssid"), userCode));
-
 				JSONArray arr = (JSONArray) json.get("inner_ip");
 				List<Map<String, Object>> deviceList = new ArrayList<Map<String, Object>>();
 				int count=arr.length();
+				
+				// DB에 공유기정보 삽입, 삽입 후 공유기 코드(apCode) 받아옴.
+				Integer apCode = deviceDao.insertAP(new APInfoDTO(publicIP, (String) json.get("ssid"), userCode, count));
 				
 				for (int i = 0; i < count; i++) {//List에다 map요소 추가
 					JSONObject item=arr.getJSONObject(i);
