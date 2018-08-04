@@ -69,13 +69,21 @@
     padding-right: 7px;
     font-weight: bold;
     cursor: pointer;
+    outline: none;
 }
 
-.RouterAddModal:hover{
+.RouterAddModal-btn:hover:not([disabled]){
     background-color: #2ca8ff;
     border: 1px solid #2ca8ff;
     color: white;
     text-decoration: none;
+}
+
+.RouterAddModal-btn[disabled]{
+    background-color: white;
+    border: 1px solid rgba(0,0,0,.125);
+    color: rgba(0,0,0,.125);
+    cursor: default;
 }
 
 #padding-right-8{

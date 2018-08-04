@@ -6,7 +6,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 
 const MainToolBar = ({ isOpen, toggle, addFunc, deleteFunc }) => {
     return (
-        <div className="mt-0 mb-3 MainToolBar-container">
+        <div className="mt-0 MainToolBar-container">
             <div className="MainToolBar-box-left mt-2 mb-2">
             </div>
             <div className="MainToolBar-box-right mt-2 mb-2">

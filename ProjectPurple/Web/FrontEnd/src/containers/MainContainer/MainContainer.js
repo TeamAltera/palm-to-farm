@@ -13,6 +13,8 @@ import {
     RouterAddButton,
     MainToolBar,
     RouterAddModal,
+    FormError,
+    SfItemContainer,
 } from '../../components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +28,22 @@ class MainContainer extends Component {
         MainActions.changeToggleState(!toggleState);
     }
 
+    _sfItemContainerControlOpen = (apCode, apName, regDate) => {
+        const { MainActions } = this.props;
+        const data={
+            apCode: apCode,
+            apName: apName,
+            regDate: regDate,
+        };
+        MainActions.changeSelectedAp(data)
+        MainActions.changeSfToggleState(true);
+    }
+
+    _sfItemContainerControlClose = () => {
+        const { MainActions } = this.props;
+        MainActions.changeSfToggleState(false);
+    }
+
     _headerUserButtonControl = () => {
         const { MainActions, popoverState } = this.props;
         MainActions.changePopoverState(!popoverState);
@@ -34,6 +52,9 @@ class MainContainer extends Component {
     _changeModalsOpen = () => {
         const { MainActions, modalsState } = this.props;
         MainActions.changeModalsState(!modalsState);
+        if(!modalsState) MainActions.resInit();
+        else MainActions.initializeForm();
+        
     }
 
     _changeDropdown = () => {
@@ -44,7 +65,7 @@ class MainContainer extends Component {
     // componentWillUnmount() {
     //     const { AuthActions, isAutenticated, history } = this.props;
     //     //if (isAutenticated) {
-    //     //    history.push('/main');
+    //     //    history.push('/main');  
     //     //}
     //     AuthActions.initializeForm('signin');
     // }
@@ -68,21 +89,31 @@ class MainContainer extends Component {
         );
     }
 
+    //라우터 조회
     _searchRouter = async () => {
-        const { MainActions } = this.props;
+        const { MainActions, isConfirm } = this.props;
         const { a, b, c, d } = this.props.ip.toJS();
         console.log(a + '.' + b + '.' + c + '.' + d);
-        await MainActions.searchRouter(a + '.' + b + '.' + c + '.' + d);
+        MainActions.resInit();
+        await MainActions.searchRouter(a + '.' + b + '.' + c + '.' + d).then(
+            res=>{
+                MainActions.changeConfirm(res.data.status==='OK');
+                return res;
+            }
+        );
     }
 
+    //라우터 추가
     _addRouter = async () => {
         const { MainActions } = this.props;
         const { a, b, c, d } = this.props.ip.toJS();
+        MainActions.resInit();
         await MainActions.addRouter(a + '.' + b + '.' + c + '.' + d).then(
             (res) => {
-                if (res.data.status === 'OK')
+                if (res.data.status === 'OK'){
                     this._changeModalsOpen();
-                this._showAlert(res.data);
+                    this._showAlert(res.data);
+                }
                 return res;
             }
         );
@@ -125,6 +156,9 @@ class MainContainer extends Component {
                         <RouterItem apName={ap.AP_SSID} userCode={ap.USER_CODE}
                             ip={ap.AP_PUBLIC_IP} key={ap.AP_CODE} apCode={ap.AP_CODE}
                             deleteFunc={() => this._deleteSingleRouter(ap.AP_CODE)}
+                            count={ap.AP_SF_CNT} regDate={ap.AP_REG_DATE}
+                            open={()=>this._sfItemContainerControlOpen(ap.AP_CODE, ap.AP_SSID, ap.AP_REG_DATE)}
+                            close={this._sfItemContainerControlClose}
                         />
                     );
                 }
@@ -132,15 +166,29 @@ class MainContainer extends Component {
         }
     }
 
+    //modal에서 에러메시지 출력
+    _renderFormError=(res)=>{
+        if (res) {
+            const {status, msg} = res.toJS();
+            return (
+                <FormError isSuccess={status==='OK'}>{msg}</FormError>
+            )
+        }
+    }
+
     //출력
     render() {
         const {
+            sfToggleState,
             toggleState,
             popoverState,
             modalsState,
             dropdownState,
+            result,
+            deviceInfo,
+            isConfirm,
+            selectedAp,
         } = this.props;
-        const { data } = this.props.result.toJS();
         return (
             <MainWrapper option={toggleState}>
                 <SideBar />
@@ -156,9 +204,11 @@ class MainContainer extends Component {
                         addFunc={this._changeModalsOpen}
                         deleteFunc={this._deleteAllRouter}
                     />
+                    <SfItemContainer option={sfToggleState} data={selectedAp} 
+                    close={this._sfItemContainerControlClose}/>
                     <PageBody>
                         <ToastContainer />
-                        {this._renderRouterItems(data)}
+                        {this._renderRouterItems(deviceInfo.toJS())}
                         <RouterAddButton
                             onClick={this._changeModalsOpen} />
                         <RouterAddModal
@@ -167,6 +217,8 @@ class MainContainer extends Component {
                             onChange={this._handleChange}
                             searchFunc={this._searchRouter}
                             addFunc={this._addRouter}
+                            errorRender={()=>this._renderFormError(result)}
+                            isConfirm={isConfirm}
                         />
                     </PageBody>
                     {/* <Footer /> */}
@@ -182,11 +234,15 @@ export default withRouter(
         state => ({
             ip: state.main.get('ip'),
             modalsState: state.main.get('modalsState'),
+            sfToggleState: state.main.get('sfToggleState'),
             toggleState: state.main.get('toggleState'),
             popoverState: state.main.get('popoverState'),
-            //deviceInfo: state.main.get('deviceInfo'),
+            deviceInfo: state.main.get('deviceInfo'),
             dropdownState: state.main.get('dropdownState'),
             result: state.main.get('result'),
+            msg: state.main.get('msg'),
+            isConfirm: state.main.get('isConfirm'),
+            selectedAp: state.main.get('selectedAp'),
         }),
         dispatch => ({
             MainActions: bindActionCreators(mainActions, dispatch),

@@ -1,0 +1,88 @@
+.SfItemContainer-wrapper {
+    /* 최상단 */
+    z-index: 1000;
+    position: fixed;
+    right: 537px;
+    width: 0px;
+    height: 100%;
+    margin-right: -537px;
+    overflow-y: auto;
+    /* border-left: 1px solid rgba(0,0,0,.125); */
+    box-shadow: 0px 3px 5px gray;
+    background-color: #f3f4f5;
+    display: flex;
+    flex-direction: column;
+
+    /* 애니메이션 효과 */
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.SfItemContainer-wrapper.toggled{
+    width: 537px;
+}
+
+.SfItemContainer-title{
+    font-size: 18px;
+    height: 79px;
+    background-color: white;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.sfItemContainer-body{
+
+}
+
+.SfItemContainer-item{
+    position: relative;
+    top: 0;
+    width: 537px;
+    margin: 0;
+    padding: 0;
+}
+
+.SfItemContainer-body{
+    display: flex;
+    flex-direction: column;
+}
+
+.SfItemContainer-btn{
+    border: 0;
+    border-right: 1px solid rgba(0,0,0,.125);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    background-color: white;
+    cursor: pointer;
+}
+
+.SfItemContainer-btn:hover{
+    color: white;
+    background-color: #2ca8ff;
+}
+
+#nopadding-left{
+    padding-left: 0;
+}
+
+@media(min-width:768px) {
+    .SfItemContainer-wrapper {
+        /* z-index: 1000;
+        position: fixed;
+        right: 100%;
+        width: 0px;
+        height: 100%;
+        margin-right: -100%;
+        overflow-y: auto;
+        border-left: 1px solid rgba(0,0,0,.125);
+        background-color: white;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease; */
+    }
+
+    /* .SfItemContainer-wrapper.toggled{
+        width: 100%;
+    } */
+}

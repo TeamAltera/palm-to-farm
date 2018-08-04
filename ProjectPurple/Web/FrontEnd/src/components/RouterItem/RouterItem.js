@@ -6,14 +6,15 @@ import TextCenter from '../TextCenter/TextCenter';
 import './RouterItem.css';
 import { Progress } from 'react-sweet-progress';
 import "react-sweet-progress/lib/style.css";
+import Moment from 'react-moment';
 
-const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc }) => {
-    let count = 4;
+const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, open, close }) => {
+    count *= 4;
     return (
 
         <div className="col-lg-3 col-md-4 col-sm-6 portfolio-item mb-3">
-            <a className="list-group-item list-group-item-action RouterItem"
-                id="nopadding-top" href="#"
+            <a className="list-group-item list-group-item-action RouterItem" onClick={open}
+                id="nopadding-top"
             >
                 <div className="row md-5">
                     <div className="col-2 mt-2">
@@ -39,15 +40,17 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc }) => {
                     </div>
                     <div className="col-7 col-xs-2 mt-5 text-right">
                         <MdHistory size={17} />
-                        <span className="text-muted smaller size-9 ml-1">
-                            2018-07-02
-                            </span>
+                        <span className="smaller size-9 ml-1 bold">
+                            <Moment format="YYYY-MM-DD">
+                                {new Date(regDate)}
+                            </Moment>
+                        </span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12 mt-1">
                         <Progress
-                            percent={4}
+                            percent={count}
                             status="default"
                             theme={
                                 {
@@ -75,6 +78,10 @@ RouterItem.propTypes = {
     userCode: PropTypes.number.isRequired,
     apCode: PropTypes.number.isRequired,
     deleteFunc: PropTypes.func.isRequired,
+    count: PropTypes.number.isRequired,
+    regDate: PropTypes.number.isRequired,
+    open:PropTypes.func.isRequired,
+    close:PropTypes.func.isRequired,
 }
 
 export default RouterItem;

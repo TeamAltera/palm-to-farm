@@ -16,9 +16,15 @@ const DELETE_SINGLE_ROUTER = 'main/DELETE_SINGLE_ROUTER';
 const CHANGE_INPUT = 'main/CHANGE_INPUT';
 const SEARCH_ROUTER = 'main/SEARCH_ROUTER';
 const ADD_ROUTER = 'main/ADD_ROUTER';
+const RES_INIT = 'main/RES_INIT';
+const INITIALIZE_FORM = 'main/INITIALIZE_FORM'; // form 초기화
+const CHANGE_CONFIRM = 'main/CHANGE_CONFIRM'; // form 초기화
+const CHANGE_SF_TOGGLE_STATE = 'main/CHANGE_SF_TOGGLE_STATE';
+const CHANGE_SELECTED_AP='main/CHANGE_SELECTED_AP';
 
 //action 생성
 export const changeToggleState = createAction(CHANGE_TOGGLE_STATE);
+export const changeSfToggleState = createAction(CHANGE_SF_TOGGLE_STATE);
 export const changePopoverState = createAction(CHANGE_POPOVER_STATE);
 export const getDeviceAllInfo = createAction(GET_DEVICE_ALL_INFO, DeviceApi.getDeviceAllInfo);
 export const changeModalsState = createAction(CHANGE_MODALS_STATE);
@@ -28,9 +34,14 @@ export const deleteSingleRouter = createAction(DELETE_SINGLE_ROUTER, DeviceApi.d
 export const changeInput = createAction(CHANGE_INPUT);
 export const searchRouter = createAction(SEARCH_ROUTER, DeviceApi.searchRouter);
 export const addRouter = createAction(ADD_ROUTER, DeviceApi.addRouter);
+export const resInit = createAction(RES_INIT);
+export const initializeForm = createAction(INITIALIZE_FORM); // form
+export const changeConfirm = createAction(CHANGE_CONFIRM);
+export const changeSelectedAp = createAction(CHANGE_SELECTED_AP);
 
 //state 정의
 const initialState = Map({
+    sfToggleState: true,
     toggleState: false,
     modalsState: false,
     popoverState: false,
@@ -42,14 +53,28 @@ const initialState = Map({
         c: '',
         d: ''
     }),
+    deviceInfo: Map({}),
     result: Map({}),
+    isConfirm: false,
+    selectedAp: Map({
+        apName: '',
+        apCode: '',
+    }),
 });
 
 //action에 따른 리듀서 수행동작
 export default handleActions(
     {
+        [CHANGE_SELECTED_AP]: (state, action) => {
+            return state.set('selectedAp', action.payload);
+        },
+
         [CHANGE_TOGGLE_STATE]: (state, action) => {
             return state.set('toggleState', action.payload);
+        },
+
+        [CHANGE_SF_TOGGLE_STATE]: (state, action) => {
+            return state.set('sfToggleState', action.payload);
         },
 
         [CHANGE_MODALS_STATE]: (state, action) => {
@@ -69,28 +94,53 @@ export default handleActions(
             return state.setIn(['ip', name], value);
         },
 
+        [CHANGE_CONFIRM]: (state, action) => {
+            return state.set('isConfirm', action.payload);
+        },
+
+        [RES_INIT]: (state, action) => {
+            return state.set('result', null);
+        },
+
+        [INITIALIZE_FORM]: (state, action) => {
+            const initialForm = initialState.get('ip');
+            return state.set('ip', initialForm);
+        },
+
         ...pender({
             type: GET_DEVICE_ALL_INFO,
-            onSuccess: (state, action) =>
-                state.set('result', Map(action.payload)),
+            onSuccess: (state, action) =>{
+                if (action.payload.data.status === 'OK')
+                    return state.set('deviceInfo', Map(action.payload.data))
+                else
+                    return state.set('result', Map(action.payload.data))
+            }
         }),
 
         ...pender({
             type: DELETE_SINGLE_ROUTER,
-            onSuccess: (state, action) =>
-                state.set('result', Map(action.payload)),
+            onSuccess: (state, action) =>{
+                if (action.payload.data.status === 'OK')
+                    return state.set('deviceInfo', Map(action.payload.data))
+                else
+                    return state.set('result', Map(action.payload.data))
+            }
         }),
 
         ...pender({
             type: SEARCH_ROUTER,
             onSuccess: (state, action) =>
-                state.set('result', Map(action.payload)),
+                state.set('result', Map(action.payload.data)),
         }),
 
         ...pender({
             type: ADD_ROUTER,
-            onSuccess: (state, action) =>
-                state.set('result', Map(action.payload)),
+            onSuccess: (state, action) => {
+                if (action.payload.data.status === 'OK')
+                    return state.set('deviceInfo', Map(action.payload.data))
+                else
+                    return state.set('result', Map(action.payload.data))
+            }
         }),
 
     },

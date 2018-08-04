@@ -5,6 +5,7 @@
     transition-duration: .2s;
     transition-property: transform,box-shadow;
     transform: translateY(2px);
+    cursor: pointer;
 }
 
 .smaller {
@@ -62,4 +63,8 @@
 
 .border-top{
     border-top: 1px solid rgba(0,0,0,.125);
+}
+
+.bold{
+    font-weight: bold;
 }
