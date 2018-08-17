@@ -40,7 +40,7 @@ header('
             <a class="navbar-brand js-scroll-trigger" href="#page-top">
                 <span class="d-block d-lg-none">NAT Setting</span>
                 <span class="d-none d-lg-block">
-              <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.jpg" alt="">
+              <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile1.jpg" alt="">
             </span>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,6 +70,8 @@ header('
                     <p> <a class="mb-1" href="logout.php" role="button"> Logout </a></p>
                 </div>
             </section>
+
+            <hr class="m-0">
 
             <section class="resume-section p-3 p-lg-5 d-flex d-column" id="setting_nat">
                 <div class="my-auto">
