@@ -61,7 +61,7 @@
                     <h1 class="mb-0">NAT
                         <span class="text-primary">PAGE</span>
                     </h1>
-                    <div class="subheading mb-5"> Enginnering college 520 · Daegu Catholic University, Altera LAB · 010-3352-5812 ·
+                    <div class="subheading mb-5"> Enginnering college 520 Altera LAB · Catholic University of Daegu  · 010-3352-5812 ·
                         <a href="mailto:name@email.com">big9401@gmail.com</a>
                     </div>
                     <p class="lead mb-5">This is NAT PAGE.</p>
