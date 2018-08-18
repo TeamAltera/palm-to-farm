@@ -1,6 +1,6 @@
 #기본 공유기 접속 루트
 ```
-203.250.35.160/login.php
+203.250.35.169/login.php
 ```
 
 # RaspberryPi 3  B Model AP Mode
