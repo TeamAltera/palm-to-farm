@@ -1,5 +1,5 @@
-C:\Users\제호\AppData\Local\Temp\VMBuilds\hydroponics_master\mega_atmega2560\Debug\hydroponics_master.cpp.o: \
- C:\Users\제호\AppData\Local\Temp\VMBuilds\hydroponics_master\mega_atmega2560\Debug\hydroponics_master.cpp \
+C:\TEMP\VMBuilds\hydroponics_master\mega_atmega2560\Debug\hydroponics_master.cpp.o: \
+ C:\TEMP\VMBuilds\hydroponics_master\mega_atmega2560\Debug\hydroponics_master.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \

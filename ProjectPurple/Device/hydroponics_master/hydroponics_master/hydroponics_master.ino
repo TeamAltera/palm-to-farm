@@ -1,9 +1,19 @@
 ﻿#include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 
+#define PUMP_RELAY 31
+
 char* userName = "";
 char* ssid = ""; //AP's ssid
 char* psw = ""; // AP's password
+
+String device_ip = "";
+String sf_code = "none";	//ip의 D클래스 값.
+int dot_count = 0; // sf 코드 추출을 위한 변수.
+
+char* server_ip = "192.168.4.1"; //웹 서버 아이피
+unsigned int server_port = 80; //웹 서버 포트
+String uri = "/index.php";
 
 boolean bluetooth_protocol = false; // '{' is true, '}' is false
 boolean wifi_join = false;
@@ -16,15 +26,15 @@ SoftwareSerial Serial_C(11, 10);
 
 int buffer_count = 0;
 
-const int success_led = 3;
-const int fail_led = 2;
-const int piezo = 4;
+const int success_led = 49;
+const int fail_led = 51;
+const int piezo = 53;
 
 void esp8266Server_setup() {
-	Serial.begin(9600);
-	Serial1.begin(9600);
-	Serial2.begin(9600);
-	Serial_C.begin(9600);
+	Serial.begin(9600);	
+	Serial1.begin(9600);	//slave보드 통신
+	Serial2.begin(9600);	//esp통신
+	Serial_C.begin(9600);	//control보드 통신
 	delay(1000);
 	sendData("AT+RST\r\n", 3000, 0);
 	sendData("AT\r\n", 2000, 0);
@@ -36,12 +46,21 @@ void esp8266Server_setup() {
 String sendData(String command, long timeout, boolean debug) {
 	String response = "";
 	Serial2.print(command);
-	long time = millis();
+	long time = millis(); 
 	while ((time + timeout) > millis()) {
 		while (Serial2.available()) {
 			char c = Serial2.read();
 			response += c;
 		}
+	}
+	if (command == "AT+CIFSR\r\n") {
+		int ip_idx = response.indexOf("192.");
+		int ok_idx = response.indexOf("OK");
+		Serial.print("ip idx : ");
+		Serial.println(ip_idx);
+		Serial.print("ok_idx : ");
+		Serial.println(ok_idx);
+		device_ip = response.substring(ip_idx, ok_idx - 3);
 	}
 	if (!debug) {
 		Serial.println(response);
@@ -175,7 +194,17 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
-				case 15:
+				case 10:
+					content = "pump_on";
+					digitalWrite(PUMP_RELAY, HIGH);
+					Serial1.print(10);
+					break;
+				case 11:
+					content = "pump_off";
+					digitalWrite(PUMP_RELAY, LOW);
+					Serial1.print(11);
+					break;
+				case 15:  
 					content = "test_button";
 					send_control_val(cmd);
 					break;
@@ -255,11 +284,35 @@ void bluetooth_write(char* cmd, size_t len) {
 	while (Serial3.available()) Serial3.read();
 }
 
+boolean send_device_ip() {
+	String conn = String("AT+CIPSTART=3,\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
+		Serial2.flush();
+		return false;
+	}		//서버와 연결하는 부분
+	sendData(String("AT+CIPSTATUS"), 2000, 0);
+	String query = "?ip=" + String(device_ip);
+	String request = "GET " + uri + query + "\r\n";
+	request += "Connection:close\r\n\r\n";
+	sendData(String("AT+CIPSEND=3,") + request.length() + "\r\n", 1000, 0);
+	sendData(request, 1000, 0);
+	Serial2.flush();
+	return true;
+}
+
+String get_sf_code(String temp_ip) {
+	int dot_idx = temp_ip.indexOf('.');
+	if (dot_idx != '-1') dot_count++;
+	temp_ip = temp_ip.substring(dot_idx + 1);
+	return temp_ip;
+}
 
 // the setup function runs once when you press reset or power the board
 void setup() {
 	pinMode(success_led, OUTPUT);
+	pinMode(PUMP_RELAY, OUTPUT);
 	pinMode(fail_led, OUTPUT);
+	digitalWrite(PUMP_RELAY, LOW);
 	digitalWrite(success_led, LOW);
 	digitalWrite(fail_led, LOW);//점멸등 설정
 
@@ -267,6 +320,19 @@ void setup() {
 	bluetooth_setup(); //블루투스 설정, 블루투스 이름정해주는부분 나중에 수정필요
 	change_led_state(0);//빨간불
 	bluetooth_read(); //블루투스에 값이들어올때 까지 대기
+	Serial.print("device IP : ");
+	Serial.println(device_ip);
+	sf_code = device_ip;
+	boolean result = send_device_ip();
+	if (result == true) Serial.println("IP 전송완료");
+	else Serial.println("IP전송실패");
+
+	while (dot_count != 3) {
+		sf_code = get_sf_code(sf_code);
+	}
+	Serial.print("SF Code : ");
+	Serial.println(sf_code);
+	Serial1.print(sf_code);
 }
 
 // the loop function runs over and over again until power down or reset
