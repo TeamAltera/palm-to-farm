@@ -1,18 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './client/Root';
+import configStore from './redux/configStore';
 import registerServiceWorker from './registerServiceWorker';
-import './index.css';
-import configureStore from './redux/configureStore';
-import 'semantic-ui-css/semantic.min.css';
+import './include/bootstrap';
 import Promise from 'promise-polyfill';
+import setAuthorizationToken from './utils/setAuthorizationToken';
+import { setCurrentUser } from './redux/modules/auth';
+import jwt from 'jsonwebtoken';
+import './resources/css/sb-admin.css';
+// import './resources/css/animate.min.css';
+// import './resources/css/light-bootstrap-dashboard.css?v=1.4.0';
+// import './resources/css/demo.css';
+import './index.css';
 
-//promise-polyfill - axios IE8부터 적용
-if (!window.Promise) {
-  window.Promise = Promise;
+
+/*
+    리덕스 스토어 구성
+    렌더링
+    src/client/Root.js로
+*/
+
+//구형 브라우저에서 Promise기능 호환
+if(!window.Promise){
+    window.Promise=Promise;
 }
 
-const store = configureStore();
+//리덕스 스토어 구성
+const store = configStore();
 
-ReactDOM.render(<Root store={store} />, document.getElementById('root'));
+localStorage.removeItem('jwtToken');
+
+//인증 토큰 구성
+if(localStorage.jwtToken){
+    console.log('init token');
+    setAuthorizationToken(localStorage.jwtToken);
+    store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+}
+
+ReactDOM.render(<Root store={store}/>, document.getElementById('root'));
 registerServiceWorker();
+

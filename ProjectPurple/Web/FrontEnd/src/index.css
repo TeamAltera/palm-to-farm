@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+
 body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-html,
-#root {
-  height: 100%;
+a:hover{
+    text-decoration: none;
+}
+
+#nanum-gothic{
+    font-family: 'Nanum Gothic', sans-serif;
 }

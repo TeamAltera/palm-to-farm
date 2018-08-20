@@ -1,0 +1,14 @@
+#page-content-wrapper {
+  width: 100%;
+  position: relative;
+  padding: 0px;
+  overflow: auto;
+}
+
+@media(min-width:768px) {
+  #page-content-wrapper {
+    padding: 0px;
+    position: relative;
+    overflow: auto;
+  }
+}

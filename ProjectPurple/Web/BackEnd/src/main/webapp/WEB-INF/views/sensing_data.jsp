@@ -20,11 +20,11 @@
 </script>
 <script>
 /* var subscribeCode=${sessionScope.userInfo.userCode}; */
-var subscribeCode=0;
+var subscribeCode=12111;
 var stompClient = null;
 function connect() {
 	console.log(window.location.host);
-    var socket = new SockJS('http://'+'203.250.32.180:9001'+'/smart_plant/sensing_data');
+    var socket = new SockJS('http://'+'203.250.32.47:9001'+'/smart_plant/sensing_data');
     stompClient = Stomp.over(socket);  
     stompClient.connect('manager','manager', function(frame) {
         console.log('Connected: ' + frame);

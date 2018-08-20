@@ -27,10 +27,13 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	</update>
 	
 	<!-- 블락 횟수 증가, 5회 계정 로그인 실패시 블락 -->
-	<update id="incrementBlockCount" parameterType="String">
+	<update id="incrementBlockCount" parameterType="hashmap">
 		UPDATE PLANT_USER 
 		SET BLOCK=BLOCK+1
 		WHERE EMAIL=#{email}
+		<selectKey keyProperty="block" resultType="Integer" order="AFTER">
+			SELECT BLOCK AS BLOCK FROM PLANT_USER WHERE EMAIL=#{email} 
+		</selectKey>
 	</update>
 	
 	<!-- 로그인 시 사용자 존재 유뮤 조회-->
@@ -48,7 +51,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<!-- 회원가입 -->
 	<insert id="insertMember" parameterType="com.spring.smart_plant.user.domain.UserInfoDTO">
 		INSERT INTO PLANT_USER
-		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT) 
+		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT,BLOCK) 
 		VALUES
 		(PLANT_USER_SEQ.NEXTVAL,#{pwd},#{email},#{firstName},#{secondName},0,0)
 	</insert>
@@ -56,6 +59,10 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<!-- 이메일 사용 여부 조회 -->
 	<select id="searchEmail" resultType="hashmap" parameterType="String">
 		SELECT * FROM PLANT_USER WHERE EMAIL=#{email}
+	</select>
+	
+	<select id="searchBlock" resultType="Integer" parameterType="String">
+		SELECT BLOCK FROM PLANT_USER WHERE EMAIL=#{email}
 	</select>
 	
 	<!-- PLANT_USER 칼럼과 UserInfoDTO 변수명간의 매핑 -->

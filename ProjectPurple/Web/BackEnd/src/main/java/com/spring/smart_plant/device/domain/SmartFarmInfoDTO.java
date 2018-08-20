@@ -4,15 +4,12 @@ public class SmartFarmInfoDTO {
 	private int sfCode;
 	private int sfPortCnt;
 	private int floorCnt;
-	private int userCode;
 	private int coolerCnt;
 	private char ledCtrlMode;
-	private String tempDelay;
-	private String humiDelay;
-	private String elumDelay;
-	private String waterTempDelay;
-	private String waterLimDelay;
-	private String apPublicIp;
+	private char coolerSt;
+	private char ledSt;
+	private char pumpSt;
+	private int apCode;
 	private String innerIp;
 	
 	/**
@@ -22,35 +19,27 @@ public class SmartFarmInfoDTO {
 	 * @param userCode
 	 * @param coolerCnt
 	 * @param ledCtrlMode
-	 * @param tempDelay
-	 * @param humiDelay
-	 * @param elumDelay
-	 * @param waterTempDelay
-	 * @param waterLimDelay
-	 * @param apMac
-	 * @param apPrivateIp
-	 * @param innerPort
+	 * @param coolerSt
+	 * @param ledSt
+	 * @param pumpSt
+	 * @param apCode
 	 * @param innerIp
 	 */
-	public SmartFarmInfoDTO(int sfCode, int sfPortCnt, int floorCnt, int userCode, int coolerCnt, char ledCtrlMode,
-			String tempDelay, String humiDelay, String elumDelay, String waterTempDelay, String waterLimDelay,
-			String apPublicIp,  String innerIp) {
+	public SmartFarmInfoDTO(int sfCode, int sfPortCnt, int floorCnt, int coolerCnt, char ledCtrlMode,
+			char coolerSt, char ledSt, char pumpSt, int apCode, String innerIp) {
 		super();
 		this.sfCode = sfCode;
 		this.sfPortCnt = sfPortCnt;
 		this.floorCnt = floorCnt;
-		this.userCode = userCode;
 		this.coolerCnt = coolerCnt;
 		this.ledCtrlMode = ledCtrlMode;
-		this.tempDelay = tempDelay;
-		this.humiDelay = humiDelay;
-		this.elumDelay = elumDelay;
-		this.waterTempDelay = waterTempDelay;
-		this.waterLimDelay = waterLimDelay;
-		this.apPublicIp = apPublicIp;
+		this.coolerSt = coolerSt;
+		this.ledSt = ledSt;
+		this.pumpSt = pumpSt;
+		this.apCode = apCode;
 		this.innerIp = innerIp;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -58,8 +47,6 @@ public class SmartFarmInfoDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-
 
 	public int getSfCode() {
 		return sfCode;
@@ -79,12 +66,6 @@ public class SmartFarmInfoDTO {
 	public void setFloorCnt(int floorCnt) {
 		this.floorCnt = floorCnt;
 	}
-	public int getUserCode() {
-		return userCode;
-	}
-	public void setUserCode(int userCode) {
-		this.userCode = userCode;
-	}
 	public int getCoolerCnt() {
 		return coolerCnt;
 	}
@@ -97,41 +78,35 @@ public class SmartFarmInfoDTO {
 	public void setLedCtrlMode(char ledCtrlMode) {
 		this.ledCtrlMode = ledCtrlMode;
 	}
-	public String getTempDelay() {
-		return tempDelay;
+	public char getCoolerSt() {
+		return coolerSt;
 	}
-	public void setTempDelay(String tempDelay) {
-		this.tempDelay = tempDelay;
+	public void setCoolerSt(char coolerSt) {
+		this.coolerSt = coolerSt;
 	}
-	public String getHumiDelay() {
-		return humiDelay;
+	public char getLedSt() {
+		return ledSt;
 	}
-	public void setHumiDelay(String humiDelay) {
-		this.humiDelay = humiDelay;
+	public void setLedSt(char ledSt) {
+		this.ledSt = ledSt;
 	}
-	public String getElumDelay() {
-		return elumDelay;
+	public char getPumpSt() {
+		return pumpSt;
 	}
-	public void setElumDelay(String elumDelay) {
-		this.elumDelay = elumDelay;
+	public void setPumpSt(char pumpSt) {
+		this.pumpSt = pumpSt;
 	}
-	public String getWaterTempDelay() {
-		return waterTempDelay;
+	public int getApCode() {
+		return apCode;
 	}
-	public void setWaterTempDelay(String waterTempDelay) {
-		this.waterTempDelay = waterTempDelay;
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
-	public String getWaterLimDelay() {
-		return waterLimDelay;
+	public int getApPublicIp() {
+		return apCode;
 	}
-	public void setWaterLimDelay(String waterLimDelay) {
-		this.waterLimDelay = waterLimDelay;
-	}
-	public String getApPublicIp() {
-		return apPublicIp;
-	}
-	public void setApPublicIp(String apPublicIp) {
-		this.apPublicIp = apPublicIp;
+	public void setApPublicIp(int apPublicIp) {
+		this.apCode = apPublicIp;
 	}
 	public String getInnerIp() {
 		return innerIp;

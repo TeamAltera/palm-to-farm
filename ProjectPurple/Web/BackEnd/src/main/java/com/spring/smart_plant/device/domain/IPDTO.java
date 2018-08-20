@@ -11,16 +11,16 @@ public class IpDTO {
 		// TODO Auto-generated constructor stub
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
 	/**
-	 * @param innerIp
+	 * @param ip
 	 */
 	public IpDTO(String ip) {
 		super();
 		this.ip = ip;
-	}
-
-	public String getIp() {
-		return ip;
 	}
 
 	public void setIp(String ip) {

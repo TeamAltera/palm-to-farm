@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.smart_plant.common.domain.DateSearchDTO;
 import com.spring.smart_plant.common.domain.ResultDTO;
 import com.spring.smart_plant.log.dao.LogDAO;
 import com.spring.smart_plant.log.domain.DeviceLogDTO;
-import com.spring.smart_plant.log.domain.DeviceLogSearchDTO;
 
 @Service("getLogService")
 public class GetLogServiceImpl implements ILogService{
@@ -19,7 +19,7 @@ public class GetLogServiceImpl implements ILogService{
 	@Override
 	public ResultDTO execute(Object obj) {
 		// TODO Auto-generated method stub
-		DeviceLogSearchDTO dto=(DeviceLogSearchDTO)obj;
+		DateSearchDTO dto=(DateSearchDTO)obj;
 		List<DeviceLogDTO> result=dao.getLog(dto);
 		return ResultDTO.createInstance(true)
 				.setMsg(dto.getDate()+"의 사용기록은 "+result.size()+"개 입니다.")

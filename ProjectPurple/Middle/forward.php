@@ -9,7 +9,7 @@ $conn = mysqli_connect($db_host, $db_user, $db_passwd, $db_name) or die("Connect
 
 
 <?php
-// 포워딩 페이지 작성.
+// 포워딩 페이지 작성. 전달 받은 제어코드 값을 수경재배기 장비에게 전달해주는 역할 수행
 // 웹서버에서 버튼을 누르면 라즈베리가 받아서 유저코드의 값을 통하여 아두이노 장비로 ip주소와 cmd 값을 넘겨줘야 한다.
 
     header('Access-Control-Allow-Origin: *');
@@ -35,7 +35,7 @@ $conn = mysqli_connect($db_host, $db_user, $db_passwd, $db_name) or die("Connect
     $key = ['cmd' => $cmd, 'dest' => $dest]; // 받아온 cmd, userCode 값을 key에 넣음.
     //echo json_encode($key);
 
-    $query = "SELECT USER_CODE FROM Sys_info WHERE USER_CODE = '$user_code'"; //Sys_info 테이블의 USER_CODE와 $user_code를 비교하여 맞는 USER_CODE를 받는 쿼리문.
+    $query = "SELECT USER_CODE FROM SYS_INFO WHERE USER_CODE = '$user_code'"; //Sys_info 테이블의 USER_CODE와 $user_code를 비교하여 맞는 USER_CODE를 받는 쿼리문.
     $result_query = mysqli_query($conn, $query) or die ("Error Database connect!!");
 
     while($data = mysqli_fetch_array($result_query)){

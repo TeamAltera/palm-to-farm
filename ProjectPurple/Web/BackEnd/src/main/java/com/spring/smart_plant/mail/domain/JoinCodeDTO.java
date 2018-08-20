@@ -1,13 +1,14 @@
 package com.spring.smart_plant.mail.domain;
 
 public class JoinCodeDTO {
-	private int code;
 
-	public void setCode(int code) {
+	private String code;
+
+	public void setCode(String code) {
 		this.code = code;
 	}
 
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 }

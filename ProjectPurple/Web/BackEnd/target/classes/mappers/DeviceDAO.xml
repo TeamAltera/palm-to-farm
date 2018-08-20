@@ -4,58 +4,120 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="device">
-	<select id="getAllAP" resultType="hashmap"
-	parameterType="Integer"
-	>
-		SELECT * FROM AP 
+	<select id="getAllAP" resultType="hashmap" parameterType="Integer">
+		SELECT
+		* FROM AP
 		WHERE USER_CODE=#{userCode}
 	</select>
-	
-	<select id="getAP" resultType="hashmap"
-	parameterType="String"
-	>
-		SELECT * 
-		FROM AP 
+
+	<select id="getAP" resultType="hashmap" parameterType="String">
+		SELECT *
+		FROM AP
 		WHERE AP_PUBLIC_IP=#{ip}
 	</select>
 	
-	<select id="getAllSmartPlant" resultType="hashmap"
-	parameterType="Integer"
-	>
-		SELECT * 
-		FROM SF 
-		WHERE USER_CODE=#{userCode}
+	<select id="getApIp" resultType="String" parameterType="Integer">
+		SELECT AP_PUBLIC_IP 
+		FROM AP
+		WHERE AP_CODE=#{apCode}
 	</select>
-	
-	<delete id="deleteAP" parameterType="String">
-		DELETE FROM AP 
-		WHERE AP_PUBLIC_IP=#{apPublicIp}
+
+	<select id="getAllSmartPlant" resultType="hashmap"
+		parameterType="Integer">
+		SELECT *
+		FROM SF S,AP A
+		WHERE A.USER_CODE=#{userCode}
+		AND S.AP_CODE=A.AP_CODE
+	</select>
+
+	<delete id="deleteAP" parameterType="Integer">
+		DELETE FROM AP
+		WHERE
+		AP_CODE=#{apCode}
 	</delete>
-	
+
 	<insert id="insertAP" parameterType="com.spring.smart_plant.device.domain.APInfoDTO">
-		INSERT INTO AP
-		(AP_PUBLIC_IP,AP_SSID,USER_CODE) 
-		VALUES(#{apPublicIp},#{apSsid},#{userCode})
-	</insert>
-	
-	<insert id="insertSmartFarmDevice" parameterType="hashmap" keyProperty="id">
 		<selectKey keyProperty="id" resultType="Integer" order="BEFORE">
-			SELECT SF_SEQ.NEXTVAL AS ID FROM DUAL
+			SELECT AP_SEQ.NEXTVAL AS ID FROM DUAL
 		</selectKey>
-		INSERT INTO SF 
-		(SF_CODE,SF_PORT_CNT, FLOOR_CNT,USER_CODE,COOLER_CNT,LED_CTRL_MODE,
-		TEMP_DELAY,HUMI_DELAY,ELUM_DELAY,WATER_TEMP_DELAY,WATER_LIM_DELAY,INNER_IP,AP_PUBLIC_IP)
-		VALUES (#{id},32,2,#{userCode},3,'Y',60,60,60,60,60,#{innerIp},#{ip})
-		<!-- sfCode값 추출 -->
+		INSERT INTO AP
+		(AP_CODE,AP_PUBLIC_IP,AP_SSID,USER_CODE, AP_SF_CNT, AP_REG_DATE)
+		VALUES(#{id},#{apPublicIp},#{apSsid},#{userCode},#{apSfCnt}, SYSDATE)
 	</insert>
-	
+
+	<insert id="insertSmartFarmDeviceList" parameterType="java.util.HashMap">
+		<if test="deviceList.size != 0">
+			<!-- INSERT ALL --> 
+			<foreach collection="deviceList" item="item" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO SF (
+			SF_CODE,
+			SF_PORT_CNT,
+			FLOOR_CNT,
+			COOLER_CNT,
+			LED_CTRL_MODE,
+			INNER_IP,
+			AP_CODE,
+			LED_ST,
+			PUMP_ST,
+			COOLER_ST
+			) VALUES
+			(
+				#{item.sfCode},
+				#{item.sfPortCnt},
+				#{item.floorCnt},
+				#{item.coolerCnt},
+				#{item.mode},<!-- 장비 상태는 자동(auto) -->
+				#{item.innerIp},
+				#{apCode},
+				#{item.ledSt},<!-- LED상태는 꺼져 있음 -->
+				#{item.pumpSt},<!-- 펌프 상태는 꺼져 있음 -->
+				#{item.coolerSt}<!-- 쿨러 상태는 꺼져 있음 -->
+			)
+			</foreach>	
+			<!-- SELECT * FROM DUAL -->
+		</if>
+	</insert>
+
+	<insert id="insertSmartFarmDevice" parameterType="hashmap">
+		INSERT INTO SF (
+		SF_CODE,
+		SF_PORT_CNT,
+		FLOOR_CNT,
+		COOLER_CNT,
+		LED_CTRL_MODE,
+		INNER_IP,
+		AP_CODE,
+		LED_ST,
+		PUMP_ST,
+		COOLER_ST
+		)VALUES
+		(
+			#{sfCode},
+			32,
+			2,
+			3,
+			'A', <!-- 장비 상태는 자동(auto) -->
+			#{innerIp},
+			#{apCode},
+			'F',<!-- LED상태는 꺼져 있음 -->
+			'F',<!-- 펌프 상태는 꺼져 있음 -->
+			'F'<!-- 쿨러 상태는 꺼져 있음 -->
+		)
+	</insert>
+
 	<delete id="deleteSmartFarmDevice" parameterType="Integer">
-		DELETE FROM SF 
+		DELETE FROM SF
 		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
 	</delete>
-	
-	<delete id="deleteSmartFarmAPAllDevice" parameterType="String">
-		DELETE FROM SF 
-		WHERE AP_PUBLIC_IP=#{apPublicIp}
+
+	<delete id="deleteSmartFarmAPAllDevice" parameterType="Integer">
+		DELETE
+		FROM SF
+		WHERE AP_CODE=#{apCode}
 	</delete>
+
+	<!-- <resultMap type="com.spring.smart_plant.device.domain.DeviceHierarchyDTO" 
+		id="deviceHierarchyDTO"> <result property="apInfo" column=""/> <result property="devices" 
+		column=""/> </resultMap> -->
 </mapper>

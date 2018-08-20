@@ -1,0 +1,53 @@
+.smaller {
+    font-size: 0.7rem;
+}
+
+.smaller.size-8 {
+    font-size: 0.8rem;
+}
+
+.smaller.size-9 {
+    font-size: 0.9rem;
+}
+
+#RouterAddButton-border {
+    border: 2px dashed rgba(0, 0, 0, .125);
+    border-width: 2px;
+}
+
+.RouterAddButton-container {
+    height: 100%;
+    cursor: pointer;
+    padding-top: 0px;
+}
+
+.RouterAddButton-wrapper {
+    position: relative;
+    height: 135px;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.RouterAddButton-item {
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* @media(min-width:768px) {
+    .RouterAddButton-wrapper {
+        position: relative;
+        height: 60px;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+} */

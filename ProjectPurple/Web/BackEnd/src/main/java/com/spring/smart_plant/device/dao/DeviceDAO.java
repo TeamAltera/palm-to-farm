@@ -2,25 +2,21 @@ package com.spring.smart_plant.device.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.smart_plant.device.domain.APInfoDTO;
 import com.spring.smart_plant.device.domain.SmartFarmInfoDTO;
-import com.spring.smart_plant.user.dao.UserDAO;
 
 @Repository
 public class DeviceDAO{
 	
 	@Autowired
 	private SqlSessionTemplate sql;
-	
-	@Autowired
-	private UserDAO userDao;
 	
 	private final String namespace="device";
 	
@@ -40,31 +36,46 @@ public class DeviceDAO{
 	}
 	
 	//AP등록
-	public void insertAP(APInfoDTO dto) {
-		sql.insert(namespace+".insertAP", dto);
+	public int insertAP(APInfoDTO dto) {
+		//Object -> map
+		ObjectMapper oMapper = new ObjectMapper();
+        @SuppressWarnings("unchecked")
+		Map<String, Object> map = oMapper.convertValue(dto, Map.class);
+        sql.insert(namespace+".insertAP", map);
+		return (int)map.get("id");
 	}
 	
 	//AP삭제
-	public void deleteAP(String apPublicIp) {
-		sql.delete(namespace+".deleteAP",apPublicIp);
+	public void deleteAP(int apCode) {
+		sql.delete(namespace+".deleteAP",apCode);
 	}
 	
 	// SF장비 추가, SF_SEQ로 SF코드생성
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public int insertSmartFarmDevice(String innerIp, int userCode, String ip) throws Exception{
+	public void insertSmartFarmDeviceList(List<Map<String, Object>> deviceList, int apCode) throws Exception{
 		HashMap<String, Object> map=new HashMap<>();
-		map.put("innerIp", innerIp);
-		map.put("userCode", userCode);
-		map.put("ip", ip);
+		map.put("deviceList", deviceList);//각 요소는 sfCode, innerIp로 구성
+		map.put("apCode", apCode);
 		try {
-			sql.insert(namespace+".insertSmartFarmDevice", map);
-			userDao.incrementSfCount(userCode);
+			sql.insert(namespace+".insertSmartFarmDeviceList", map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
-		return (int)map.get("id");
+	}
+	
+	public void insertSmartFarmDevice(int sfCode, String innerIp, int apCode) throws Exception{
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("innerIp", innerIp);
+		map.put("apCode", apCode);
+		try {
+			sql.insert(namespace+".insertSmartFarmDevice", map);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
 	//수경재비기 한 대 삭제
@@ -73,16 +84,19 @@ public class DeviceDAO{
 	}
 	
 	//공유기에 연결된 모든 수경재배기 삭제
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public int deleteSmartFarmAPAllDevice(String apPublicIp, int userCode) throws Exception{
+	public int deleteSmartFarmAPAllDevice(int apCode) throws Exception{
 		int count=0;
 		try {
-			count=sql.delete(namespace+".deleteSmartFarmAPAllDevice",apPublicIp);
-			userDao.decrementSfCount(count, userCode);
+			count=sql.delete(namespace+".deleteSmartFarmAPAllDevice",apCode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw e;
 		}
 		return count;
+	}
+	
+	public String getApIp(int apCode) {
+		return sql.selectOne(namespace+".getApIp", apCode);
 	}
 }

@@ -1,27 +1,33 @@
+#기본 공유기 접속 루트
+```
+203.250.35.169/login.php
+```
+
 # RaspberryPi 3  B Model AP Mode
 
 Hello. How to access point RapsberryPi.
+
 ```
 AP란?
 
 * Access Point : 와이파이를 이용한 관련 표준을 이용하여 무선 장치들을 유선 장치에 연결할 수 있게 하는 장치.
 
-즉, 공유기와 비슷한 역할을 하게 된다고 합니다.
+즉, 공유기와 비슷한 역할을 하게 된다고 한다..
 ```
 
 
 ref
 https://www.raspberrypi.org/documentation/configuration/wireless/access-point.md
 
-dnsmasq와 hostapd가 무엇인지부터 알아봐야겠네요??
+dnsmasq와 hostapd가 무엇인지부터 알아보자.
 
 
 
-dnsmasq : 1000클라이언트 이하의 로컬 네트워크에서 활용할 수 있는 간단한 DHCP/DNS 서버라고 하네요.
+```dnsmasq``` : 1000클라이언트 이하의 로컬 네트워크에서 활용할 수 있는 간단한 DHCP/DNS 서버라고 한다.
 
-핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 하네요.
+핵심 특징은 쉬운 설정과 소규모에서 활용하기 좋은 시스템이라고 한다.
 
-즉, 와이파이를 사용하고자 하는 사용자가 오면 그 사용자에게 IP와 DNS를 할당해주는 패키지라고 생각하면 편할 것 같아요.
+즉, 와이파이를 사용하고자 하는 사용자가 오면 그 사용자에게 IP와 DNS를 할당해주는 패키지라고 생각하면 편할 것 같다.
 
 
 
@@ -29,27 +35,27 @@ DHCP는 또 뭐고 DNS는 또 무엇일까??
 
 
 
-일단 DHCP는 우리가 전화를 사용할 때 유일한 전화번호가 있듯이 인터넷에도 유일한 주소가 있겠죠??
+일단 ```DHCP```는 우리가 전화를 사용할 때 유일한 전화번호가 있듯이 인터넷에도 유일한 주소가 있겠다.
 
-그런 것들을 IP주소라고 흔히 부르고 있죠~?
+그런 것들을 IP주소라고 흔히 부르고 있다.
 
 
 
 그런데 보면 컴퓨터 사고 랜선 꼽으면 그냥 아무 설정 안했는데 자동으로 그냥 인터넷 연결도 되고~
 
-편하게 사용할 수 있죠??
+편하게 사용할 수 있다.
 
-그렇게 해주는 설정이 바로 DHCP설정이라고 하네요!
+그렇게 해주는 설정이 바로 DHCP설정이라고 한다.
 
 
 
 DHCP를 통한 IP주소 할당은 흔히 '임대'라는 개념을 가지고 있어서 IP주소를 임대기간을 명시하여 그 기간 동안에만 단말이
 
-IP주소를 사용할수 있다고 하고 더 사용하고자 하면 기간연장을 서버에 요청하고 필요없으면 반납절차를 수행하게 된다고 하네요.
+IP주소를 사용할수 있다고 하고 더 사용하고자 하면 기간연장을 서버에 요청하고 필요없으면 반납절차를 수행하게 된다고 한다.
 
 
 
-DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻한ㄷ.
+```DNS```는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻한다.??
 
 
 
@@ -57,19 +63,23 @@ DNS는 흔히 naver.com이나 google.co.kr 같은 도메인 네임 서버를 뜻
 
 
 
-그럼 hostapd는 또 무엇?
-hostapd와 관련된 내용은 영문으로 된 위키백과를 참고
+그럼 hostapd는 또 무엇일까요??
+
+hostapd와 관련된 내용은 영문으로 된 위키백과를 참고하였다.
+
 설명으로는 
 
+
+```
 hostapd is a user space daemon for wireless access point and authentication servers. There are three implementations: Jouni Malinen's hostapd, OpenBSD's hostapd and Devicescape's hostapd.
 
 
 Contents  [hide] 
-
+```
 
 AP와 인증 서버를 위한 사용자 공간 데몬이라고 하네요?? 데몬은 흔히 백그라운도 프로세스라고 불리고..
 
-그냥 무선 네트워크 인터페이스는 AP모드로 전환하여 서비스를 하게 해주는 패키지라고 생각하면 될 것 같아요.
+그냥 무선 네트워크 인터페이스는 AP모드로 전환하여 서비스를 하게 해주는 패키지라고 생각하면 될 것 같다.
 
 
 The Raspberry Pi can be used as a wireless access point, running a standalone network. 
@@ -99,7 +109,6 @@ sudo apt-get update
 sudo apt-get upgrade
 
 sudo apt-get install dnsmasq hostapd
-
 ```
 
 ```
@@ -215,7 +224,7 @@ Save the iptables rule.
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 ```
 
-Edit /etc/rc.local and add this just above "exit 0" to install these rules on boot.
+Edit ```/etc/rc.local ```and add this just above "exit 0" to install these rules on boot.
 
 ```
 iptables-restore < /etc/iptables.ipv4.nat
@@ -249,7 +258,7 @@ sudo hostapd /etc/hostapd/hostapd.conf
 
 AP모드가 작동하지 않고 ERROR가 발생하게 되었다.
 
-에러는 Line2 : invalid/unknown driver 'nl80211'
+에러는 ```Line2 : invalid/unknown driver 'nl80211'```
 
 이라고 하면서 앞에서 hostapd.conf에서 설정을 해준 'nl80211'이 뭐가 잘 안되는 것을 느꼈다.
 
@@ -306,10 +315,10 @@ nano .config
 ```.config ```파일로 들어가서 찾아준다.
 
 ```
-/#CONFIG_DRIVER_NL80211=y
+#CONFIG_DRIVER_NL80211=y
 ```
 
-/#부분을 없앤다. 최근버젼인 2.6버젼에는 애초에 #이 없었다. /는 깃허브에 올릴려고 추가적으로 붙인 것이니 원래 없는 부분... 신경쓰지 말자!!
+\#부분을 없앤다. 최근버젼인 2.6버젼에는 애초에 #이 없었다.
 
 Next, compile hostapd:
 
@@ -358,17 +367,16 @@ make
 
 컴파일을 해준다. 여기서 분명 안되는 것 처럼?? 나오는 걸로 알고있다. 
 
-../src/drivers/driver_nl080211.c:17:31: fatal error~~ 에러가 뜨는데 딱히 신경 쓰지말자..
+```../src/drivers/driver_nl080211.c:17:31: fatal error~~ ```에러가 뜨는데 딱히 신경 쓰지말자..
 
 여기서 이제
 
 ```
-$sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
-sudo apt-get hostapd hostapd/hostapd.conf 를 해보도록하자.
+sudo apt-get hostapd hostapd/hostapd.conf
 ```
 
 ```
-$sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf 도 같은 거라고 생각하면 될 것 같다.
+sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf
 ```
 
 드디어!! 성공!!

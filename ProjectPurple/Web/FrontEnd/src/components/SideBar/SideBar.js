@@ -1,25 +1,49 @@
-import React, { Component, Fragment } from 'react';
-import { Navbar, Nav, NavItem } from 'reactstrap';
-import './SideBar.css';
+import React from 'react';
+import PropTypes from 'prop-types';
+import './SideBar.css'
+import TextCenter from '../TextCenter/TextCenter';
+import { MdDeviceHub, MdTimeline, MdPermIdentity } from 'react-icons/lib/md';
 import { Link } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
 
-class SideBar extends Component {
-  render() {
+const SideBar = () => {
     return (
-      <div className="SideBar">
-        <Link to="Home" className="SideBar__link">
-          <Icon name="home" size="large" />DashBoard
-        </Link>
-        <Link to="Home" className="SideBar__link">
-          <Icon name="podcast" size="large" />AP
-        </Link>
-        <Link to="graph" className="SideBar__link">
-          <Icon name="cube" size="large" />Component
-        </Link>
-      </div>
-    );
-  }
+        <div id="sidebar-wrapper">
+            <nav className="absolute-top navbar navbar-absolute navbar-expand-lg"
+                id="sidebar-header"
+            >
+                <TextCenter>
+                    <span className="sidebar-header-text">
+                        <span className="sidebar-header-text bold">S
+                        </span>mart <span className="sidebar-header-text bold">P</span>lant
+                    </span>
+                </TextCenter>
+            </nav>
+            <ul className="sidebar-nav" id="nanum-gothic">
+                <li className="mt-3">
+                    <Link to="/main">
+                        <MdDeviceHub size="30" />
+                        <span className="ml-3">디바이스 정보</span>
+                    </Link>
+                </li>
+                <li className="mt-3">
+                    <Link to="/main">
+                        <MdTimeline size="30" />
+                        <span className="ml-3">데이터 로거</span>
+                    </Link>
+                </li>
+                <li className="mt-3">
+                    <Link to="/main">
+                        <MdPermIdentity size="30" />
+                        <span className="ml-3">사용자 정보</span>
+                    </Link>
+                </li>
+            </ul>
+        </div>
+    )
+};
+
+SideBar.propTypes = {
+
 }
 
 export default SideBar;

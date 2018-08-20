@@ -16,7 +16,7 @@ import com.spring.smart_plant.log.command.InsertLogServiceImpl;
 import com.spring.smart_plant.log.domain.DeviceLogDTO;
 
 @Service("deviceControlService")
-public class DeviceControlServiceImpl implements IDeviceService{
+public class DeviceControlServiceImpl implements IDeviceFrontService{
 	private final String PHP_FORWARD_URL = "/forward.php";	
 	
 	@Autowired
@@ -29,7 +29,7 @@ public class DeviceControlServiceImpl implements IDeviceService{
 	public ResultDTO execute(Object obj) {
 		// TODO Auto-generated method stub
 		CommandDTO commandSet=(CommandDTO)obj;
-		UrlConnectionCommand conn=new UrlConnectionCommand();
+		UrlConnectionServiceImpl conn=new UrlConnectionServiceImpl();
 		int cmd=commandSet.getCmd();
 		int userCode=(int)ConstantJwtService.getJwtService().get("member").get("userCode");
 		String requestData="{\"cmd\":\"" + cmd 
@@ -58,10 +58,11 @@ public class DeviceControlServiceImpl implements IDeviceService{
 	private void saveLog(CommandDTO commandSet, String result) {
 		Timestamp ts=new Timestamp(new Date().getTime());
 		int sfCode=commandSet.getSfCode();
+		int apCode=commandSet.getApCode();
 		String usedIp=commandSet.getUsedIp();
 		String actName=getCommandType(commandSet.getCmd());
 		char res=getResult(result);
-		insertLogService.execute(new DeviceLogDTO(ts,sfCode,usedIp,actName,res));
+		insertLogService.execute(new DeviceLogDTO(ts,sfCode,apCode,usedIp,actName,res));
 	}
 	
 	private String getCommandType(int cmd) {

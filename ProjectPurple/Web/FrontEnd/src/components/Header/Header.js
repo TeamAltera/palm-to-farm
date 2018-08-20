@@ -1,14 +1,49 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import './Header.css';
+import PropTypes from 'prop-types';
+import { MdChevronRight, MdChevronLeft, MdAccountCircle } from 'react-icons/lib/md';
+import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 
-class Header extends Component {
-  render() {
+const Header = ({ onClick, direction, popover, title }) => {
     return (
-      <div className="Header">
-        <p className="title">Project Ponics</p>
-      </div>
-    );
-  }
+        <nav className="absolute-top navbar navbar-absolute navbar-expand-lg
+         nopadding-top nopadding-bottom"
+            id="Header">
+            <div className="Header-container">
+                <div className="Header-box-left">
+                    <a className="Header-toggle"
+                        onClick={onClick[0]}
+                    >
+                        {!direction && <MdChevronRight size={35} color="#2ca8ff" />}
+                        {direction && <MdChevronLeft size={35} color="#2ca8ff" />}
+                    </a>
+                    <div className="Header-title ml-2" id="nanum-gothic">
+                        {title}
+                    </div>
+                </div>
+                <div className="Header-box-right">
+                    <a className="Header-toggle" onClick={onClick[1]} id="Popover1">
+                        <MdAccountCircle size={35} color="#2ca8ff" />
+                    </a>
+                    <Popover placement="bottom" isOpen={popover} target="Popover1" toggle={onClick[1]}>
+                        <PopoverHeader>
+                            sencom1028@gmail.com
+                        </PopoverHeader>
+                        <PopoverBody>
+                            Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+                        </PopoverBody>
+                    </Popover>
+                </div>
+            </div>
+        </nav>
+    )
+};
+
+Header.propTypes = {
+    direction: PropTypes.bool.isRequired,
+    onClick: PropTypes.array.isRequired,
+    popover: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
 }
 
 export default Header;

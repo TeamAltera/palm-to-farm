@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 public class SensorDataDTO {
 	private Timestamp date;
 	private int sfCode;
+	private int apCode;
 	private int temp;
 	private int humi;
 	private int elum;
@@ -30,10 +31,11 @@ public class SensorDataDTO {
 	 * @param waterTemp
 	 * @param waterLim
 	 */
-	public SensorDataDTO(Timestamp date, int sfCode, int temp, int humi, int elum, int waterTemp, int waterLim) {
+	public SensorDataDTO(Timestamp date, int sfCode, int apCode, int temp, int humi, int elum, int waterTemp, int waterLim) {
 		super();
 		this.date = date;
 		this.sfCode = sfCode;
+		this.apCode = apCode;
 		this.temp = temp;
 		this.humi = humi;
 		this.elum = elum;
@@ -51,6 +53,12 @@ public class SensorDataDTO {
 	}
 	public void setSfCode(int sfCode) {
 		this.sfCode = sfCode;
+	}
+	public int getApCode() {
+		return apCode;
+	}
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
 	public int getTemp() {
 		return temp;

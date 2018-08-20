@@ -1,0 +1,110 @@
+#RouterAddModal-content{
+    border-radius: .2rem;
+}
+
+#RouterAddModal-header{
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0.4rem;
+    border-top-right-radius: .2rem;
+    border-top-left-radius: .2rem;
+    background-color: #2a2a2a;
+    color: white;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.RouterAddModal-close{
+    border-top-right-radius: .2rem;
+    margin: 0;
+    background-color: #a93b36;
+    color:#ca8885;
+    border: 0;
+    float: right;
+}
+
+.RouterAddModal-close:hover{    
+    background-color: #8e211c;
+    color: #ffffff;
+}
+
+.ip-input-container{
+    display: inline-block;
+    font-size: 0;
+    border: 1px solid #ccc;
+    padding: 6px 0;
+  }
+  .ip-input-container .ip-input-item{
+    border: none;
+    outline: 0;
+    margin: 0;
+    width: 60px;
+    text-align: center;
+    vertical-align: bottom;
+    font-size: 13px;
+  }
+  .ip-input-container .ip-input-dot{
+    display: inline-block;
+    width: 2px;
+    height: 2px;
+    margin-bottom: 2px;
+    background-color: #333;
+    border-radius: 50%;
+    vertical-align: bottom;
+  }
+
+.RouterAddModal-title{
+    font-size: 1rem;
+}
+
+.RouterAddModal-btn{
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: white;
+    color: black;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+}
+
+.RouterAddModal-btn:hover:not([disabled]){
+    background-color: #2ca8ff;
+    border: 1px solid #2ca8ff;
+    color: white;
+    text-decoration: none;
+}
+
+.RouterAddModal-btn[disabled]{
+    background-color: white;
+    border: 1px solid rgba(0,0,0,.125);
+    color: rgba(0,0,0,.125);
+    cursor: default;
+}
+
+#padding-right-8{
+    padding-right: 8px;
+}
+
+/* .modal {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+    .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+    }
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+} */

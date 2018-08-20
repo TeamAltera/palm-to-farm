@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
 
+import com.spring.smart_plant.sensor.command.InsertSensorServiceImpl;
 import com.spring.smart_plant.sensor.dao.SensorDAO;
 
 @Component
@@ -16,7 +17,7 @@ public class RabbitMessageListenerImpl{
 	/*private RabbitMessagingTemplate rabbitTemplate;*/
 	
 	@Autowired
-	private SensorDAO dao;
+	private InsertSensorServiceImpl insertSensorService;
 	
 	@Autowired
 	public void setMessagingTemplate(MessageSendingOperations<String> messagingTemplate) {
@@ -28,16 +29,25 @@ public class RabbitMessageListenerImpl{
 	public void setRabbitTemplate(RabbitMessagingTemplate rabbitTemplate) {
 		this.rabbitTemplate = rabbitTemplate;
 	}*/
-
-
-	//RabbitMQ consumer로 등록된 메서드
+	
+	/**
+	 * <pre>
+	 * -RabbitMQ consumer로 등록된 메서드
+	 * </pre>
+	 * @param income
+	 */
 	public void onMessage(HashMap<String, Object> income) {
 		// TODO Auto-generated method stub
-		System.out.println(new Date());
 		/*rabbitTemplate.convertAndSend("/topic/messages"+income.get("id"),income);*/
-		System.out.println(income.get("d"));
-		this.messagingTemplate.convertAndSend("/topic/messages"+income.get("id"),income);
-		//dao.insertData(income);
+		
+		try {
+			System.out.println(income.toString());
+			this.messagingTemplate.convertAndSend("/topic/messages"+income.get("ap")+income.get("sf"),income);
+			//insertSensorService.execute(income);//센싱 데이터 저장
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		/*t: temp
 		 * wt: water temp
 		 * wl: water lim

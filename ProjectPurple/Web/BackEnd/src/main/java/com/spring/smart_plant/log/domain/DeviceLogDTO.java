@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class DeviceLogDTO {
 	private Timestamp usedDate;
 	private int sfCode;
+	private int apCode;
 	private String usedIp; //명령을 내린 사용자Ip주소
 	private String actName;
 	private char result;
@@ -22,11 +23,12 @@ public class DeviceLogDTO {
 	 * @param actName
 	 * @param result
 	 */
-	public DeviceLogDTO(Timestamp usedDate, int sfCode, String usedIp, String actName,
+	public DeviceLogDTO(Timestamp usedDate, int sfCode, int apCode, String usedIp, String actName,
 			char result) {
 		super();
 		this.usedDate = usedDate;
 		this.sfCode = sfCode;
+		this.apCode = apCode;
 		this.usedIp = usedIp;
 		this.actName = actName;
 		this.result = result;
@@ -42,6 +44,12 @@ public class DeviceLogDTO {
 	}
 	public void setSfCode(int sfCode) {
 		this.sfCode = sfCode;
+	}
+	public int getApCode() {
+		return apCode;
+	}
+	public void setApCode(int apCode) {
+		this.apCode = apCode;
 	}
 	public String getActName() {
 		return actName;

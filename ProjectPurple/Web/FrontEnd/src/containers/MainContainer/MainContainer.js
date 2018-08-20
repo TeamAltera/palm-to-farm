@@ -1,88 +1,251 @@
 import React, { Component } from 'react';
-import { Button, Form, Modal, Image } from 'semantic-ui-react';
-import { MainWrapper, DashBoard } from '../../components';
-import raz_router from '../../assets/images/raz_router.png';
-import * as MainApi from '../../lib/api/main';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as mainActions from '../../redux/modules/main';
+import {
+    SideBar,
+    PageContent,
+    Header,
+    MainWrapper,
+    PageBody,
+    RouterItem,
+    RouterAddButton,
+    MainToolBar,
+    RouterAddModal,
+    FormError,
+    SfItemContainer,
+} from '../../components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './MainContainer.css';
 
 class MainContainer extends Component {
-  state = {
-    first: '',
-    second: '',
-    third: '',
-    fourth: '',
-  };
+    toastId = null;
 
-  doConfirmIp = async () => {
-    const { first, second, third, fourth } = this.state;
-    try {
-      await MainApi.confirm_ip(first, second, third, fourth);
-    } catch (e) {
-      console.log(e);
+    _sidebarControl = () => {
+        const { MainActions, toggleState } = this.props;
+        MainActions.changeToggleState(!toggleState);
     }
-  };
 
-  moveGraph = () => {};
+    _sfItemContainerControlOpen = (apCode, apName, regDate) => {
+        const { MainActions } = this.props;
+        const data={
+            apCode: apCode,
+            apName: apName,
+            regDate: regDate,
+        };
+        MainActions.changeSelectedAp(data)
+        MainActions.changeSfToggleState(true);
+    }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+    _sfItemContainerControlClose = () => {
+        const { MainActions } = this.props;
+        MainActions.changeSfToggleState(false);
+    }
 
-  render() {
-    const { first, second, third, fourth } = this.state;
-    return (
-      <MainWrapper>
-        <DashBoard />
-        {/* <Link to="graph">그래프</Link>
-        <Modal trigger={<Button content="수경재배기 ap 추가" />}>
-          <Modal.Header>공유기 추가</Modal.Header>
-          <Modal.Content>
-            <Modal.Description>
-              <Image size="medium" src={raz_router} />
-              <p>1.사용자의 디바이스로 라즈베리파이 공유기에 연결합니다.</p>
-              <p>2.브라우저에서 192.168.4.1로 접속합니다.</p>
-              <p>
-                3.접속해서 나오는 공유기의 IP정보를 하단에 입력하고 등록합니다.
-              </p>
-              <Form>
-                라즈베리공유기 API :
-                <Form.Group widths="equal">
-                  <Form.Input
-                    placeholder="A"
-                    type="text"
-                    value={first}
-                    onChange={this.handleChange}
-                    name="first"
-                  />
-                  <Form.Input
-                    placeholder="B"
-                    type="text"
-                    value={second}
-                    onChange={this.handleChange}
-                    name="second"
-                  />
-                  <Form.Input
-                    placeholder="C"
-                    type="text"
-                    value={third}
-                    onChange={this.handleChange}
-                    name="third"
-                  />
-                  <Form.Input
-                    placeholder="D"
-                    type="text"
-                    value={fourth}
-                    onChange={this.handleChange}
-                    name="fourth"
-                  />
-                  <Form.Button onClick={this.doConfirmIp}>조회</Form.Button>
-                </Form.Group>
-              </Form>
-              <Button>등록</Button>
-            </Modal.Description>
-          </Modal.Content>
-        </Modal> */}
-      </MainWrapper>
-    );
-  }
+    _headerUserButtonControl = () => {
+        const { MainActions, popoverState } = this.props;
+        MainActions.changePopoverState(!popoverState);
+    }
+
+    _changeModalsOpen = () => {
+        const { MainActions, modalsState } = this.props;
+        MainActions.changeModalsState(!modalsState);
+        if(!modalsState) MainActions.resInit();
+        else MainActions.initializeForm();
+        
+    }
+
+    _changeDropdown = () => {
+        const { MainActions, dropdownState } = this.props;
+        MainActions.changeDropdownState(!dropdownState);
+    }
+
+    // componentWillUnmount() {
+    //     const { AuthActions, isAutenticated, history } = this.props;
+    //     //if (isAutenticated) {
+    //     //    history.push('/main');  
+    //     //}
+    //     AuthActions.initializeForm('signin');
+    // }
+
+    _getDeviceAllInfo = async () => {
+        const { MainActions } = this.props;
+        await MainActions.getDeviceAllInfo();
+    }
+
+    _deleteAllRouter = async () => {
+        const { MainActions } = this.props;
+    }
+
+    _deleteSingleRouter = async (apCode) => {
+        const { MainActions } = this.props;
+        await MainActions.deleteSingleRouter(apCode).then(
+            (res) => {
+                this._showAlert(res.data)
+                return res;
+            }
+        );
+    }
+
+    //라우터 조회
+    _searchRouter = async () => {
+        const { MainActions, isConfirm } = this.props;
+        const { a, b, c, d } = this.props.ip.toJS();
+        console.log(a + '.' + b + '.' + c + '.' + d);
+        MainActions.resInit();
+        await MainActions.searchRouter(a + '.' + b + '.' + c + '.' + d).then(
+            res=>{
+                MainActions.changeConfirm(res.data.status==='OK');
+                return res;
+            }
+        );
+    }
+
+    //라우터 추가
+    _addRouter = async () => {
+        const { MainActions } = this.props;
+        const { a, b, c, d } = this.props.ip.toJS();
+        MainActions.resInit();
+        await MainActions.addRouter(a + '.' + b + '.' + c + '.' + d).then(
+            (res) => {
+                if (res.data.status === 'OK'){
+                    this._changeModalsOpen();
+                    this._showAlert(res.data);
+                }
+                return res;
+            }
+        );
+    }
+
+    _showAlert = (data) => {
+        let type = toast.TYPE.SUCCESS
+        if (data.msg) {
+            if (data.status !== 'OK') {
+                type = toast.TYPE.ERROR;
+            }
+            this.toastId = toast(
+                data.msg, {
+                    autoClose: 4000,
+                    type: type,
+                });
+        }
+    }
+
+    //Input 컴포넌트의 value가 변화할 때 수행
+    _handleChange = e => {
+        const { MainActions } = this.props;
+        const { name, value } = e.target;
+
+        MainActions.changeInput({
+            name,
+            value,
+        });
+    }
+
+    componentDidMount() {
+        this._getDeviceAllInfo();
+    }
+
+    _renderRouterItems = (data) => {
+        if (data && data.data && data.data.deviceInfo) {
+            return data.data.deviceInfo.raspAPDevices.map(
+                (ap) => {
+                    return (
+                        <RouterItem apName={ap.AP_SSID} userCode={ap.USER_CODE}
+                            ip={ap.AP_PUBLIC_IP} key={ap.AP_CODE} apCode={ap.AP_CODE}
+                            deleteFunc={() => this._deleteSingleRouter(ap.AP_CODE)}
+                            count={ap.AP_SF_CNT} regDate={ap.AP_REG_DATE}
+                            open={()=>this._sfItemContainerControlOpen(ap.AP_CODE, ap.AP_SSID, ap.AP_REG_DATE)}
+                            close={this._sfItemContainerControlClose}
+                        />
+                    );
+                }
+            );
+        }
+    }
+
+    //modal에서 에러메시지 출력
+    _renderFormError=(res)=>{
+        if (res) {
+            const {status, msg} = res.toJS();
+            return (
+                <FormError isSuccess={status==='OK'}>{msg}</FormError>
+            )
+        }
+    }
+
+    //출력
+    render() {
+        const {
+            sfToggleState,
+            toggleState,
+            popoverState,
+            modalsState,
+            dropdownState,
+            result,
+            deviceInfo,
+            isConfirm,
+            selectedAp,
+        } = this.props;
+        return (
+            <MainWrapper option={toggleState}>
+                <SideBar />
+                <PageContent>
+                    <Header
+                        onClick={[this._sidebarControl, this._headerUserButtonControl]}
+                        direction={toggleState} popover={popoverState}
+                        title="디바이스 정보"
+                    />
+                    <MainToolBar
+                        isOpen={dropdownState}
+                        toggle={this._changeDropdown}
+                        addFunc={this._changeModalsOpen}
+                        deleteFunc={this._deleteAllRouter}
+                    />
+                    <SfItemContainer option={sfToggleState} data={selectedAp} 
+                    close={this._sfItemContainerControlClose}/>
+                    <PageBody>
+                        <ToastContainer />
+                        {this._renderRouterItems(deviceInfo.toJS())}
+                        <RouterAddButton
+                            onClick={this._changeModalsOpen} />
+                        <RouterAddModal
+                            modalFunc={this._changeModalsOpen}
+                            isOpen={modalsState}
+                            onChange={this._handleChange}
+                            searchFunc={this._searchRouter}
+                            addFunc={this._addRouter}
+                            errorRender={()=>this._renderFormError(result)}
+                            isConfirm={isConfirm}
+                        />
+                    </PageBody>
+                    {/* <Footer /> */}
+                </PageContent>
+            </MainWrapper>
+
+        );
+    }
 }
 
-export default MainContainer;
+export default withRouter(
+    connect(
+        state => ({
+            ip: state.main.get('ip'),
+            modalsState: state.main.get('modalsState'),
+            sfToggleState: state.main.get('sfToggleState'),
+            toggleState: state.main.get('toggleState'),
+            popoverState: state.main.get('popoverState'),
+            deviceInfo: state.main.get('deviceInfo'),
+            dropdownState: state.main.get('dropdownState'),
+            result: state.main.get('result'),
+            msg: state.main.get('msg'),
+            isConfirm: state.main.get('isConfirm'),
+            selectedAp: state.main.get('selectedAp'),
+        }),
+        dispatch => ({
+            MainActions: bindActionCreators(mainActions, dispatch),
+        })
+    )(MainContainer)
+);
