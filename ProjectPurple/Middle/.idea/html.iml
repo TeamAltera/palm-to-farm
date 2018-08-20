@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bootstrap/css" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bootstrap/js" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/css" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/js" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/less" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/scss" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/sprites" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/svgs" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fontawesome-free/webfonts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-amqplib/php-amqplib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

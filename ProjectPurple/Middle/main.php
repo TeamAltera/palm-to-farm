@@ -10,6 +10,8 @@ header('
     Pragma: no-cache; 
     Expires: Sat, 26 jul 1997 05:00:00 GMT; 
  ');
+
+    $conn = mysqli_connect("localhost", "root", "619412", "water_middle_server");
 ?>
 
 <!DOCTYPE html>
@@ -86,14 +88,49 @@ header('
                             echo "<script> location.replace('/login.php');</script>";
                         }
 
-                        echo "<a class='mb-1' href=logout.php>logout</a> <br>";
+                        echo "<a class='mb-1' href=logout.php>Logout</a> <br>";
                         ?>
 
                         <?php
+                        // IP 조회
                         $ip_print = $_SERVER['REMOTE_ADDR'];
                         echo "<p>"."Currently connected device IP : " . $ip_print ."</p>"."</br>";
+                        //맥주소 조회
+                        exec("arp -H ether -n -a ".$_SERVER["REMOTE_ADDR"]."",$values);
+                        $parts = explode(' ',$values[0]);
+                        echo "<p> Device MAC : ".$parts[3]."</p><br>";
                         ?>
+
+                        <?php
+                        $query_SYS = "SELECT * FROM SYS_INFO"; $select_query1 = mysqli_query($conn, $query_SYS) or die ("Error database.. Not select SYS_INFO table.");
+                        $query_PRO = "SELECT * FROM PRODUCT_INFO"; $select_query2 = mysqli_query($conn, $query_PRO) or die ("Error database.. Not select PRODUCT_INFO table.");
+                        ?>
+
+                        <div class="subheading mb-3">NAT SYS_INFOMAION</div>
+                        <ul class="fa-ul mb-0">
+                            <li>
+                                <i class="fa-li fa fa-check"></i>
+                                SYS_INFO TABLE</li><br>
+                            <?php echo "AP_CODE &nbsp &nbsp IP<br>" ?>
+                            <?php while($row1 = mysqli_fetch_array($select_query1)) { ?>
+                            <li>
+                                <?php echo $row1['AP_CODE']."&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp ".$row1['PUBLIC_IP'] ?> </li><br>
+                            <?php } ?>
+                        </ul>
+
+                        <div class="subheading mb-3">NAT PRODUCT_INFOMAION</div>
+                        <ul class="fa-ul mb-0">
+                            <li>
+                                <i class="fa-li fa fa-check"></i>
+                                PRODUCT_INFO TABLE</li><br>
+                            <?php echo "SF_CODE &nbsp &nbsp IP<br>" ?>
+                            <?php while($row2 = mysqli_fetch_array($select_query2)) { ?>
+                                <li>
+                                    <?php echo $row2['SF_CODE']."&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp ".$row2['INNER_IP'] ?> </li>
+                            <?php }  mysqli_close($conn); ?> <br>
+                        </ul>
                     </div>
+
                 </div>
 
             </section>

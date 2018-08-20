@@ -74,6 +74,7 @@
                 <div class="my-auto">
                     <h1 class="mb-5"> LOGIN </h1>
                     <h3 class="mb-5"> Please Login..</h3>
+                    <h4 class="mb-5"> Forgot Password? I'dont know. sorry! :D</h4>
 
                     <form class="form-horizontal" method = "POST" action = "/login_check.php">
                         <input class="form-control text-left" type = "text" name = "id" placeholder="ID">

@@ -47,8 +47,8 @@
 
         //시간 짜기
         date_default_timezone_set('Asia/Seoul'); // 분침 -30분 문제..
-        $current_time = date("Y-m-d-H-i-s"); //날짜 시간 추가..
-
+        //$current_time = date("Y-m-d-H-i-s"); //날짜 시간 추가..
+        $current_time = date('D M d Y H:i:s');
 
         // ampq //
         $connection = new AMQPStreamConnection($ip_setting, PORT, USER, PASS);
@@ -67,7 +67,7 @@
         //$ap_value = mysqli_fetch_array($result_ap, MYSQLI_BOTH); // 데이터 값을 표현해주는 방식을 ~만들고.
         //$value = $ap_value['AP_CODE'];// row의 0행값을 뽑아서 ~저장.
 
-        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'], 'ap' => $value ];
+        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'], 'ap' => $value, 'ec' => $_GET['ec'], 'ph'=> $_GET['ph']];
         //$temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'] ];
         // t: temperature
         // h : 습도
@@ -76,6 +76,9 @@
         // e : 조도
         // d : 시간
         // sf : sf코드 ip의 D클래스
+        // ec : ec 센서
+        // ph : ph 센서
+        // mip : 아두이노의 와이파이 ip 값을 받음.
         //get arduino data..
 
         //$query_1 = "SELECT sf_code FROM product_info WHERE INNER_IP = '$ip' "; // product_info의 INNER_IP가 $ip인 칼럼의 sf_code를 찾는다.
