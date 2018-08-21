@@ -1,32 +1,12 @@
 
-CREATE TABLE ADMIN
-(
-	ADMIN_CODE           NUMBER(4) NOT NULL ,
-	ID                   VARCHAR(20) NULL ,
-	PWD                  VARCHAR(15) NULL ,
-	REG_USER_CNT         NUMBER(4) NULL 
-);
-
-
-
-CREATE UNIQUE INDEX XPK관리자 ON ADMIN
-(ADMIN_CODE   ASC);
-
-
-
-ALTER TABLE ADMIN
-	ADD CONSTRAINT  XPK관리자 PRIMARY KEY (ADMIN_CODE);
-
-
-
 CREATE TABLE AP
 (
 	AP_SSID              VARCHAR(30) NULL ,
 	AP_PUBLIC_IP         VARCHAR(15) NULL ,
 	USER_CODE            NUMBER(8) NOT NULL ,
 	AP_CODE              NUMBER(8) NOT NULL ,
-	AP_SF_CNT            NUMBER(8) NULL ,
-	AP_REG_DATE          DATE NULL 
+	AP_REG_DATE          DATE NULL ,
+	AP_SF_CNT            NUMBER(2) NULL 
 );
 
 
@@ -103,34 +83,35 @@ ALTER TABLE DEVICE_LOG
 
 
 
-CREATE TABLE GROWTH
+CREATE TABLE G_PLANT
 (
-	SF_PORT_NO           NUMBER(2) NOT NULL ,
-	FLOOR_NUM            NUMBER(2) NULL ,
-	GROWTH_DT            DATE NULL ,
-	FINISH_DT            DATE NULL ,
+	FARMING_DATE         DATE NULL ,
+	PLANT_CODE           NUMBER(4) NOT NULL ,
 	SF_CODE              NUMBER(3) NOT NULL ,
-	AP_CODE              NUMBER(8) NOT NULL ,
-	PLANT_CODE           NUMBER(3) NOT NULL 
+	AP_CODE              NUMBER(8) NOT NULL 
 );
 
 
 
-CREATE UNIQUE INDEX XPK생육 ON GROWTH
-(SF_CODE   ASC,AP_CODE   ASC,SF_PORT_NO   ASC);
+CREATE UNIQUE INDEX XPK생육식물 ON G_PLANT
+(PLANT_CODE   ASC,AP_CODE   ASC,SF_CODE   ASC);
 
 
 
-ALTER TABLE GROWTH
-	ADD CONSTRAINT  XPK생육 PRIMARY KEY (SF_CODE,AP_CODE,SF_PORT_NO);
+ALTER TABLE G_PLANT
+	ADD CONSTRAINT  XPK생육식물 PRIMARY KEY (PLANT_CODE,AP_CODE,SF_CODE);
 
 
 
 CREATE TABLE PLANT
 (
-	PLANT_CODE           NUMBER(3) NOT NULL ,
-	PLANT_NAME           VARCHAR(30) NULL ,
-	ADMIN_CODE           NUMBER(4) NOT NULL 
+	PLANT_CODE           NUMBER(4) NOT NULL ,
+	OPT_TEMP             NUMBER(5,2) NULL ,
+	MAX_TEMP             NUMBER(5,2) NULL ,
+	MIN_TEMP             NUMBER(5,2) NULL ,
+	MIN_PH               NUMBER(5,2) NULL ,
+	MAX_PH               NUMBER(5,2) NULL ,
+	PLANT_NAME           VARCHAR(30) NULL 
 );
 
 
@@ -151,9 +132,9 @@ CREATE TABLE PLANT_USER
 	PWD                  VARCHAR(64) NULL ,
 	EMAIL                VARCHAR(30) NULL ,
 	FIRST_NAME           VARCHAR(16) NULL ,
-	SF_CNT               NUMBER(8) NULL ,
+	SF_CNT               NUMBER(3) NULL ,
 	SECOND_NAME          VARCHAR(30) NULL ,
-	BLOCK                NUMBER(1) NULL  CONSTRAINT  Time_Limit_402066275 CHECK (BLOCK BETWEEN 0 AND 5)
+	BLOCK                NUMBER(1) NULL 
 );
 
 
@@ -177,7 +158,9 @@ CREATE TABLE SENSOR_DATA
 	ELUM                 NUMBER(3) NULL ,
 	WATER_TEMP           NUMBER(5,2) NULL ,
 	WATER_LIM            NUMBER(3) NULL ,
-	AP_CODE              NUMBER(8) NOT NULL 
+	AP_CODE              NUMBER(8) NOT NULL ,
+	EC                   NUMBER(5,2) NULL ,
+	PH                   NUMBER(5,2) NULL 
 );
 
 
@@ -203,7 +186,8 @@ CREATE TABLE SF
 	AP_CODE              NUMBER(8) NOT NULL ,
 	COOLER_ST            CHAR(1) NULL ,
 	LED_ST               CHAR(1) NULL ,
-	PUMP_ST              CHAR(1) NULL 
+	PUMP_ST              CHAR(1) NULL ,
+	SF_REG_DATE          DATE NULL 
 );
 
 
@@ -218,7 +202,7 @@ ALTER TABLE SF
 
 
 
-CREATE  VIEW 장비View ( AP_SSID,USER_CODE,AP_PUBLIC_IP,SF_CODE,SF_PORT_CNT,FLOOR_CNT,COOLER_CNT,LED_CTRL_MODE,INNER_IP ) 
+CREATE  VIEW DEV_VIEW ( AP_SSID,USER_CODE,AP_PUBLIC_IP,SF_CODE,SF_PORT_CNT,FLOOR_CNT,COOLER_CNT,LED_CTRL_MODE,INNER_IP ) 
 	 AS  SELECT AP.AP_SSID,AP.USER_CODE,AP.AP_PUBLIC_IP,SF.SF_CODE,SF.SF_PORT_CNT,SF.FLOOR_CNT,SF.COOLER_CNT,SF.LED_CTRL_MODE,SF.INNER_IP
 		FROM SF,AP;
 
@@ -244,18 +228,13 @@ ALTER TABLE DEVICE_LOG
 
 
 
-ALTER TABLE GROWTH
-	ADD (CONSTRAINT R_33 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+ALTER TABLE G_PLANT
+	ADD (CONSTRAINT R_53 FOREIGN KEY (PLANT_CODE) REFERENCES PLANT (PLANT_CODE));
 
 
 
-ALTER TABLE GROWTH
-	ADD (CONSTRAINT R_50 FOREIGN KEY (PLANT_CODE) REFERENCES PLANT (PLANT_CODE));
-
-
-
-ALTER TABLE PLANT
-	ADD (CONSTRAINT R_30 FOREIGN KEY (ADMIN_CODE) REFERENCES ADMIN (ADMIN_CODE));
+ALTER TABLE G_PLANT
+	ADD (CONSTRAINT R_54 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
 
 
 
@@ -267,70 +246,6 @@ ALTER TABLE SENSOR_DATA
 ALTER TABLE SF
 	ADD (CONSTRAINT R_45 FOREIGN KEY (AP_CODE) REFERENCES AP (AP_CODE));
 
-
-
-CREATE  TRIGGER  tD_ADMIN AFTER DELETE ON ADMIN for each row
--- ERwin Builtin Trigger
--- DELETE trigger on ADMIN 
-DECLARE NUMROWS INTEGER;
-BEGIN
-    /* ERwin Builtin Trigger */
-    /* ADMIN  PLANT on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000d23e", PARENT_OWNER="", PARENT_TABLE="ADMIN"
-    CHILD_OWNER="", CHILD_TABLE="PLANT"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_30", FK_COLUMNS="ADMIN_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM PLANT
-      WHERE
-        /*  %JoinFKPK(PLANT,:%Old," = "," AND") */
-        PLANT.ADMIN_CODE = :old.ADMIN_CODE;
-    IF (NUMROWS > 0)
-    THEN
-      raise_application_error(
-        -20001,
-        'Cannot delete ADMIN because PLANT exists.'
-      );
-    END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
-
-CREATE  TRIGGER tU_ADMIN AFTER UPDATE ON ADMIN for each row
--- ERwin Builtin Trigger
--- UPDATE trigger on ADMIN 
-DECLARE NUMROWS INTEGER;
-BEGIN
-  /* ERwin Builtin Trigger */
-  /* ADMIN  PLANT on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0000fb60", PARENT_OWNER="", PARENT_TABLE="ADMIN"
-    CHILD_OWNER="", CHILD_TABLE="PLANT"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_30", FK_COLUMNS="ADMIN_CODE" */
-  IF
-    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.ADMIN_CODE <> :new.ADMIN_CODE
-  THEN
-    SELECT count(*) INTO NUMROWS
-      FROM PLANT
-      WHERE
-        /*  %JoinFKPK(PLANT,:%Old," = "," AND") */
-        PLANT.ADMIN_CODE = :old.ADMIN_CODE;
-    IF (NUMROWS > 0)
-    THEN 
-      raise_application_error(
-        -20005,
-        'Cannot update ADMIN because PLANT exists.'
-      );
-    END IF;
-  END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
 
 
 CREATE  TRIGGER tI_AP BEFORE INSERT ON AP for each row
@@ -716,40 +631,17 @@ END;
 /
 
 
-CREATE  TRIGGER tI_GROWTH BEFORE INSERT ON GROWTH for each row
+CREATE  TRIGGER tI_G_PLANT BEFORE INSERT ON G_PLANT for each row
 -- ERwin Builtin Trigger
--- INSERT trigger on GROWTH 
+-- INSERT trigger on G_PLANT 
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
-    /* PLANT  GROWTH on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0001e705", PARENT_OWNER="", PARENT_TABLE="PLANT"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+    /* SF  G_PLANT on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0001e760", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_50", FK_COLUMNS="PLANT_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM PLANT
-      WHERE
-        /* %JoinFKPK(:%New,PLANT," = "," AND") */
-        :new.PLANT_CODE = PLANT.PLANT_CODE;
-    IF (
-      /* %NotnullFK(:%New," IS NOT NULL AND") */
-      
-      NUMROWS = 0
-    )
-    THEN
-      raise_application_error(
-        -20002,
-        'Cannot insert GROWTH because PLANT does not exist.'
-      );
-    END IF;
-
-    /* ERwin Builtin Trigger */
-    /* SF  GROWTH on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_33", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
     SELECT count(*) INTO NUMROWS
       FROM SF
       WHERE
@@ -764,7 +656,30 @@ BEGIN
     THEN
       raise_application_error(
         -20002,
-        'Cannot insert GROWTH because SF does not exist.'
+        'Cannot insert G_PLANT because SF does not exist.'
+      );
+    END IF;
+
+    /* ERwin Builtin Trigger */
+    /* PLANT  G_PLANT on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="PLANT"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_53", FK_COLUMNS="PLANT_CODE" */
+    SELECT count(*) INTO NUMROWS
+      FROM PLANT
+      WHERE
+        /* %JoinFKPK(:%New,PLANT," = "," AND") */
+        :new.PLANT_CODE = PLANT.PLANT_CODE;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert G_PLANT because PLANT does not exist.'
       );
     END IF;
 
@@ -773,40 +688,17 @@ BEGIN
 END;
 /
 
-CREATE  TRIGGER tU_GROWTH AFTER UPDATE ON GROWTH for each row
+CREATE  TRIGGER tU_G_PLANT AFTER UPDATE ON G_PLANT for each row
 -- ERwin Builtin Trigger
--- UPDATE trigger on GROWTH 
+-- UPDATE trigger on G_PLANT 
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
-  /* PLANT  GROWTH on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0001ee71", PARENT_OWNER="", PARENT_TABLE="PLANT"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+  /* SF  G_PLANT on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0001ebe7", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_50", FK_COLUMNS="PLANT_CODE" */
-  SELECT count(*) INTO NUMROWS
-    FROM PLANT
-    WHERE
-      /* %JoinFKPK(:%New,PLANT," = "," AND") */
-      :new.PLANT_CODE = PLANT.PLANT_CODE;
-  IF (
-    /* %NotnullFK(:%New," IS NOT NULL AND") */
-    
-    NUMROWS = 0
-  )
-  THEN
-    raise_application_error(
-      -20007,
-      'Cannot update GROWTH because PLANT does not exist.'
-    );
-  END IF;
-
-  /* ERwin Builtin Trigger */
-  /* SF  GROWTH on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_33", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
   SELECT count(*) INTO NUMROWS
     FROM SF
     WHERE
@@ -821,7 +713,30 @@ BEGIN
   THEN
     raise_application_error(
       -20007,
-      'Cannot update GROWTH because SF does not exist.'
+      'Cannot update G_PLANT because SF does not exist.'
+    );
+  END IF;
+
+  /* ERwin Builtin Trigger */
+  /* PLANT  G_PLANT on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="PLANT"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_53", FK_COLUMNS="PLANT_CODE" */
+  SELECT count(*) INTO NUMROWS
+    FROM PLANT
+    WHERE
+      /* %JoinFKPK(:%New,PLANT," = "," AND") */
+      :new.PLANT_CODE = PLANT.PLANT_CODE;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update G_PLANT because PLANT does not exist.'
     );
   END IF;
 
@@ -831,60 +746,27 @@ END;
 /
 
 
-CREATE  TRIGGER tI_PLANT BEFORE INSERT ON PLANT for each row
--- ERwin Builtin Trigger
--- INSERT trigger on PLANT 
-DECLARE NUMROWS INTEGER;
-BEGIN
-    /* ERwin Builtin Trigger */
-    /* ADMIN  PLANT on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000e0f4", PARENT_OWNER="", PARENT_TABLE="ADMIN"
-    CHILD_OWNER="", CHILD_TABLE="PLANT"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_30", FK_COLUMNS="ADMIN_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM ADMIN
-      WHERE
-        /* %JoinFKPK(:%New,ADMIN," = "," AND") */
-        :new.ADMIN_CODE = ADMIN.ADMIN_CODE;
-    IF (
-      /* %NotnullFK(:%New," IS NOT NULL AND") */
-      
-      NUMROWS = 0
-    )
-    THEN
-      raise_application_error(
-        -20002,
-        'Cannot insert PLANT because ADMIN does not exist.'
-      );
-    END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
-
 CREATE  TRIGGER  tD_PLANT AFTER DELETE ON PLANT for each row
 -- ERwin Builtin Trigger
 -- DELETE trigger on PLANT 
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
-    /* PLANT  GROWTH on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000d9d1", PARENT_OWNER="", PARENT_TABLE="PLANT"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+    /* PLANT  G_PLANT on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000d9e3", PARENT_OWNER="", PARENT_TABLE="PLANT"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_50", FK_COLUMNS="PLANT_CODE" */
+    FK_CONSTRAINT="R_53", FK_COLUMNS="PLANT_CODE" */
     SELECT count(*) INTO NUMROWS
-      FROM GROWTH
+      FROM G_PLANT
       WHERE
-        /*  %JoinFKPK(GROWTH,:%Old," = "," AND") */
-        GROWTH.PLANT_CODE = :old.PLANT_CODE;
+        /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
+        G_PLANT.PLANT_CODE = :old.PLANT_CODE;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
         -20001,
-        'Cannot delete PLANT because GROWTH exists.'
+        'Cannot delete PLANT because G_PLANT exists.'
       );
     END IF;
 
@@ -899,50 +781,27 @@ CREATE  TRIGGER tU_PLANT AFTER UPDATE ON PLANT for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
-  /* PLANT  GROWTH on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00020383", PARENT_OWNER="", PARENT_TABLE="PLANT"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+  /* PLANT  G_PLANT on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0001023b", PARENT_OWNER="", PARENT_TABLE="PLANT"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_50", FK_COLUMNS="PLANT_CODE" */
+    FK_CONSTRAINT="R_53", FK_COLUMNS="PLANT_CODE" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
     :old.PLANT_CODE <> :new.PLANT_CODE
   THEN
     SELECT count(*) INTO NUMROWS
-      FROM GROWTH
+      FROM G_PLANT
       WHERE
-        /*  %JoinFKPK(GROWTH,:%Old," = "," AND") */
-        GROWTH.PLANT_CODE = :old.PLANT_CODE;
+        /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
+        G_PLANT.PLANT_CODE = :old.PLANT_CODE;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
         -20005,
-        'Cannot update PLANT because GROWTH exists.'
+        'Cannot update PLANT because G_PLANT exists.'
       );
     END IF;
-  END IF;
-
-  /* ERwin Builtin Trigger */
-  /* ADMIN  PLANT on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="ADMIN"
-    CHILD_OWNER="", CHILD_TABLE="PLANT"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_30", FK_COLUMNS="ADMIN_CODE" */
-  SELECT count(*) INTO NUMROWS
-    FROM ADMIN
-    WHERE
-      /* %JoinFKPK(:%New,ADMIN," = "," AND") */
-      :new.ADMIN_CODE = ADMIN.ADMIN_CODE;
-  IF (
-    /* %NotnullFK(:%New," IS NOT NULL AND") */
-    
-    NUMROWS = 0
-  )
-  THEN
-    raise_application_error(
-      -20007,
-      'Cannot update PLANT because ADMIN does not exist.'
-    );
   END IF;
 
 
@@ -1123,22 +982,22 @@ CREATE  TRIGGER  tD_SF AFTER DELETE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
-    /* SF  GROWTH on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0003ab15", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+    /* SF  G_PLANT on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0003bf61", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_33", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
     SELECT count(*) INTO NUMROWS
-      FROM GROWTH
+      FROM G_PLANT
       WHERE
-        /*  %JoinFKPK(GROWTH,:%Old," = "," AND") */
-        GROWTH.SF_CODE = :old.SF_CODE AND
-        GROWTH.AP_CODE = :old.AP_CODE;
+        /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
+        G_PLANT.SF_CODE = :old.SF_CODE AND
+        G_PLANT.AP_CODE = :old.AP_CODE;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
         -20001,
-        'Cannot delete SF because GROWTH exists.'
+        'Cannot delete SF because G_PLANT exists.'
       );
     END IF;
 
@@ -1213,27 +1072,27 @@ CREATE  TRIGGER tU_SF AFTER UPDATE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
-  /* SF  GROWTH on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00055c1e", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="GROWTH"
+  /* SF  G_PLANT on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00056eba", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_33", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
     :old.SF_CODE <> :new.SF_CODE OR 
     :old.AP_CODE <> :new.AP_CODE
   THEN
     SELECT count(*) INTO NUMROWS
-      FROM GROWTH
+      FROM G_PLANT
       WHERE
-        /*  %JoinFKPK(GROWTH,:%Old," = "," AND") */
-        GROWTH.SF_CODE = :old.SF_CODE AND
-        GROWTH.AP_CODE = :old.AP_CODE;
+        /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
+        G_PLANT.SF_CODE = :old.SF_CODE AND
+        G_PLANT.AP_CODE = :old.AP_CODE;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
         -20005,
-        'Cannot update SF because GROWTH exists.'
+        'Cannot update SF because G_PLANT exists.'
       );
     END IF;
   END IF;
@@ -1345,21 +1204,14 @@ END;
 /
 
 
-COMMENT ON TABLE ADMIN IS '관리자';
- 
-    COMMENT ON COLUMN ADMIN.ADMIN_CODE IS '관리자코드';  
-    COMMENT ON COLUMN ADMIN.ID IS '아이디';  
-    COMMENT ON COLUMN ADMIN.PWD IS '패스워드';  
-    COMMENT ON COLUMN ADMIN.REG_USER_CNT IS '관리하는사용자수';  
-    
 COMMENT ON TABLE AP IS '공유기';
  
     COMMENT ON COLUMN AP.AP_CODE IS '공유기코드';  
     COMMENT ON COLUMN AP.USER_CODE IS '사용자코드';  
     COMMENT ON COLUMN AP.AP_PUBLIC_IP IS '공용ip';  
     COMMENT ON COLUMN AP.AP_SSID IS 'SSID';  
+    COMMENT ON COLUMN AP.AP_REG_DATE IS '공유기등록일';  
     COMMENT ON COLUMN AP.AP_SF_CNT IS '재배기수';  
-    COMMENT ON COLUMN AP.AP_REG_DATE IS '등록일자';  
     
 COMMENT ON TABLE CS IS '배양액';
  
@@ -1384,21 +1236,22 @@ COMMENT ON TABLE DEVICE_LOG IS '로그기록';
     COMMENT ON COLUMN DEVICE_LOG.USED_IP IS '수행IP';  
     COMMENT ON COLUMN DEVICE_LOG.USED_RES IS '수행결과';  
     
-COMMENT ON TABLE GROWTH IS '생육';
+COMMENT ON TABLE G_PLANT IS '생육식물';
  
-    COMMENT ON COLUMN GROWTH.SF_CODE IS '재배기코드';  
-    COMMENT ON COLUMN GROWTH.AP_CODE IS '공유기코드';  
-    COMMENT ON COLUMN GROWTH.SF_PORT_NO IS '화분번호';  
-    COMMENT ON COLUMN GROWTH.PLANT_CODE IS '식물코드';  
-    COMMENT ON COLUMN GROWTH.FLOOR_NUM IS '층번호';  
-    COMMENT ON COLUMN GROWTH.GROWTH_DT IS '생육일자';  
-    COMMENT ON COLUMN GROWTH.FINISH_DT IS '예상완료일자';  
+    COMMENT ON COLUMN G_PLANT.PLANT_CODE IS '식물코드';  
+    COMMENT ON COLUMN G_PLANT.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN G_PLANT.SF_CODE IS '재배기코드';  
+    COMMENT ON COLUMN G_PLANT.FARMING_DATE IS '재배시작일';  
     
 COMMENT ON TABLE PLANT IS '식물';
  
     COMMENT ON COLUMN PLANT.PLANT_CODE IS '식물코드';  
     COMMENT ON COLUMN PLANT.PLANT_NAME IS '식물이름';  
-    COMMENT ON COLUMN PLANT.ADMIN_CODE IS '관리자코드';  
+    COMMENT ON COLUMN PLANT.OPT_TEMP IS '최적온도';  
+    COMMENT ON COLUMN PLANT.MAX_TEMP IS '최대온도';  
+    COMMENT ON COLUMN PLANT.MIN_TEMP IS '최저온도';  
+    COMMENT ON COLUMN PLANT.MIN_PH IS '최저ph';  
+    COMMENT ON COLUMN PLANT.MAX_PH IS '최대ph';  
     
 COMMENT ON TABLE PLANT_USER IS '사용자';
  
@@ -1420,6 +1273,8 @@ COMMENT ON TABLE SENSOR_DATA IS '센서데이터';
     COMMENT ON COLUMN SENSOR_DATA.ELUM IS '조도';  
     COMMENT ON COLUMN SENSOR_DATA.WATER_TEMP IS '수온';  
     COMMENT ON COLUMN SENSOR_DATA.WATER_LIM IS '수위';  
+    COMMENT ON COLUMN SENSOR_DATA.EC IS 'ec';  
+    COMMENT ON COLUMN SENSOR_DATA.PH IS 'ph';  
     
 COMMENT ON TABLE SF IS '수경재배기';
  
@@ -1433,6 +1288,7 @@ COMMENT ON TABLE SF IS '수경재배기';
     COMMENT ON COLUMN SF.COOLER_ST IS '쿨러상태';  
     COMMENT ON COLUMN SF.LED_ST IS 'LED상태';  
     COMMENT ON COLUMN SF.PUMP_ST IS '펌프상태';  
+    COMMENT ON COLUMN SF.SF_REG_DATE IS '재배기등록일';  
     
 
 
