@@ -208,7 +208,6 @@ class SignupContainer extends Component {
             <Container>
                 <Column option="mt-5">
                     <Form type="login">
-                        <FormHeader>회원가입</FormHeader>
                         <FormBody>
                             <SignupProg />
                             <FormGroup>

@@ -1,0 +1,30 @@
+#PageBody{
+    position: relative;
+    z-index: 0;
+    flex: 1 1;
+    overflow: auto;
+    contain: strict;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    height: 100%;
+}
+
+#PageBody::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background: transparent;
+}
+
+#PageBody::-webkit-scrollbar-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #b0b4bb;
+}
+
+#PageBody::-webkit-scrollbar-track {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #f3f4f5;
+}

@@ -3,11 +3,11 @@
 import { createAction, handleActions } from 'redux-actions';
 import { pender } from 'redux-pender';
 import * as DeviceApi from '../../lib/spring_api/device';
-import { Map } from 'immutable';
+import * as AuthApi from '../../lib/spring_api/auth';
+import { Map,List } from 'immutable';
 
 //action 경로
-const CHANGE_TOGGLE_STATE = 'main/CHANGE_TOGGLE_STATE'; // input 값 변경
-const CHANGE_POPOVER_STATE = 'main/CHANGE_POPOVER_STATE'; // input 값 변경
+const CHANGE_POPOVER_STATE = 'main/CHANGE_POPOVER_STATE';
 const GET_DEVICE_ALL_INFO = 'main/GET_DEVICE_ALL_INFO';
 const CHANGE_MODALS_STATE = 'main/CHANGE_MODALS_STATE';
 const CHANGE_DROPDOWN_STATE = 'main/CHANGE_DROPDOWN_STATE';
@@ -20,10 +20,11 @@ const RES_INIT = 'main/RES_INIT';
 const INITIALIZE_FORM = 'main/INITIALIZE_FORM'; // form 초기화
 const CHANGE_CONFIRM = 'main/CHANGE_CONFIRM'; // form 초기화
 const CHANGE_SF_TOGGLE_STATE = 'main/CHANGE_SF_TOGGLE_STATE';
-const CHANGE_SELECTED_AP='main/CHANGE_SELECTED_AP';
+const GET_USER_INFO = 'main/GET_USER_INFO';
+const CHANGE_SELECTED_SF = 'main/CHANGE_SELECTED_SF';
+// const ADD_ITEM = 'main/ADD_ITEM';
 
 //action 생성
-export const changeToggleState = createAction(CHANGE_TOGGLE_STATE);
 export const changeSfToggleState = createAction(CHANGE_SF_TOGGLE_STATE);
 export const changePopoverState = createAction(CHANGE_POPOVER_STATE);
 export const getDeviceAllInfo = createAction(GET_DEVICE_ALL_INFO, DeviceApi.getDeviceAllInfo);
@@ -37,12 +38,28 @@ export const addRouter = createAction(ADD_ROUTER, DeviceApi.addRouter);
 export const resInit = createAction(RES_INIT);
 export const initializeForm = createAction(INITIALIZE_FORM); // form
 export const changeConfirm = createAction(CHANGE_CONFIRM);
-export const changeSelectedAp = createAction(CHANGE_SELECTED_AP);
+export const getUserInfo = createAction(GET_USER_INFO, AuthApi.getUserInfo);
+export const changeSelectedSf = createAction(CHANGE_SELECTED_SF);
+// export const addItem = createAction(ADD_ITEM);
 
 //state 정의
 const initialState = Map({
-    sfToggleState: true,
-    toggleState: false,
+    user: null,
+    sfToggle: Map({
+        sfToggleState: false,
+        selectedAp: Map({
+            apName: '',
+            apCode: '',
+            count: 0,
+            apIp: '',
+            regDate:'',
+        }),
+    }),
+    selectedSf: Map({
+        sfCode: '',
+        count: 0,
+        sfIp: '',
+    }),
     modalsState: false,
     popoverState: false,
     dropdownState: false,
@@ -53,28 +70,36 @@ const initialState = Map({
         c: '',
         d: ''
     }),
-    deviceInfo: Map({}),
+    deviceInfo: Map({
+        // data: Map({
+        //     deviceInfo:Map({
+        //         plantDevices:List(),
+        //         raspAPDevices:List(),
+        //     })
+        // })
+    }),
     result: Map({}),
     isConfirm: false,
-    selectedAp: Map({
-        apName: '',
-        apCode: '',
-    }),
 });
 
 //action에 따른 리듀서 수행동작
 export default handleActions(
     {
-        [CHANGE_SELECTED_AP]: (state, action) => {
-            return state.set('selectedAp', action.payload);
-        },
-
-        [CHANGE_TOGGLE_STATE]: (state, action) => {
-            return state.set('toggleState', action.payload);
-        },
+        // [ADD_ITEM]: (state, action) => {
+        //     return {
+        //         ...state,
+        //         deviceInfo:state.get('deviceInfo',
+        //     deviceInfo=>
+        //     deviceInfo.data.deviceInfo.plantDevices.push(action.payload.newSf))
+        //     };
+        // },
 
         [CHANGE_SF_TOGGLE_STATE]: (state, action) => {
-            return state.set('sfToggleState', action.payload);
+            return state.set('sfToggle', Map(action.payload));
+        },
+
+        [CHANGE_SELECTED_SF]: (state, action) => {
+            return state.set('selectedSf', Map(action.payload));
         },
 
         [CHANGE_MODALS_STATE]: (state, action) => {
@@ -109,7 +134,7 @@ export default handleActions(
 
         ...pender({
             type: GET_DEVICE_ALL_INFO,
-            onSuccess: (state, action) =>{
+            onSuccess: (state, action) => {
                 if (action.payload.data.status === 'OK')
                     return state.set('deviceInfo', Map(action.payload.data))
                 else
@@ -119,7 +144,7 @@ export default handleActions(
 
         ...pender({
             type: DELETE_SINGLE_ROUTER,
-            onSuccess: (state, action) =>{
+            onSuccess: (state, action) => {
                 if (action.payload.data.status === 'OK')
                     return state.set('deviceInfo', Map(action.payload.data))
                 else
@@ -140,6 +165,13 @@ export default handleActions(
                     return state.set('deviceInfo', Map(action.payload.data))
                 else
                     return state.set('result', Map(action.payload.data))
+            }
+        }),
+
+        ...pender({
+            type: GET_USER_INFO,
+            onSuccess: (state, action) => {
+                return state.set('user', Map(action.payload.data.data))
             }
         }),
 

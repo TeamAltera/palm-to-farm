@@ -1,0 +1,80 @@
+.SfDeviceToolbar-back {
+    margin-right: 6px;
+    margin-left: 0;
+    margin: 0 3px;
+    display: flex;
+    -ms-flex-negative: 0;
+    display: -ms-flexbox;
+    flex-shrink: 0;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    outline: none;
+    border: none;
+    background: none;
+    color: #696f7a;
+    cursor: pointer;
+    border: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.SfDeviceToolbar-back:hover {
+    color: #2ca8ff;
+}
+
+.SfDeviceToolbar-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.SfDeviceToolbar-item {
+    align-content: center;
+}
+
+.padding-bottom-2 {
+    padding-bottom: 2px;
+}
+
+.SfDeviceToolbar-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+    height: 48px;
+    background: #fff;
+    /* box-shadow: 0 1px 0 0 rgba(29,34,43,.1); */
+    flex-wrap: nowrap;
+    color: #696f7a;
+    align-items: center;
+    height: 48px;
+    background: #fff;
+    box-shadow: 0 1px 0 0 rgba(29, 34, 43, .1);
+}
+
+.SfDeviceToolbar-container-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.SfDeviceToolbar-container-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.SfDeviceToolbar-btn {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.size-10 {
+    font-size: 1.2rem;
+}

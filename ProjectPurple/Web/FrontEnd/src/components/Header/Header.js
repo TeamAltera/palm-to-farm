@@ -4,33 +4,44 @@ import PropTypes from 'prop-types';
 import { MdChevronRight, MdChevronLeft, MdAccountCircle } from 'react-icons/lib/md';
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 
-const Header = ({ onClick, direction, popover, title }) => {
+const Header = ({ onClick, popover, user }) => {
+    let firstName='';
+    let secondName='';
+    let email='';
+    let sfCnt='';
+    if(user){
+        user=user.toJS();
+        firstName=user.firstName;
+        secondName=user.secondName;
+        email=user.email;
+        sfCnt=user.sfCnt;
+    }
     return (
         <nav className="absolute-top navbar navbar-absolute navbar-expand-lg
          nopadding-top nopadding-bottom"
             id="Header">
             <div className="Header-container">
                 <div className="Header-box-left">
-                    <a className="Header-toggle"
-                        onClick={onClick[0]}
-                    >
-                        {!direction && <MdChevronRight size={35} color="#2ca8ff" />}
-                        {direction && <MdChevronLeft size={35} color="#2ca8ff" />}
-                    </a>
-                    <div className="Header-title ml-2" id="nanum-gothic">
-                        {title}
-                    </div>
+                    <span className="main-header-text">
+                        <span className="main-header-text bold">S
+                        </span>mart <span className="main-header-text bold">P</span>lant
+                    </span>
                 </div>
                 <div className="Header-box-right">
-                    <a className="Header-toggle" onClick={onClick[1]} id="Popover1">
+                    <span className="main-header-username size-7 mr-2 mt-1" id="nanum-gothic">
+                        {firstName} {secondName}
+                    </span>
+                    <a className="Header-toggle" onClick={onClick[0]} id="Popover1">
                         <MdAccountCircle size={35} color="#2ca8ff" />
                     </a>
-                    <Popover placement="bottom" isOpen={popover} target="Popover1" toggle={onClick[1]}>
+                    <Popover placement="bottom" isOpen={popover} target="Popover1" toggle={onClick[0]}>
                         <PopoverHeader>
-                            sencom1028@gmail.com
+                            <span id="nanum-gothic">{email}</span>
                         </PopoverHeader>
                         <PopoverBody>
-                            Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+                            <div>
+                                <div id="nanum-gothic">{sfCnt}대의 재배기 보유</div>
+                            </div>
                         </PopoverBody>
                     </Popover>
                 </div>
@@ -40,10 +51,8 @@ const Header = ({ onClick, direction, popover, title }) => {
 };
 
 Header.propTypes = {
-    direction: PropTypes.bool.isRequired,
     onClick: PropTypes.array.isRequired,
     popover: PropTypes.bool.isRequired,
-    title: PropTypes.string.isRequired,
 }
 
 export default Header;

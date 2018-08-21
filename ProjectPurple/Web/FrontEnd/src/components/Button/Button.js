@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './Button.css'
 
-const Button = ({ children, onClick, option, disabled }) => {
+const Button = ({ children, onClick, disabled }) => {
     let res;
     if(disabled)
         res="";
@@ -10,18 +11,20 @@ const Button = ({ children, onClick, option, disabled }) => {
     return (
         <input 
         type="button" 
-        className={"btn btn-"+option+" btn-block"} 
+        className="Form-btn"
         onClick={onClick} 
         value={children}
         disabled={res}
-        />)
+        id="nanum-gothic"
+        >
+        </input>
+    )
     };
 
 Button.propTypes = {
     children: PropTypes.string,
     onClick: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
-    option: PropTypes.string.isRequired,
 }
 
 export default Button;

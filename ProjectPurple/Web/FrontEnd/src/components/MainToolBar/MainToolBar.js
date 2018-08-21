@@ -25,14 +25,14 @@ const MainToolBar = ({ isOpen, toggle, addFunc, deleteFunc }) => {
                     </DropdownMenu>
                 </Dropdown> */}
                 {/* <div id="nanum-gothic"> */}
-                    <a href="#" className="MainToolBar-btn mr-2" onClick={deleteFunc}>
+                    <div href="#" className="MainToolBar-btn mr-2" onClick={deleteFunc}>
                         <MdCancel size={20} />
                         <span className="smaller size-9 ml-1">전체 삭제</span>
-                    </a>
-                    <a href="#" className="MainToolBar-btn mr-3" onClick={addFunc}>
+                    </div>
+                    <div className="MainToolBar-btn mr-3" onClick={addFunc}>
                         <MdAddCircle size={20} />
                         <span className="smaller size-9 ml-1">새 라우터</span>
-                    </a>
+                    </div>
                 {/* </div> */}
             </div>
         </div>

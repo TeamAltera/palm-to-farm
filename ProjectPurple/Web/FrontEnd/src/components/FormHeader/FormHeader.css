@@ -1,3 +1,23 @@
-.FormHeader-text{
-    text-align: center;
+.Form-title{
+    z-index: 10;
+    cursor: default;
 }
+
+.Form-title h3{
+    margin: 0;
+}
+
+.blue{
+    color: #2ca8ff;
+}
+
+/* .FormHeader-back{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    background-color: rgb(70, 70, 70);
+    opacity: .1;
+    z-index: 0;
+} */

@@ -73,7 +73,6 @@ const initialState = Map({
     }),
   }),
   result: Map({}),
-  user: null,
 });
 
 //action에 따른 리듀서 수행동작

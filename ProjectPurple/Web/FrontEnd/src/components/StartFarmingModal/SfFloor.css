@@ -1,0 +1,35 @@
+.StartFarmingModal-floor{
+    width: 100%;
+    border: 1px solid rgba(150, 150, 150, .5);
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.StartFarmingModal-floor-title{
+    background-color: rgba(150, 150, 150, .5);
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    cursor: default;
+}
+
+.StartFarmingModal-floor-blank{
+    cursor: pointer;
+    border: 1px solid rgba(150, 150, 150, .5);
+    background-color: transparent;
+    text-align: center;
+    color: black;
+    width: 70px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.StartFarmingModal-floor-blank:hover{
+    color: white;
+    background-color: #2ca8ff;
+    border: 1px solid #2ca8ff;
+}

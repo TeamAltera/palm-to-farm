@@ -90,7 +90,7 @@ class SigninContainer extends Component {
         const { email, password } = this.props.form.toJS();
 
         let error = SigninValidator(email, password);
-        
+
         //AuthActions.setSpinnerLoading(true);
         if (!error) {
             //비밀번호 해싱 수행(단방향 해시)
@@ -150,71 +150,67 @@ class SigninContainer extends Component {
         const { email, password } = this.props.form.toJS();
         return (
             <Container>
-                <Column option="mt-5">
-                    <Form type="login">
-                        <FormHeader>
-                            로그인
-                        </FormHeader>
-                        <FormBody>
-                            <FormGroup>
-                                <FormInput
-                                    aria="emailHelp"
-                                    id="email"
-                                    text="Email address"
-                                    type="email"
-                                    placeholder="이메일"
-                                    onChange={this._handleChange}
-                                    value={email}
-                                    name="email"
-                                    disabled={false}
-                                />
-                            </FormGroup>
-                            {this._renderFormError(error, 1)}
-                            <FormGroup>
-                                <FormInput
-                                    id="password"
-                                    text="Password"
-                                    type="password"
-                                    placeholder="비밀번호"
-                                    onChange={this._handleChange}
-                                    value={password}
-                                    name="password"
-                                    disabled={false}
-                                />
-                            </FormGroup>
-                            {this._renderFormError(error, 2)}
-                            <TextCenter>
-                                <PulseLoader
-                                    color={'#123abc'}
-                                    loading={spinnerLoading}
-                                />
-                            </TextCenter>
-                            {
-                                !spinnerLoading &&
-                                <Button onClick={this._handleSignin} option="primary" disabled={true}>
-                                    로그인
+                <Form isError={error}>
+                    <FormHeader>Smart Plant</FormHeader>
+                    <FormBody>
+                        <FormGroup>
+                            <FormInput
+                                aria="emailHelp"
+                                id="email"
+                                text="Email address"
+                                type="email"
+                                placeholder="이메일"
+                                onChange={this._handleChange}
+                                value={email}
+                                name="email"
+                                disabled={false}
+                            />
+                        </FormGroup>
+                        {this._renderFormError(error, 1)}
+                        <FormGroup>
+                            <FormInput
+                                id="password"
+                                text="Password"
+                                type="password"
+                                placeholder="비밀번호"
+                                onChange={this._handleChange}
+                                value={password}
+                                name="password"
+                                disabled={false}
+                            />
+                        </FormGroup>
+                        {this._renderFormError(error, 2)}
+                        <TextCenter>
+                            <PulseLoader
+                                color={'#123abc'}
+                                loading={spinnerLoading}
+                            />
+                        </TextCenter>
+                        {
+                            !spinnerLoading &&
+                            <Button onClick={this._handleSignin} disabled={true}>
+                                로그인
                                 </Button>
-                            }
-                            <TextCenter option="mt-3">
-                                <PageLink
-                                    preChildren="계정이 없다면 "
-                                    middleChildren="회원가입"
-                                    postChildren="해주세요."
-                                    link="/signup"
-                                    option="mt-1"
-                                />
-                                <PageLink
-                                    preChildren="비밀번호를 잊어버렸다면 "
-                                    middleChildren="여기"
-                                    postChildren="를 클릭해주세요."
-                                    link="/"
-                                    option="mt-1"
-                                />
-                            </TextCenter>
-                        </FormBody>
-                    </Form>
-                    <Copyright />
-                </Column>
+                        }
+                        <TextCenter option="mt-3">
+                            <PageLink
+                                preChildren="계정이 없다면 "
+                                middleChildren="회원가입"
+                                postChildren="해주세요."
+                                link="/signup"
+                                option="mt-1"
+                            />
+                            <PageLink
+                                preChildren="비밀번호를 잊어버렸다면 "
+                                middleChildren="여기"
+                                postChildren="를 클릭해주세요."
+                                link="/"
+                                option="mt-1"
+                            />
+                        </TextCenter>
+                    </FormBody>
+                    <Copyright/>
+                </Form>
             </Container>
         );
     }

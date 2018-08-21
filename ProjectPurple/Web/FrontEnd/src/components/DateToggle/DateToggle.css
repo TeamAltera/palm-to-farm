@@ -1,0 +1,29 @@
+.DateToggle-btn{
+    border: 1px solid rgba(0,0,0,.125);
+    padding-left: 15px;
+    padding-right: 15px;
+    color: #696f7a;
+    background-color: transparent;
+    cursor: pointer;
+    width: 121.19px;
+}
+
+.DateToggle-btn:focus{
+    outline: none;
+}
+
+.DateToggle-btn:hover:enabled{
+    background-color: #2ca8ff;
+    border: 1px solid #2ca8ff;
+    color: white;
+    text-decoration: none;
+}
+
+.DateToggle-btn:disabled {
+    background: #dddddd;
+    cursor: default;
+}
+
+.DateToggle-btn:focus{
+    outline: none;
+}

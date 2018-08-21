@@ -6,6 +6,20 @@
     transition-property: transform,box-shadow;
     transform: translateY(2px);
     cursor: pointer;
+    box-sizing: border-box;
+    background-color: white;
+    z-index: 2;
+}
+
+#RouterItem-border{
+    border:0;
+    padding: 0;
+}
+
+.RouterItem:hover{
+    box-shadow: 0 5px 6px 0 rgba(0,0,0,.15);
+    transform: translateY(-2px);
+    background-color: white;
 }
 
 .smaller {
@@ -36,13 +50,18 @@
 }
 
 .RouterItem-clear-btn{
+    float: right;
     background-color: transparent;
     border: 0px;
     cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-left: 1px solid rgba(0,0,0,.125);
+    z-index: 5;
 }
 
 .RouterItem-clear-btn:hover{
-    background-color: #e30714;
+    background-color: #2ca8ff;
+    color: white;
 }
 
 .item-right{
@@ -51,6 +70,23 @@
 
 #nopadding{
     padding: 0px;
+}
+
+.padding-left{
+    padding-left: 15px;
+}
+
+.padding-bottom{
+    padding-bottom: 10px;
+}
+
+.padding-right{
+    padding-right: 15px;
+}
+
+#padding-horizontal{
+    padding-right: 15px;
+    padding-left: 15px;
 }
 
 #nopadding-right{

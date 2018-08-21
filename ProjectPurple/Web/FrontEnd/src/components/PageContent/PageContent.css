@@ -1,14 +1,30 @@
 #page-content-wrapper {
-  width: 100%;
-  position: relative;
-  padding: 0px;
-  overflow: auto;
+  position: absolute;
+  transition: .2s ease-in-out;
+  top: 45px;
+  right: 0;
+  bottom: 0;
+  left: 45px;
+  z-index: 0;
+  overflow: hidden;
+  background: url(../../resources/img/mountain.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 @media(min-width:768px) {
-  #page-content-wrapper {
-    padding: 0px;
-    position: relative;
-    overflow: auto;
+  /* #page-content-wrapper {
+    top: 45px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  } */
+}
+
+@media(max-width:768px) {
+  #page-content-wrapper{
+    left: 0px;
   }
 }

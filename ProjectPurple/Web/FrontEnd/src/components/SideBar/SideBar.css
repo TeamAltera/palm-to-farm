@@ -1,94 +1,42 @@
-/* body {
-    overflow-x: hidden;
-  } */
-
-#sidebar-wrapper {
-  z-index: 1000;
-  position: fixed;
-  left: 250px;
-  width: 0px;
-  height: 100%;
-  margin-left: -250px;
-  overflow-y: auto;
-  background-color:#2ca8ff;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-/* Sidebar Styles */
-
-.sidebar-nav {
-  position: relative;
-  top: 0;
-  width: 250px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.sidebar-nav li {
-  text-indent: 20px;
-  line-height: 40px;
-}
-
-.sidebar-nav li a {
+ #sidebar-wrapper {
+  position: absolute;
+  transition: .2s ease-in-out;
+  top: 45px;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  width: 45px;
+  box-shadow: 1px 0 3px 0 rgba(0,0,0,.4);
+  background-color: #2ca8ff;
+  color: white;
   display: block;
-  text-decoration: none;
+}
+
+.sidebar-item{
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 45px;
+  height: 48px;
+  cursor: pointer;
+  color: #a4c8e0;
+}
+
+.sidebar-item:hover{
   color:white;
 }
 
-.sidebar-nav li a:hover {
-  text-decoration: none;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none;
-}
-
-.sidebar-nav>.sidebar-brand {
-  height: 65px;
-  font-size: 18px;
-  line-height: 60px;
-}
-
-.sidebar-nav>.sidebar-brand a {
-  color: #999999;
-}
-
-.sidebar-nav>.sidebar-brand a:hover {
-  color: #fff;
-  background: none;
-}
-
-#sidebar-header{
-  display: block;
-  width: 250px;
-  background-color: #2a2a2a;
-  height: 47 px;
-}
-
-#sidebar-header a{
-  color: #fff;
-}
-
-.sidebar-header-text{
+.sidebar-item.selected{
   color: white;
-  cursor: default;
-  font-size: 20px;
+  background-color: dodgerblue;
 }
 
-.sidebar-header-text.bold{
-  color: #2ca8ff;
-  font-weight: bold;
-}
-
-@media(min-width:768px) {
-  #sidebar-wrapper {
-    width: 0;
+@media(max-width:768px) {
+  #sidebar-wrapper{
+    display: none
   }
 }

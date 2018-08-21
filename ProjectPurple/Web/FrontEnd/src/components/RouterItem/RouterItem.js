@@ -13,10 +13,11 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, 
     return (
 
         <div className="col-lg-3 col-md-4 col-sm-6 portfolio-item mb-3">
-            <a className="list-group-item list-group-item-action RouterItem" onClick={open}
-                id="nopadding-top"
+            <div className="list-group-item RouterItem" onClick={open}
+                id="RouterItem-border"
             >
-                <div className="row md-5">
+            <div className="container-fluid" id="nopadding">
+                <div className="row md-5 padding-left">
                     <div className="col-2 mt-2">
                         <MdRouter size={35} color="#89bf04" />
                     </div>
@@ -24,15 +25,14 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, 
                         <span className="title ml-1 mt-2 md-3"><strong>{apName}#{apCode}</strong></span>
                         <div className="text-muted smaller size-8 ml-1">{ip}</div>
                     </div>
-                    <div className="col-3 mt-2">
+                    <div className="col-3" id="">
                         <button className="RouterItem-clear-btn" id="nopadding"
-                            onClick={deleteFunc}
-                        >
-                            <MdClear size={30} color="black" />
+                            onClick={deleteFunc}>
+                            <MdClear size={20}/>
                         </button>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row" id="padding-horizontal">
                     <div className="col-5 col-xs-10 mt-5" id="nopadding-right">
                         <span className="smaller RouterItem-action">
                             동작중
@@ -47,7 +47,7 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, 
                         </span>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row padding-bottom" id="padding-horizontal">
                     <div className="col-12 mt-1">
                         <Progress
                             percent={count}
@@ -67,7 +67,8 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, 
                         />
                     </div>
                 </div>
-            </a>
+                </div>
+            </div>
         </div>
     )
 }

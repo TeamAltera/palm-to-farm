@@ -1,20 +1,12 @@
 import React from 'react';
 import './MainWrapper.css'
-import PropTypes from 'prop-types';
 
-const MainWrapper = ({ children, option }) => {
-    let toggled = "";
-    if (option)
-        toggled = "toggled";
+const MainWrapper = ({ children }) => {
     return (
-        <div id="MainWrapper" className={toggled}>
+        <div id="MainWrapper">
             {children}
         </div>
     )
 };
-
-MainWrapper.propTypes = {
-    option: PropTypes.bool.isRequired,
-}
 
 export default MainWrapper;

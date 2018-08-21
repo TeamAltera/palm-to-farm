@@ -2,7 +2,15 @@
   background-color: #2a2a2a;
   padding-bottom: 0px;
   padding-top: 0px;
-  height: 47px;
+  height: 45px;
+  top: 0;
+  right: 0;
+  left: 45px;
+  /* z-index: 2; */
+  height: 45px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.4);
+  position: absolute;
+  transition: .2s ease-in-out;
 }
 
 #Header-item-wrapper {
@@ -57,4 +65,26 @@
   padding-left: 18px;
   padding-right: 18px;
   cursor: default;
+}
+
+.main-header-text{
+  color: white;
+  cursor: default;
+  font-size: 20px;
+}
+
+.main-header-username{
+  color: white;
+  cursor: default;
+}
+
+.main-header{
+  display: block;
+  background-color: #2a2a2a;
+  height: 47 px;
+}
+
+.main-header-text.bold{
+  color: #2ca8ff;
+  font-weight: bold;
 }

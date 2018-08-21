@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import './PageLink.css'
 
 const PageLink = ({ preChildren, middleChildren, postChildren, link, option } ) => (
     <span className={"d-block small "+option}>
         {preChildren}
-        <Link to={link}>
+        <Link to={link} className="PageLink-color">
         {middleChildren}
         </Link>
         {postChildren}

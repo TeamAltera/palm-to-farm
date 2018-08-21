@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './SfItemContainer.css'
-import { MdDeviceHub, MdTimeline, MdPermIdentity, MdClear } from 'react-icons/lib/md';
+import { MdArrowForward } from 'react-icons/lib/md';
 import Moment from 'react-moment';
 import SfItem from '../SfItem/SfItem';
 
-const SfItemContainer = ({ option, data, close }) => {
-    const { apCode, apName, regDate } = data;
-    console.log(data);
+const SfItemContainer = ({ option, data, close, children }) => {
+    let apCode;
+    let apName;
+    let regDate;
+    if(data){
+        apCode=data.apCode;
+        apName=data.apName;
+        regDate=data.regDate;
+    }
     let toggled = '';
     if (option) toggled = 'toggled'
     return (
@@ -18,7 +24,7 @@ const SfItemContainer = ({ option, data, close }) => {
                         <div className="col-1" id="nopadding-left">
                             <button type="button" onClick={close}
                                 className="SfItemContainer-btn">
-                                <MdClear />
+                                <MdArrowForward />
                             </button>
                         </div>
                         <div className="col-11">
@@ -37,10 +43,12 @@ const SfItemContainer = ({ option, data, close }) => {
                     </div>
                 </div>
             </div>
+            <div className={"background-image " + toggled}>
+                <div className="background-image-container"></div>
+            </div>
             <div className="SfItemContainer-body SfItemContainer-item">
-                <div className="container-fluid">
-                    <SfItem />
-                    <SfItem />
+                <div className="container-fluid mb-150">
+                    {children}
                 </div>
             </div>
         </div>

@@ -23,11 +23,18 @@
     color:#ca8885;
     border: 0;
     float: right;
+    cursor: pointer;
+    padding-left: 6px;
+    padding-right: 6px;
 }
 
 .RouterAddModal-close:hover{    
     background-color: #8e211c;
     color: #ffffff;
+}
+
+.RouterAddModal-close:focus{
+    outline: none;
 }
 
 .ip-input-container{
@@ -88,6 +95,14 @@
 
 #padding-right-8{
     padding-right: 8px;
+}
+
+.RouterAddModal-justify{
+    justify-content: center;
+}
+
+.RouterAddModal-align{
+    align-content: center;
 }
 
 /* .modal {

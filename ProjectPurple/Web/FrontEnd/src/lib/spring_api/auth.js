@@ -19,6 +19,7 @@ export const signin = (email, password) => {
             if (response.data.status === "OK") {
                 const token = response.data.data.token;
                 if (token) {
+                    // sessionStorage.setItem('jwtToken', token);
                     localStorage.setItem('jwtToken', token);
                     setAuthorizationToken(token);
                 }
@@ -41,26 +42,38 @@ export const signup = (email, password, firstName, secondName) => {
 //email is exists?
 export const checkEmailExists = (email) => {
     return axios
-      .get(DOMAIN + USER_NAMESPACE + 'find?email='+email);
-  };
+        .get(DOMAIN + USER_NAMESPACE + 'find?email=' + email);
+};
 
 //인증 이메일 발송
-export const sendAuthCode = (email) =>{
+export const sendAuthCode = (email) => {
     return axios
-      .post(DOMAIN + MAIL_NAMESPACE + 'send',{
+        .post(DOMAIN + MAIL_NAMESPACE + 'send', {
             email: email,
-      }).then(
-          res=>{
-              console.log(res);
-            return res;
-          }
-      );
+        }).then(
+            res => {
+                console.log(res);
+                return res;
+            }
+        );
 }
 
 //인증 코드 확인
-export const checkAuthCode = (code) =>{
+export const checkAuthCode = (code) => {
     return axios
-      .post(DOMAIN + MAIL_NAMESPACE + 'check',{
+        .post(DOMAIN + MAIL_NAMESPACE + 'check', {
             code: code,
-      });
+        });
 }
+
+//사용자 정보 조회
+export const getUserInfo = () => {
+    return axios
+        .get(DOMAIN + USER_NAMESPACE+'info')
+        .then(res => {
+            console.log(res);
+            return res;
+        });
+};
+
+

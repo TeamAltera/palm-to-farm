@@ -1,13 +1,41 @@
-.SfItem-box{
+#SfItem-box{
     width: 508px;
     /* border: 1px solid rgba(0,0,0,.125); */
     justify-content: center;
-    /* background-color: white; */
+    z-index: 9999;
 }
 
-.SFItem-title{
-    background-color: #2ca8ff;
-    color: #2a2a2a;
+#SfItem-box:hover{
+}
+
+.SFItem-action{
+    color: white;
+    background-color: #ffb024;
+    border-radius: 3px;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+}
+
+.success{
+    /* background-color:#ffb024; */
+    /* color: white; */
+}
+
+.ready{
+    background-color:white;
+    color: #8d919a;
+    border: .8px solid rgba(0,0,0,.125);
+    font-weight: 400;
+}
+
+.SFItem-right{
+    float: right;
+}
+
+.SFItem-left{
+    float: left;
 }
 
 .SFItem-small-title{
@@ -16,15 +44,19 @@
 }
 
 .SfItem-line{
-    border-top: 1px solid rgba(0,0,0,.125);;
+    border-top: 1px solid rgba(0,0,0,.125);
 }
 
 .SfItem-line-right{
-    border-right: 1px solid rgba(0,0,0,.125);;
+    border-right: 1px solid rgba(0,0,0,.125);
 }
 
 .SfItem-title{
     font-weight: bold;
+}
+
+#SfItem-color{
+    color: black;
 }
 
 .SfItem-btn-clear{
@@ -34,6 +66,8 @@
     border-bottom: 1px solid rgba(0,0,0,.125);
     background-color: white;
     cursor: pointer;
+    padding-left: 6px;
+    padding-right: 6px;
 }
 
 .SfItem-btn-clear:hover{

@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
 import main from './main';
+import sensor from './sensor';
+import plant from './plant';
+import base from './base';
 import { penderReducer } from 'redux-pender';
 
 /**
@@ -11,5 +14,8 @@ import { penderReducer } from 'redux-pender';
 export default combineReducers({
   auth,
   main,
+  sensor,
+  plant,
+  base,
   pender: penderReducer,
 });

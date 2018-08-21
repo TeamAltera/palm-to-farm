@@ -1,6 +1,6 @@
 .SfItemContainer-wrapper {
     /* 최상단 */
-    z-index: 1000;
+    z-index: 9999;
     position: fixed;
     right: 537px;
     width: 0px;
@@ -9,33 +9,91 @@
     overflow-y: auto;
     /* border-left: 1px solid rgba(0,0,0,.125); */
     box-shadow: 0px 3px 5px gray;
-    background-color: #f3f4f5;
     display: flex;
     flex-direction: column;
-
     /* 애니메이션 효과 */
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+
+    
+}
+
+.background-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 537px;
+    z-index: 1;
+    display: block;
+    background: url(../../resources/img/mountain.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    width: 0;
+    height: 100%;
+    margin-right: -537px;
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
 
-.SfItemContainer-wrapper.toggled{
+.background-image-container{
+    width: 537px;
+    height: 100%;
+    background: inherit;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    /* margin-left: -175px;
+    margin-top: -250px;
+    border-radius: 8px; */
+}
+
+.background-image-container:before {
+    width: 557px;
+    height: 100%;
+    content: "";
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    bottom: 0;
+    right: 0;
+    background: inherit;
+    box-shadow: inset 0 0 0 300px rgba(255, 255, 255, 0.2);
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);
+}
+
+.background-image.toggled {
     width: 537px;
 }
 
-.SfItemContainer-title{
+.SfItemContainer-wrapper.toggled {
+    width: 537px;
+}
+
+.SfItemContainer-title {
+    z-index: 9999;
     font-size: 18px;
     height: 79px;
     background-color: white;
-    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
 }
 
-.sfItemContainer-body{
-
-}
-
-.SfItemContainer-item{
+.SfItemContainer-item {
     position: relative;
     top: 0;
     width: 537px;
@@ -43,26 +101,60 @@
     padding: 0;
 }
 
-.SfItemContainer-body{
+.SfItemContainer-body {
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 9999;
+    flex: 1 1;
+    overflow: auto;
+    contain: strict;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    height: 100%;
 }
 
-.SfItemContainer-btn{
+.mb-150 {
+    margin-bottom: 150px;
+}
+
+.SfItemContainer-btn {
     border: 0;
-    border-right: 1px solid rgba(0,0,0,.125);
-    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-right: 1px solid rgba(0, 0, 0, .125);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
     background-color: white;
+    padding-left: 6px;
+    padding-right: 6px;
     cursor: pointer;
 }
 
-.SfItemContainer-btn:hover{
+.SfItemContainer-btn:hover {
     color: white;
     background-color: #2ca8ff;
 }
 
-#nopadding-left{
+#nopadding-left {
     padding-left: 0;
+}
+
+.SfItemContainer-body::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background: transparent;
+}
+
+.SfItemContainer-body::-webkit-scrollbar-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #b0b4bb;
+}
+
+.SfItemContainer-body::-webkit-scrollbar-track {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: #f3f4f5;
 }
 
 @media(min-width:768px) {
@@ -81,7 +173,6 @@
         -o-transition: all 0.5s ease;
         transition: all 0.5s ease; */
     }
-
     /* .SfItemContainer-wrapper.toggled{
         width: 100%;
     } */

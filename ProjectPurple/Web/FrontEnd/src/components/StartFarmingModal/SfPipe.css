@@ -1,0 +1,82 @@
+.StartFarmingModal-pipe {
+    background-color: #ece6cc;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+    height: 34px;
+    padding-top: 2px;
+    display: flex;
+    flex-direction: row;
+}
+
+.StartFarmingModal-tline{
+    width: 100%;
+    height: 5px;
+    background-color: rgba(206, 200, 174, 1);
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+
+.StartFarmingModal-bline{
+    width: 100%;
+    height: 5px;
+    background-color: rgba(206, 200, 174, 1);
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+}
+
+.StartFarmingModal-index {
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.StartFarmingModal-count{
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    cursor: default;
+}
+
+#myCheckbox input {
+    display: none;
+    position: relative;
+    z-index: -9999;
+}
+
+#myCheckbox span {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: block;
+    background-color: rgb(55, 55, 55);
+    padding: 3px;
+}
+
+/* #myCheckbox span:hover{
+    color: white;
+    background-color: #2ca8ff;
+} */
+#myCheckbox span span{
+    background-color: rgb(70, 70, 70);
+    width: 100%;
+    height: 100%;
+}
+
+/* #myCheckbox span span:hover{
+    color: white;
+    background-color: #2ca8ff;
+} */
+
+#myCheckbox input:checked + span span{
+    color: green;
+    background-color: transparent;
+}

@@ -4,27 +4,31 @@ import './FormInput.css';
 import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
 
 const FormInput = ({ addon, addonText, type, id, placeholder, aria, onChange, value, name, disabled }) => {
-    return(<Fragment>
-        <InputGroup>
-            <Input
-                className="form-control"
-                id={id}
-                type={type}
-                aria-describedby={aria}
-                placeholder={placeholder}
-                onChange={onChange}
-                value={value}
-                name={name}
-                autoComplete="off"
-                disabled={disabled}
-            />
-            {addon &&
-                <InputGroupAddon addonType="append">
-                    {addonText}
-                </InputGroupAddon>
-            }
-        </InputGroup>
-    </Fragment>)
+    return (
+        <Fragment>
+            <label htmlFor={id} className="inp">
+                <input
+                    type={type}
+                    id={id}
+                    placeholder="&nbsp;"
+                    onChange={onChange}
+                    value={value}
+                    name={name}
+                    autoComplete="off"
+                    disabled={disabled}
+                    spellCheck="false"
+                />
+                <span className="label" id="nanum-gothic">{placeholder}</span>
+                <span className="border"></span>
+            </label>
+            <InputGroup>
+                {addon &&
+                    <InputGroupAddon addonType="append">
+                        {addonText}
+                    </InputGroupAddon>
+                }
+            </InputGroup>
+        </Fragment>)
 };
 
 FormInput.propTypes = {

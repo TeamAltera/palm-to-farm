@@ -1,0 +1,27 @@
+.HeaderBlank{
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    transition: .2s ease-in-out;
+    display: block;
+    background-color: #2a2a2a
+}
+
+.HeaderBlank-btn{
+    display: none;
+    color: gray;
+    cursor: pointer;
+}
+
+.HeaderBlank-btn:hover{
+    color: white;
+}
+
+@media(max-width:768px) {
+    .HeaderBlank-btn{
+        display: block;
+    }
+  }

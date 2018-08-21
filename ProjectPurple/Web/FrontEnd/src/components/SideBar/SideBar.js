@@ -8,36 +8,38 @@ import { Link } from 'react-router-dom';
 const SideBar = () => {
     return (
         <div id="sidebar-wrapper">
-            <nav className="absolute-top navbar navbar-absolute navbar-expand-lg"
-                id="sidebar-header"
-            >
-                <TextCenter>
-                    <span className="sidebar-header-text">
-                        <span className="sidebar-header-text bold">S
-                        </span>mart <span className="sidebar-header-text bold">P</span>lant
-                    </span>
-                </TextCenter>
-            </nav>
-            <ul className="sidebar-nav" id="nanum-gothic">
+            <div>
+                <Link to="/main">
+                    <div className="sidebar-item selected">
+                        <MdDeviceHub size="20" />
+                    </div>
+                </Link>
+                <Link to="/main">
+                    <div className="sidebar-item">
+                        <MdTimeline size="20" />
+                    </div>
+                </Link>
+                <Link to="/main">
+                    <div className="sidebar-item">
+                        <MdPermIdentity size="20" />
+                    </div>
+                </Link>
+            </div>
+            {/* <ul className="sidebar-nav">
+                <li className="mt-3">
+                    
+                </li>
                 <li className="mt-3">
                     <Link to="/main">
-                        <MdDeviceHub size="30" />
-                        <span className="ml-3">디바이스 정보</span>
+                        <MdTimeline size="20"/>
                     </Link>
                 </li>
                 <li className="mt-3">
                     <Link to="/main">
-                        <MdTimeline size="30" />
-                        <span className="ml-3">데이터 로거</span>
+                        <MdPermIdentity size="20" />
                     </Link>
                 </li>
-                <li className="mt-3">
-                    <Link to="/main">
-                        <MdPermIdentity size="30" />
-                        <span className="ml-3">사용자 정보</span>
-                    </Link>
-                </li>
-            </ul>
+            </ul> */}
         </div>
     )
 };

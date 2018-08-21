@@ -1,0 +1,15 @@
+.Form-btn{
+    margin-top: 20px;
+    width: 100%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border: 0;
+    cursor: pointer;
+    color: white;
+    background-color: #2ca8ff;
+    border-radius: 3px;
+}
+
+.Form-btn:focus{
+    outline: 0;
+}
