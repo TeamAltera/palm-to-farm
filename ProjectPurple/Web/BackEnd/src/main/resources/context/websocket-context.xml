@@ -45,6 +45,9 @@
 		<websocket:stomp-endpoint path="/sensing_data" allowed-origins="*">
 			<websocket:sockjs />
 		</websocket:stomp-endpoint>
+		<websocket:stomp-endpoint path="/device_data" allowed-origins="*">
+			<websocket:sockjs />
+		</websocket:stomp-endpoint>
 		<!-- <websocket:simple-broker prefix="/topic, /queue"/> -->
 		<websocket:stomp-broker-relay prefix="/topic, /queue, /user"
 			relay-host="${websocket.host}" relay-port="${websocket.port}" 

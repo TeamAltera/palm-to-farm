@@ -19,6 +19,7 @@ public class LogDAO {
 	private final String namespace="log";
 	
 	public void insertLog(DeviceLogDTO dto) {
+		System.out.println(dto.toString());
 		sql.insert(namespace+".insertLog",dto);
 	}
 	

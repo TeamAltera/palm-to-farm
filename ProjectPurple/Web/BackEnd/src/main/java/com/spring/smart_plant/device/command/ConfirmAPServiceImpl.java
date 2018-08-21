@@ -30,13 +30,12 @@ public class ConfirmAPServiceImpl implements IDeviceFrontService {
 		// TODO Auto-generated method stub
 		String ip = (String) obj;
 		String msg=null;
-		APStatusDTO code=new APStatusDTO();
+		APStatusDTO code=new APStatusDTO(FAIL_CODE);
 		boolean httpStatus=true;
 		if (!isAPExist(ip,dao)){//AP가 존재하지 않는다면 미들서버로부터 정보를 받아온다.
 			try {
 				JSONObject json=new UrlConnectionServiceImpl().request(ip, PHP_SEARCH_URL, "POST",null);
 	            if(json.get("state").equals("FAIL")) {//이미 사용중
-	            	code.setCode(FAIL_CODE);
 	            	msg=FAIL_MSG;
 	            }
 	            else { //사용가능한 경우

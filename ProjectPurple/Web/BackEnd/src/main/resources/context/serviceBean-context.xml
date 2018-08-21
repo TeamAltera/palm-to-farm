@@ -29,8 +29,15 @@
 	<!-- sensor -->
 	<bean id="insertSensorService" class="com.spring.smart_plant.sensor.command.InsertSensorServiceImpl"/>
 	<bean id="getSensorDataService" class="com.spring.smart_plant.sensor.command.GetSensorDataServiceImpl"/>
+	<bean id="deleteSensorDataService" class="com.spring.smart_plant.sensor.command.DeleteSensorDataServiceImpl"/>
 	
 	<!-- mail -->
 	<bean id="mailService" class="com.spring.smart_plant.mail.command.MailServiceImpl"/>
 	<bean id="authCodeCheckService" class="com.spring.smart_plant.mail.command.AuthCodeCheckServiceImpl"/>
+	
+	<!-- plant -->
+	<bean id="getGrowthPlantService" class="com.spring.smart_plant.plant.command.GetGrowthPlantServiceImpl"/>
+	<bean id="insertGrowthPlantService" class="com.spring.smart_plant.plant.command.InsertGrowthPlantServiceImpl"/>
+	<bean id="deleteGrowthPlantService" class="com.spring.smart_plant.plant.command.DeleteGrowthPlantServiceImpl"/>
+	<bean id="farmingService" class="com.spring.smart_plant.plant.command.FarmingServiceImpl"/>
 </beans>

@@ -23,8 +23,13 @@ public class GetUserInfoServiceImpl implements IUserService{
 		Map<String, Object> map=ConstantJwtService.getJwtService().get("member");
 		int userCode=(int)map.get("userCode");
 		UserInfoDTO userInfo=dao.getMemberInfo(userCode);
-		userInfo.setPwd(null);
-		return ResultDTO.createInstance(true).setMsg("사용자 정보").setData(userInfo);
+		if(userInfo!=null) {
+			userInfo.setPwd(null);
+			return ResultDTO.createInstance(true).setMsg("사용자 정보").setData(userInfo);
+		}
+		else {
+			return ResultDTO.createInstance(false).setMsg("정보를 받아오는데 실패하였습니다.");
+		}
 	}
 	
 }

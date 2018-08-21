@@ -35,6 +35,13 @@ public class DeviceDAO{
 		return sql.selectList(namespace+".getAllSmartPlant", userCode);
 	}
 	
+	public Object getSmartPlant(int apCode,int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		return sql.selectOne(namespace+".getSmartPlant", map);
+	}
+	
 	//AP등록
 	public int insertAP(APInfoDTO dto) {
 		//Object -> map
@@ -48,6 +55,11 @@ public class DeviceDAO{
 	//AP삭제
 	public void deleteAP(int apCode) {
 		sql.delete(namespace+".deleteAP",apCode);
+	}
+	
+	//AP에 등록된 SF 갯수 업데이트
+	public void updateSFCount(int apCode) {
+		sql.update(namespace+".updateSFCount",apCode);
 	}
 	
 	// SF장비 추가, SF_SEQ로 SF코드생성
@@ -78,6 +90,10 @@ public class DeviceDAO{
 		}
 	}
 	
+	public int getUserCodeOfAP(int apCode) {
+		return sql.selectOne(namespace+".getUserCodeOfAP", apCode);
+	}
+	
 	//수경재비기 한 대 삭제
 	public void deleteSmartFarmDevice(int sfCode) {
 		sql.delete(namespace+".deleteSmartFarmDevice",sfCode);
@@ -94,6 +110,15 @@ public class DeviceDAO{
 			throw e;
 		}
 		return count;
+	}
+	
+	public void updatePort(int apCode, int sfCode, int sfPort, char pumpSt) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("sfPort", sfPort);
+		map.put("apCode", apCode);
+		map.put("pumpSt", pumpSt);
+		sql.update(namespace+".updatePort", map);
 	}
 	
 	public String getApIp(int apCode) {

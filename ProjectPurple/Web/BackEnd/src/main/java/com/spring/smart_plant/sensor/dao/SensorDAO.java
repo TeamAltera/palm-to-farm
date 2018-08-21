@@ -32,4 +32,8 @@ public class SensorDAO {
 	public List<SensorDataDTO> getDayData(DateSearchDTO dto){
 		return sql.selectList(namespace+".getDayData",dto);
 	}
+	
+	public void deleteAllSensorData(HashMap<String, Integer> map) {
+		sql.delete(namespace+".deleteAllSensorData", map);
+	}
 }

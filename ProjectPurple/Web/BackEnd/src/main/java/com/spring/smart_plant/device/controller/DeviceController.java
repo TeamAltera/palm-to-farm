@@ -227,10 +227,11 @@ public class DeviceController {
 	 * @param command
 	 * @param result
 	 * @return
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "재배기 제어, target:front")
 	@PostMapping(value = "/control")
-	public ResultDTO deviceControl(@RequestBody @Valid CommandDTO command, BindingResult result) {
+	public ResultDTO deviceControl(@RequestBody @Valid CommandDTO command, BindingResult result) throws Exception {
 		if (result.hasErrors())
 			return ResultDTO.createInstance(false).setMsg("잘못된 명령 입니다.").setData(result.getAllErrors());
 		return deviceControlService.execute(command);

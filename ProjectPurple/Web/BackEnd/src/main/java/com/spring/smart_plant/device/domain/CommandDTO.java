@@ -7,6 +7,7 @@ public class CommandDTO {
 	private int sfCode;
 	private int apCode;
 	private String usedIp;
+	private CommandDataDTO optData;
 	
 	/**
 	 * @param dest
@@ -63,6 +64,12 @@ public class CommandDTO {
 	}
 	public void setApCode(int apCode) {
 		this.apCode = apCode;
+	}
+	public CommandDataDTO getOptData() {
+		return optData;
+	}
+	public void setOptData(CommandDataDTO optData) {
+		this.optData = optData;
 	}
 	
 }

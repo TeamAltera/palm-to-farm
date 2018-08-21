@@ -1,5 +1,7 @@
 package com.spring.smart_plant.device.domain;
 
+import java.sql.Timestamp;
+
 public class SmartFarmInfoDTO {
 	private int sfCode;
 	private int sfPortCnt;
@@ -11,6 +13,7 @@ public class SmartFarmInfoDTO {
 	private char pumpSt;
 	private int apCode;
 	private String innerIp;
+	private Timestamp sfRegDate;
 	
 	/**
 	 * @param sfCode
@@ -113,6 +116,12 @@ public class SmartFarmInfoDTO {
 	}
 	public void setInnerIp(String innerIp) {
 		this.innerIp = innerIp;
+	}
+	public Timestamp getSfRegDate() {
+		return sfRegDate;
+	}
+	public void setSfRegDate(Timestamp sfRegDate) {
+		this.sfRegDate = sfRegDate;
 	}
 	
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="plant">
+
+	<select id="getPlantInfo" resultMap="plantDto"
+		parameterType="hashmap">
+		SELECT
+		G.PLANT_CODE AS PLANT_CODE,
+		P.PLANT_NAME AS PLANT_NAME,
+		P.OPT_TEMP AS OPT_TEMP,
+		P.MAX_TEMP AS MAX_TEMP,
+		P.MIN_TEMP AS MIN_TEMP,
+		P.MIN_PH AS MIN_PH,
+		P.MAX_PH AS MAX_PH,
+		G.FARMING_DATE AS FARMING_DATE
+		FROM G_PLANT G, PLANT P
+		WHERE G.SF_CODE=#{sfCode} AND G.AP_CODE=#{apCode}
+		AND P.PLANT_CODE=G.PLANT_CODE
+	</select>
+
+	<insert id="insertGrowthPlant" parameterType="hashmap">
+		INSERT INTO G_PLANT (
+			SF_CODE, 
+			AP_CODE, 
+			PLANT_CODE, 
+			FARMING_DATE
+		)
+		VALUES (
+			#{sfCode},
+			#{apCode},
+			#{plantCode},
+			SYSDATE
+		)
+	</insert>
+
+	<delete id="deleteGrowthPlant" parameterType="hashmap">
+		DELETE
+		FROM G_PLANT
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+	</delete>
+
+	<resultMap type="com.spring.smart_plant.plant.domain.PlantDTO"
+		id="plantDto">
+		<result property="plantCode" column="plant_code" />
+		<result property="plantName" column="plant_name" />
+		<result property="optTemp" column="opt_temp" />
+		<result property="maxTemp" column="max_temp" />
+		<result property="minTemp" column="min_temp" />
+		<result property="minPh" column="min_ph" />
+		<result property="maxPh" column="max_ph" />
+		<result property="farmingDate" column="farming_date" />
+	</resultMap>
+</mapper>

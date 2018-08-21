@@ -3,6 +3,7 @@ package com.spring.smart_plant.log.domain;
 import java.sql.Timestamp;
 
 public class DeviceLogDTO {
+
 	private Timestamp usedDate;
 	private int sfCode;
 	private int apCode;
@@ -70,4 +71,9 @@ public class DeviceLogDTO {
 		this.result = result;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "dt:"+usedDate+" sf:"+sfCode+" ap:"+apCode+" ip:"+usedIp+" act:"+actName+" res:"+result;
+	}
 }

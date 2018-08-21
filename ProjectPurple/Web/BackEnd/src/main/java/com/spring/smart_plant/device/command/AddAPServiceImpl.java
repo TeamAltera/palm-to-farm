@@ -62,7 +62,7 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					String innerIp=(String) item.get("INNER_IP");
 					map.put("innerIp", innerIp);
 					map.put("sfCode", innerIp.substring(innerIp.lastIndexOf('.')+1, innerIp.length()));
-					map.put("sfPortCnt", 32);
+					map.put("sfPortCnt", 0);
 					map.put("floorCnt", 2);
 					map.put("coolerCnt", 3);
 					map.put("mode", 'A');

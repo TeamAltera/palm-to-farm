@@ -10,85 +10,97 @@ import java.sql.Timestamp;
  *		elum:
  *		waterTemp:
  *		waterLim: 
+ *		ec:
+ *		ph:
 	}
 */
 public class SensorDataDTO {
-	private Timestamp date;
-	private int sfCode;
-	private int apCode;
-	private int temp;
-	private int humi;
-	private int elum;
-	private int waterTemp;
-	private int waterLim;
-	
+	private Timestamp d;
+//	private int sfCode;
+//	private int apCode;
+	private double t;
+	private double h;
+	private int e;
+	private double wt;
+	private double wl;
+	private double ec;
+	private double ph;
 	/**
-	 * @param date
-	 * @param sfCode
-	 * @param temp
-	 * @param humi
-	 * @param elum
-	 * @param waterTemp
-	 * @param waterLim
+	 * @param d
+	 * @param t
+	 * @param h
+	 * @param e
+	 * @param wt
+	 * @param wl
+	 * @param ec
+	 * @param ph
 	 */
-	public SensorDataDTO(Timestamp date, int sfCode, int apCode, int temp, int humi, int elum, int waterTemp, int waterLim) {
+	public SensorDataDTO(Timestamp d, double t, double h, int e, double wt, double wl, double ec, double ph) {
 		super();
-		this.date = date;
-		this.sfCode = sfCode;
-		this.apCode = apCode;
-		this.temp = temp;
-		this.humi = humi;
-		this.elum = elum;
-		this.waterTemp = waterTemp;
-		this.waterLim = waterLim;
+		this.d = d;
+		this.t = t;
+		this.h = h;
+		this.e = e;
+		this.wt = wt;
+		this.wl = wl;
+		this.ec = ec;
+		this.ph = ph;
 	}
-	public Timestamp getDate() {
-		return date;
+	/**
+	 * 
+	 */
+	public SensorDataDTO() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-	public void setDate(Timestamp date) {
-		this.date = date;
+	public Timestamp getD() {
+		return d;
 	}
-	public int getSfCode() {
-		return sfCode;
+	public void setD(Timestamp d) {
+		this.d = d;
 	}
-	public void setSfCode(int sfCode) {
-		this.sfCode = sfCode;
+	public double getT() {
+		return t;
 	}
-	public int getApCode() {
-		return apCode;
+	public void setT(double t) {
+		this.t = t;
 	}
-	public void setApCode(int apCode) {
-		this.apCode = apCode;
+	public double getH() {
+		return h;
 	}
-	public int getTemp() {
-		return temp;
+	public void setH(double h) {
+		this.h = h;
 	}
-	public void setTemp(int temp) {
-		this.temp = temp;
+	public int getE() {
+		return e;
 	}
-	public int getHumi() {
-		return humi;
+	public void setE(int e) {
+		this.e = e;
 	}
-	public void setHumi(int humi) {
-		this.humi = humi;
+	public double getWt() {
+		return wt;
 	}
-	public int getElum() {
-		return elum;
+	public void setWt(double wt) {
+		this.wt = wt;
 	}
-	public void setElum(int elum) {
-		this.elum = elum;
+	public double getWl() {
+		return wl;
 	}
-	public int getWaterTemp() {
-		return waterTemp;
+	public void setWl(double wl) {
+		this.wl = wl;
 	}
-	public void setWaterTemp(int waterTemp) {
-		this.waterTemp = waterTemp;
+	public double getEc() {
+		return ec;
 	}
-	public int getWaterLim() {
-		return waterLim;
+	public void setEc(double ec) {
+		this.ec = ec;
 	}
-	public void setWaterLim(int waterLim) {
-		this.waterLim = waterLim;
+	public double getPh() {
+		return ph;
 	}
+	public void setPh(double ph) {
+		this.ph = ph;
+	}
+	
 	
 }
