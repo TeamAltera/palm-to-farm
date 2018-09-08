@@ -111,7 +111,9 @@ CREATE TABLE PLANT
 	MIN_TEMP             NUMBER(5,2) NULL ,
 	MIN_PH               NUMBER(5,2) NULL ,
 	MAX_PH               NUMBER(5,2) NULL ,
-	PLANT_NAME           VARCHAR(30) NULL 
+	PLANT_NAME           VARCHAR(30) NULL ,
+	MIN_EC               NUMBER(5,2) NULL ,
+	MAX_EC               NUMBER(5,2) NULL 
 );
 
 
@@ -146,6 +148,26 @@ CREATE UNIQUE INDEX XPK사용자 ON PLANT_USER
 
 ALTER TABLE PLANT_USER
 	ADD CONSTRAINT  XPK사용자 PRIMARY KEY (USER_CODE);
+
+
+
+CREATE TABLE PORT_INFO
+(
+	SF_CODE              NUMBER(3) NOT NULL ,
+	AP_CODE              NUMBER(8) NOT NULL ,
+	PORT_ST              CHAR(1) NULL ,
+	PORT_NO              NUMBER(2) NOT NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK포트정보 ON PORT_INFO
+(SF_CODE   ASC,AP_CODE   ASC,PORT_NO   ASC);
+
+
+
+ALTER TABLE PORT_INFO
+	ADD CONSTRAINT  XPK포트정보 PRIMARY KEY (SF_CODE,AP_CODE,PORT_NO);
 
 
 
@@ -235,6 +257,11 @@ ALTER TABLE G_PLANT
 
 ALTER TABLE G_PLANT
 	ADD (CONSTRAINT R_54 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+
+
+
+ALTER TABLE PORT_INFO
+	ADD (CONSTRAINT R_55 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
 
 
 
@@ -874,6 +901,75 @@ END;
 /
 
 
+CREATE  TRIGGER tI_PORT_INFO BEFORE INSERT ON PORT_INFO for each row
+-- ERwin Builtin Trigger
+-- INSERT trigger on PORT_INFO 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* ERwin Builtin Trigger */
+    /* SF  PORT_INFO on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000e699", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    SELECT count(*) INTO NUMROWS
+      FROM SF
+      WHERE
+        /* %JoinFKPK(:%New,SF," = "," AND") */
+        :new.SF_CODE = SF.SF_CODE AND
+        :new.AP_CODE = SF.AP_CODE;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert PORT_INFO because SF does not exist.'
+      );
+    END IF;
+
+
+-- ERwin Builtin Trigger
+END;
+/
+
+CREATE  TRIGGER tU_PORT_INFO AFTER UPDATE ON PORT_INFO for each row
+-- ERwin Builtin Trigger
+-- UPDATE trigger on PORT_INFO 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* ERwin Builtin Trigger */
+  /* SF  PORT_INFO on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0000e51e", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+  SELECT count(*) INTO NUMROWS
+    FROM SF
+    WHERE
+      /* %JoinFKPK(:%New,SF," = "," AND") */
+      :new.SF_CODE = SF.SF_CODE AND
+      :new.AP_CODE = SF.AP_CODE;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update PORT_INFO because SF does not exist.'
+    );
+  END IF;
+
+
+-- ERwin Builtin Trigger
+END;
+/
+
+
 CREATE  TRIGGER tI_SENSOR_DATA BEFORE INSERT ON SENSOR_DATA for each row
 -- ERwin Builtin Trigger
 -- INSERT trigger on SENSOR_DATA 
@@ -982,8 +1078,28 @@ CREATE  TRIGGER  tD_SF AFTER DELETE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
+    /* SF  PORT_INFO on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0004bb74", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    SELECT count(*) INTO NUMROWS
+      FROM PORT_INFO
+      WHERE
+        /*  %JoinFKPK(PORT_INFO,:%Old," = "," AND") */
+        PORT_INFO.SF_CODE = :old.SF_CODE AND
+        PORT_INFO.AP_CODE = :old.AP_CODE;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete SF because PORT_INFO exists.'
+      );
+    END IF;
+
+    /* ERwin Builtin Trigger */
     /* SF  G_PLANT on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0003bf61", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
     FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
@@ -1072,8 +1188,34 @@ CREATE  TRIGGER tU_SF AFTER UPDATE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
+  /* SF  PORT_INFO on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00068051", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.SF_CODE <> :new.SF_CODE OR 
+    :old.AP_CODE <> :new.AP_CODE
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM PORT_INFO
+      WHERE
+        /*  %JoinFKPK(PORT_INFO,:%Old," = "," AND") */
+        PORT_INFO.SF_CODE = :old.SF_CODE AND
+        PORT_INFO.AP_CODE = :old.AP_CODE;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update SF because PORT_INFO exists.'
+      );
+    END IF;
+  END IF;
+
+  /* ERwin Builtin Trigger */
   /* SF  G_PLANT on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00056eba", PARENT_OWNER="", PARENT_TABLE="SF"
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
     FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
@@ -1252,6 +1394,8 @@ COMMENT ON TABLE PLANT IS '식물';
     COMMENT ON COLUMN PLANT.MIN_TEMP IS '최저온도';  
     COMMENT ON COLUMN PLANT.MIN_PH IS '최저ph';  
     COMMENT ON COLUMN PLANT.MAX_PH IS '최대ph';  
+    COMMENT ON COLUMN PLANT.MIN_EC IS '최저ec';  
+    COMMENT ON COLUMN PLANT.MAX_EC IS '최대ec';  
     
 COMMENT ON TABLE PLANT_USER IS '사용자';
  
@@ -1262,6 +1406,13 @@ COMMENT ON TABLE PLANT_USER IS '사용자';
     COMMENT ON COLUMN PLANT_USER.SF_CNT IS '보유재배기갯수';  
     COMMENT ON COLUMN PLANT_USER.SECOND_NAME IS '이름';  
     COMMENT ON COLUMN PLANT_USER.BLOCK IS '계정중지';  
+    
+COMMENT ON TABLE PORT_INFO IS '포트정보';
+ 
+    COMMENT ON COLUMN PORT_INFO.SF_CODE IS '재배기코드';  
+    COMMENT ON COLUMN PORT_INFO.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN PORT_INFO.PORT_NO IS '포트번호';  
+    COMMENT ON COLUMN PORT_INFO.PORT_ST IS '포트상태';  
     
 COMMENT ON TABLE SENSOR_DATA IS '센서데이터';
  
