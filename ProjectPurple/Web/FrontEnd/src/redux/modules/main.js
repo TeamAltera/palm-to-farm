@@ -22,7 +22,9 @@ const CHANGE_CONFIRM = 'main/CHANGE_CONFIRM'; // form 초기화
 const CHANGE_SF_TOGGLE_STATE = 'main/CHANGE_SF_TOGGLE_STATE';
 const GET_USER_INFO = 'main/GET_USER_INFO';
 const CHANGE_SELECTED_SF = 'main/CHANGE_SELECTED_SF';
-// const ADD_ITEM = 'main/ADD_ITEM';
+const CHANGE_SELECTED_SB = 'main/CHANGE_SELECTED_SB';
+const ADD_ITEM = 'main/ADD_ITEM';
+const INCREMENT_SF_CNT = 'main/INCREMENT_SF_CNT'
 
 //action 생성
 export const changeSfToggleState = createAction(CHANGE_SF_TOGGLE_STATE);
@@ -40,10 +42,13 @@ export const initializeForm = createAction(INITIALIZE_FORM); // form
 export const changeConfirm = createAction(CHANGE_CONFIRM);
 export const getUserInfo = createAction(GET_USER_INFO, AuthApi.getUserInfo);
 export const changeSelectedSf = createAction(CHANGE_SELECTED_SF);
-// export const addItem = createAction(ADD_ITEM);
+export const changeSelectedSb = createAction(CHANGE_SELECTED_SB);
+export const addItem = createAction(ADD_ITEM);
+export const incrementSfCnt = createAction(INCREMENT_SF_CNT);
 
 //state 정의
 const initialState = Map({
+    sidebarSelected:0,
     user: null,
     sfToggle: Map({
         sfToggleState: false,
@@ -53,12 +58,16 @@ const initialState = Map({
             count: 0,
             apIp: '',
             regDate:'',
+            plantDevices: List([]),
         }),
     }),
     selectedSf: Map({
-        sfCode: '',
-        count: 0,
-        sfIp: '',
+        // sfCode: '',
+        // count: 0,
+        // sfIp: '',
+        // pumpSt: '',
+        // ledSt: '',
+        // coolerSt
     }),
     modalsState: false,
     popoverState: false,
@@ -70,14 +79,7 @@ const initialState = Map({
         c: '',
         d: ''
     }),
-    deviceInfo: Map({
-        // data: Map({
-        //     deviceInfo:Map({
-        //         plantDevices:List(),
-        //         raspAPDevices:List(),
-        //     })
-        // })
-    }),
+    deviceInfo: List([]),
     result: Map({}),
     isConfirm: false,
 });
@@ -85,14 +87,19 @@ const initialState = Map({
 //action에 따른 리듀서 수행동작
 export default handleActions(
     {
-        // [ADD_ITEM]: (state, action) => {
-        //     return {
-        //         ...state,
-        //         deviceInfo:state.get('deviceInfo',
-        //     deviceInfo=>
-        //     deviceInfo.data.deviceInfo.plantDevices.push(action.payload.newSf))
-        //     };
-        // },
+        [ADD_ITEM]: (state, action) => {
+            return state.updateIn(['deviceInfo',action.payload.index,'plantDevices'],
+            plantDevices=>plantDevices.concat(action.payload.data));
+        },
+
+        [INCREMENT_SF_CNT]: (state, action) => {
+            // if(state.get('deviceInfo')[action.payload.index])
+                return state.updateIn(['deviceInfo',action.payload.index,'apSfCnt'],action.payload.count);
+        },
+
+        [CHANGE_SELECTED_SB]: (state, action) => {
+            return state.set('sidebarSelected', action.payload);
+        },
 
         [CHANGE_SF_TOGGLE_STATE]: (state, action) => {
             return state.set('sfToggle', Map(action.payload));
@@ -135,8 +142,9 @@ export default handleActions(
         ...pender({
             type: GET_DEVICE_ALL_INFO,
             onSuccess: (state, action) => {
-                if (action.payload.data.status === 'OK')
-                    return state.set('deviceInfo', Map(action.payload.data))
+                if (action.payload.data.status === 'OK'){
+                    return state.set('deviceInfo', List(action.payload.data.data))
+                }
                 else
                     return state.set('result', Map(action.payload.data))
             }
@@ -146,7 +154,7 @@ export default handleActions(
             type: DELETE_SINGLE_ROUTER,
             onSuccess: (state, action) => {
                 if (action.payload.data.status === 'OK')
-                    return state.set('deviceInfo', Map(action.payload.data))
+                    return state.set('deviceInfo', List(action.payload.data.data.deviceInfo))
                 else
                     return state.set('result', Map(action.payload.data))
             }
@@ -162,7 +170,7 @@ export default handleActions(
             type: ADD_ROUTER,
             onSuccess: (state, action) => {
                 if (action.payload.data.status === 'OK')
-                    return state.set('deviceInfo', Map(action.payload.data))
+                    return state.set('deviceInfo', List(action.payload.data.data))
                 else
                     return state.set('result', Map(action.payload.data))
             }

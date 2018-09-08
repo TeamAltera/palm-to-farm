@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { MdRouter, MdClear } from 'react-icons/lib/md';
 import './StartFarmingModal.css';
-import SfPipe from './SfPipe'
-import SfFloor from './SfFloor';
+import SfPipe from '../SfPipe/SfPipe'
+import SfFloor from '../SfFloor/SfFloor';
 
 const StartFarmingModal = ({ sfName, isOpen, modalFunc, onChange, sendFunc, reset, errorRender
-    , isConfirm, farm, resetFunc, resetPipeFunc, resetFloorFunc, farmingCount, plantChange }) => {
+    , isConfirm, farm, resetFunc, resetPipeFunc, resetFloorFunc, farmingCount, plantChange,farmRes }) => {
     let isDisabled = '';
     if (!isConfirm) isDisabled = 'disabled';
     return (
@@ -38,14 +38,14 @@ const StartFarmingModal = ({ sfName, isOpen, modalFunc, onChange, sendFunc, rese
                         </span>
                     </div>
                     <SfFloor floorIndex={3} resetPipeFunc={resetPipeFunc}
-                        resetFloorFunc={resetFloorFunc}>
-                        <SfPipe portIndex={1} onChange={onChange} pipe={farm.get(0)} pipeIndex={0} />
-                        <SfPipe portIndex={9} onChange={onChange} pipe={farm.get(1)} pipeIndex={1} />
+                        resetFloorFunc={resetFloorFunc} option={true}>
+                        <SfPipe portIndex={1} onChange={onChange} pipe={farm.get(0)} pipeIndex={0} option={true}/>
+                        <SfPipe portIndex={9} onChange={onChange} pipe={farm.get(1)} pipeIndex={1} option={true}/>
                     </SfFloor>
                     <SfFloor floorIndex={2} resetPipeFunc={resetPipeFunc}
-                        resetFloorFunc={resetFloorFunc}>
-                        <SfPipe portIndex={17} onChange={onChange} pipe={farm.get(2)} pipeIndex={2} />
-                        <SfPipe portIndex={25} onChange={onChange} pipe={farm.get(3)} pipeIndex={3} />
+                        resetFloorFunc={resetFloorFunc} option={true}>
+                        <SfPipe portIndex={17} onChange={onChange} pipe={farm.get(2)} pipeIndex={2} option={true}/>
+                        <SfPipe portIndex={25} onChange={onChange} pipe={farm.get(3)} pipeIndex={3} option={true}/>
                     </SfFloor>
                     {errorRender && errorRender()}
                     <div className="row StartFarmingModal-justify">

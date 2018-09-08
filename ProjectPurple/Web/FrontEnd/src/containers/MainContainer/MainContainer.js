@@ -40,7 +40,7 @@ class MainContainer extends Component {
     _connect(addSfAuto, userCode) {
         if (!socket) {
             socket = new SockJS(
-                'http://203.250.32.173:9001/smart_plant/device_data'
+                'http://203.250.32.91:9001/smart_plant/device_data'
             );
 
             socket.onclose = () => {
@@ -57,19 +57,35 @@ class MainContainer extends Component {
     }
 
     _addSfAuto = (message) => {
-        const { deviceInfo, MainActions } = this.props;
-        let msg = JSON.parse(message.body);
-        deviceInfo.toJS().data.deviceInfo.plantDevices.push(msg);
+        const { deviceInfo, sfToggleState } = this.props;
         //MainActions.addItem({newSf:msg});
-        deviceInfo.toJS().data.deviceInfo.raspAPDevices.map(
-            (arg) => {
-                if (arg.AP_CODE === msg.AP_CODE)
-                    arg.AP_SF_CNT += 1;
+        let msg = JSON.parse(message.body);
+        deviceInfo.toJS().some(
+            (arg, index) => {
+                if (arg.apCode === msg.apCode) {
+                    console.log(index)
+                    console.log('find')
+                    this._getDeviceAllInfo();
+
+                    if (sfToggleState) {
+                        this._sfItemContainerControlClose();
+                    }
+                    // MainActions.incrementSfCnt({
+                    //     index: index,
+                    //     count: arg.apSfCnt+1
+                    // });
+                    // MainActions.addItem({
+                    //     index: index,
+                    //     data: msg
+                    // })
+                    //this._getDeviceAllInfo();
+                    return true;
+                }
             }
         );
         this._showAlert({
-            msg: "pi3-ap#" + msg.AP_CODE + "에 sf-device#"
-                + msg.SF_CODE + "가 추가되었습니다.", status: 'OK'
+            msg: "pi3-ap#" + msg.apCode + "에 sf-device#"
+                + msg.sfCode + "가 추가되었습니다.", status: 'OK'
         });
 
     }
@@ -216,13 +232,9 @@ class MainContainer extends Component {
         }
     }
 
-    _changeSelectedSf = (sfCode, count, sfIp) => {
+    _changeSelectedSf = (item) => {
         const { MainActions } = this.props;
-        MainActions.changeSelectedSf({
-            sfCode: sfCode,
-            count: count,
-            sfIp: sfIp,
-        });
+        MainActions.changeSelectedSf(item);
     }
 
     //Input 컴포넌트의 value가 변화할 때 수행
@@ -237,27 +249,34 @@ class MainContainer extends Component {
     }
 
     componentDidMount() {
+        this._sfItemContainerControlClose();
+        this._sbChange(0);
         this._getDeviceAllInfo();
         this._getUserInfo();
     }
 
+    componentWillUnmount() {
+    }
+
     _renderRouterItems = (data) => {
-        if (data && data.data && data.data.deviceInfo) {
-            return data.data.deviceInfo.raspAPDevices.map(
+        if (data) {
+            return data.map(
                 (ap) => {
                     return (
-                        <RouterItem apName={ap.AP_SSID} userCode={ap.USER_CODE}
-                            ip={ap.AP_PUBLIC_IP} key={ap.AP_CODE} apCode={ap.AP_CODE}
-                            deleteFunc={() => this._deleteSingleRouter(ap.AP_CODE)}
-                            count={ap.AP_SF_CNT} regDate={ap.AP_REG_DATE}
+                        <RouterItem apName={ap.apSsid} userCode={ap.userCode}
+                            ip={ap.apPublicIp} apCode={ap.apCode}
+                            key={ap.apCode}
+                            deleteFunc={() => this._deleteSingleRouter(ap.apCode)}
+                            count={ap.apSfCnt} regDate={ap.apRegDate}
                             open={() =>
                                 this._sfItemContainerControlOpen(
                                     {
-                                        apCode: ap.AP_CODE,
-                                        apIp: ap.AP_PUBLIC_IP,
-                                        apName: ap.AP_SSID,
-                                        regDate: ap.AP_REG_DATE,
-                                        count: ap.AP_SF_CNT,
+                                        apCode: ap.apCode,
+                                        apIp: ap.apPublicIp,
+                                        apName: ap.apSsid,
+                                        regDate: ap.apRegDate,
+                                        count: ap.apSfCnt,
+                                        plantDevices: ap.plantDevices,
                                     })
                             }
                             close={this._sfItemContainerControlClose}
@@ -269,21 +288,17 @@ class MainContainer extends Component {
     }
 
     _renderSfItems = (data) => {
-        const { apCode, count } = this.props.selectedAp;
-        if (data && data.data && data.data.deviceInfo) {
-            return data.data.deviceInfo.plantDevices.filter(
-                (item, index, array) => {
-                    return apCode === item.AP_CODE
-                }
-            ).map(
+        if (data) {
+            return data.map(
                 (sf) => {
                     return (
-                        <SfItem key={sf.SF_CODE} coolerSt={sf.COOLER_ST}
-                            ledSt={sf.LED_ST} pumpSt={sf.PUMP_ST}
-                            ip={sf.INNER_IP} ctrlMode={sf.LED_CTRL_MODE}
-                            sfCode={sf.SF_CODE} regDate={sf.SF_REG_DATE}
-                            floor={sf.FLOOR_CNT} port={sf.SF_PORT_CNT}
-                            onClick={() => this._changeSelectedSf(sf.SF_CODE, 0, sf.INNER_IP)}
+                        <SfItem key={sf.sfCode}
+                            coolerSt={sf.coolerSt}
+                            ledSt={sf.ledSt} pumpSt={sf.pumpSt}
+                            ip={sf.innerIp} ctrlMode={sf.ledCtrlMode}
+                            sfCode={sf.sfCode} regDate={sf.sfRegDate}
+                            floor={sf.floorCnt} port={sf.sfPortCnt}
+                            onClick={() => this._changeSelectedSf(sf)}
                         />
                     );
                 }
@@ -306,6 +321,11 @@ class MainContainer extends Component {
         }
     }
 
+    _sbChange = (value) => {
+        const { MainActions } = this.props;
+        MainActions.changeSelectedSb(value);
+    }
+
     //출력
     render() {
         const {
@@ -319,8 +339,8 @@ class MainContainer extends Component {
             selectedAp,
             user,
             blocking,
+            sidebarSelected,
         } = this.props;
-
         return (
             <Fragment>
                 <BlankWrapper blocking={blocking}>
@@ -331,7 +351,7 @@ class MainContainer extends Component {
                     </BlockUi>
                 </BlankWrapper>
                 <MainWrapper>
-                    <SideBar />
+                    <SideBar changeFunc={this._sbChange} selected={sidebarSelected} />
                     <HeaderBlank />
                     <Header
                         onClick={[this._headerUserButtonControl]}
@@ -348,7 +368,7 @@ class MainContainer extends Component {
                         />
                         <SfItemContainer option={sfToggleState} data={selectedAp}
                             close={this._sfItemContainerControlClose}>
-                            {selectedAp && this._renderSfItems(deviceInfo.toJS())}
+                            {selectedAp && this._renderSfItems(selectedAp.plantDevices)}
                         </SfItemContainer>
                         <PageBody>
                             {this._renderRouterItems(deviceInfo.toJS())}
@@ -388,6 +408,7 @@ export default withRouter(
             sfToggleState: state.main.getIn(['sfToggle', 'sfToggleState']),
             blocking: state.sensor.get('blocking'),
             user: state.main.get('user'),
+            sidebarSelected: state.main.get('sidebarSelected'),
         }),
         dispatch => ({
             MainActions: bindActionCreators(mainActions, dispatch),

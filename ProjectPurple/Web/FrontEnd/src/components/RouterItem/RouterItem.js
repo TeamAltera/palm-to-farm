@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Collapse } from 'reactstrap';
 import { MdRouter, MdClear, MdHistory } from 'react-icons/lib/md';
 import TextCenter from '../TextCenter/TextCenter';
-import './RouterItem.css';
 import { Progress } from 'react-sweet-progress';
 import "react-sweet-progress/lib/style.css";
 import Moment from 'react-moment';
+import './RouterItem.css';
 
 const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, open, close }) => {
     count *= 4;
     return (
 
-        <div className="col-lg-3 col-md-4 col-sm-6 portfolio-item mb-3">
+        <div className="col-lg-3 col-md-4 col-sm-6 col-xs-6 portfolio-item mb-3">
             <div className="list-group-item RouterItem" onClick={open}
                 id="RouterItem-border"
             >
@@ -27,18 +27,21 @@ const RouterItem = ({ apName, userCode, ip, apCode, deleteFunc, count, regDate, 
                     </div>
                     <div className="col-3" id="">
                         <button className="RouterItem-clear-btn" id="nopadding"
-                            onClick={deleteFunc}>
-                            <MdClear size={20}/>
+                            onClick={(e)=>{
+                                e.stopPropagation();//버블링 방지
+                                deleteFunc();
+                                }}>
+                            <MdClear size={15}/>
                         </button>
                     </div>
                 </div>
-                <div className="row" id="padding-horizontal">
-                    <div className="col-5 col-xs-10 mt-5" id="nopadding-right">
+                <div className="row mt-5" id="padding-horizontal">
+                    <div className="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-xs-3" id="nopadding-right">
                         <span className="smaller RouterItem-action">
                             동작중
                         </span>
                     </div>
-                    <div className="col-7 col-xs-2 mt-5 text-right">
+                    <div className="col-xl-7 col-lg-8 col-md-8 col-sm-7 col-xs-9 text-right">
                         <MdHistory size={17} />
                         <span className="smaller size-9 ml-1 bold">
                             <Moment format="YYYY-MM-DD">

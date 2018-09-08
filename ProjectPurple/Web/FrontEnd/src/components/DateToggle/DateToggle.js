@@ -10,7 +10,6 @@ class DateToggle extends Component {
 
     render() {
         const disabled = this.props.disabled;
-        console.log(disabled)
         return (
             <div>
                 <span className="text-muted smaller mr-1 size-8">날짜</span>

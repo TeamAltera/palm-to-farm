@@ -1,121 +1,175 @@
 
 // Ph Config
-const phConfig = (dataset, start, end) => {
+const phConfig = (dataset, start, end, min, max) => {
     return {
-        time:{
-            useUTC:false,
+        time: {
+            useUTC: false,
         },
         chart: {
             zoomType: 'x',
-            type: 'line',
+            type: 'spline',
         },
         title: {
-            text: 'PH (2018.08.16.)'
+            text: 'Electrical Conductivity'
         },
-        subtitle: {
-            text: 'PH센서로 부터 측정된 양액 농도'
+        // subtitle: {
+        //     text: '전기전도도를 통한 양액의 염류 농도'
+        // },
+        rangeSelector: {
+            // verticalAlign: 'top',
+            // buttonPosition: {
+            //     align: 'left',
+            //     x: 0,
+            //     y: 0
+            // },
+            // buttons: [{
+            //     count: 120,
+            //     type: 'minute',
+            //     text: '30M'
+            // }, {
+            //     count: 240,
+            //     type: 'minute',
+            //     text: ' 1H'
+            // },
+            // {
+            //     count: 240 * 3,
+            //     type: 'minute',
+            //     text: ' 3H'
+            // },
+            // {
+            //     count: 240 * 12,
+            //     type: 'minute',
+            //     text: '12H'
+            // }, {
+            //     type: 'all',
+            //     text: 'ALL'
+            // }],
+            // selected: 0,
+            // inputEnabled: false,
+            enabled: false
         },
         xAxis: {
+            // maxRange: 5670,
             type: 'datetime',
             dateTimeLabelFormats: { // don't display the dummy year
-                month: '%e. %b',
-                year: '%b'
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
             },
             labels: {
-                rotation: -45,
+                // rotation: -45,
                 // x: 5,
             },
-            gridLineWidth: 1,
+            // gridLineWidth: 1,
+            // maxRange: 3600 * 1000,
+            // maxTickInterval: 30,
+            // min: start,
+            // max: end + 1000,
             minPadding: 0.02,
             maxPadding: 0.02,
-            tickInterval: 3600 * 1000,
-            min: start,
-            max: end+1000,
+            crosshair: {
+                width: 1,
+                color: 'black',
+            },
+            gridLineWidth: 1,
         },
         yAxis: {
             title: {
-                text: 'PH Values (ph)'
+                text: 'EC Values (mS/cm)'
             },
-            tickInterval: 0.5,
-            tickWidth: 0.5,
+            labels: {
+                x: -3 
+            },
+            opposite: false,
+            tickInterval: 1,
+            // tickWidth: 1,
+            tickmarkPlacement:'on',
             min: 0,
-            max: 10,
-            minPadding: 0.2,
-            maxPadding: 0.2,
-            maxZoom: 10,
-            plotLines: [{
-                label: {
-                    // text: 'max',
-                    x: 25
-                },
-                color: 'orange',
-                width: 2,
-                value: 5,
-                dashStyle: 'longdashdot'
-            }, {
-                label: {
-                    // text: 'max',
-                    x: 25
-                },
-                color: 'orange',
-                width: 2,
-                value: 2,
-                dashStyle: 'longdashdot'
+            max: 14,
+            plotBands: [{
+                color: 'rgba(0,0,0,.125)', // Color value
+                from: min, // Start of the plot band
+                to: max // End of the plot band
             }],
         },
+        //툴팁
         legend: {
             enabled: false
         },
-        //툴팁
         tooltip: {
+            crosshair: true,
+            shared: true,
+            useHTML: true,
+            headerFormat: '<small>{point.key}</small><table>',
+            pointFormat: '<tr><td>{series.name}: </td>' +
+                '<td style="text-align: right"><b>{point.y} mS/cm</b></td></tr>',
+            // '+<tr><td>maxEC: </td>'+
+            // '<td style="text-align: right">'+this.point.y*1.1+' mS/cm</td></tr>'+
+            // '<tr><td>minEC: </td>'+
+            // '<td style="text-align: right">'+this.point.y*0.9+' mS/cm</td></tr>',
+            footerFormat: '</table>',
+            valueDecimals: 2,
+            borderColor: 'gray'
         },
-
-        rangeSelector: {
-            selected: 1
-        },
+        // navigator: {
+        //     series: {
+        //         color: '#3bc0c3',
+        //         lineWidth: 2
+        //     }
+        // },
 
         plotOptions: {
             series: {
                 zones: [{
-                    value: 2,
-                    color: 'red'
+                    value: min,
+                    color: '#FF0000',
                 }, {
-                    value: 5,
-                    color: 'green'
+                    value: max,
+                    color: '#0088FF',
+                    
                 }, {
-                    color: 'red'
+                    color: '#FF0000',
                 }]
             },
-            area: {
-                marker: {
-                    radius: 2
-                },
-                lineWidth: 1,
-                states: {
-                    hover: {
-                        lineWidth: 1
-                    }
-                },
-                threshold: null
-            },
-            marker: {
-                lineWidth: 1
-            }
+            // area: {
+            //     marker: {
+            //         radius: 2
+            //     },
+            //     lineWidth: 1,
+            //     states: {
+            //         hover: {
+            //             lineWidth: 1
+            //         }
+            //     },
+            //     threshold: null
+            // },
+            // marker: {
+            //     lineWidth: 1
+            // }
         },
         colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+        exporting: {
+            enabled: true
+        },
 
         series: [{
             // type: 'spline',
+            name: 'EC',
             data: dataset.map(
                 (arg) => [arg.d, arg.ec]
             ),
-            // threshold: 5,
-            // negativeColor: 'green',
-            // color: 'red',
-            tooltip: {
-                valueDecimals: 2
+
+        }],
+        lang: {
+            noData: "센싱 데이터가 없습니다."
+        },
+        noData: {
+            style: {
+                fontWeight: 'bold',
+                fontSize: '15px',
+                color: '#303030'
             }
-        }]
+        }
     }
 }
 

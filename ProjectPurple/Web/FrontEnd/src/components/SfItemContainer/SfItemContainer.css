@@ -157,23 +157,6 @@
     background: #f3f4f5;
 }
 
-@media(min-width:768px) {
-    .SfItemContainer-wrapper {
-        /* z-index: 1000;
-        position: fixed;
-        right: 100%;
-        width: 0px;
-        height: 100%;
-        margin-right: -100%;
-        overflow-y: auto;
-        border-left: 1px solid rgba(0,0,0,.125);
-        background-color: white;
-        -webkit-transition: all 0.5s ease;
-        -moz-transition: all 0.5s ease;
-        -o-transition: all 0.5s ease;
-        transition: all 0.5s ease; */
-    }
-    /* .SfItemContainer-wrapper.toggled{
-        width: 100%;
-    } */
+@media(max-width:537px) {
+    
 }

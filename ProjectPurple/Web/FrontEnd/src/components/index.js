@@ -30,8 +30,11 @@ import SfDeviceToolbar from './SfDeviceToolbar/SfDeviceToolbar';
 import DateToggle from './DateToggle/DateToggle';
 import BlankWrapper from './BlankWrapper/BlankWrapper';
 import StartFarmingModal from './StartFarmingModal/StartFarmingModal';
-import FormHeader from './FormHeader/FormHeader'  
-import Chart from './Chart/Chart'  
+import FormHeader from './FormHeader/FormHeader';
+import Chart from './Chart/Chart';
+import DeviceInfo from './DeviceInfo/DeviceInfo';
+import SfFloor from './SfFloor/SfFloor';  
+import SfPipe from './SfPipe/SfPipe';  
 
 export {
   Container,
@@ -68,4 +71,7 @@ export {
   BlankWrapper,
   StartFarmingModal,
   Chart,
+  DeviceInfo,
+  SfPipe,
+  SfFloor,
 };

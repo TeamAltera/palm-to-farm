@@ -1,5 +1,5 @@
 import axios from 'axios';
-const DOMAIN = 'http://203.250.32.173:9001/smart_plant/';
+const DOMAIN = 'http://203.250.32.91:9001/smart_plant/';
 const DEVICE_NAMESPACE = 'device/';
 
 //장치 정보 받아오기

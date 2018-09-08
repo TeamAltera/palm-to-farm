@@ -10,10 +10,10 @@ const thConfig = (dataset, start, end) => {
             type: 'spline',
         },
         title: {
-            text: 'Temperature & Humidiity (2018.08.16.)'
-        },
-        subtitle: {
-            text: 'DHT11센서로 부터 측정된 온습도'
+            text: '',
+            style: {
+                display: 'none'
+            }
         },
         xAxis: {
             type: 'datetime',
@@ -28,7 +28,7 @@ const thConfig = (dataset, start, end) => {
             gridLineWidth: 1,
             minPadding: 0.02,
             maxPadding: 0.02,
-            tickInterval: 3600 * 1000,
+            tickInterval: 3600 * 1000*2,
             min: start,
             max: end+1000,
         },
@@ -48,10 +48,12 @@ const thConfig = (dataset, start, end) => {
         }
         ],
         legend: {
-            enabled: false
+            enabled: true
         },
         //툴팁
         tooltip: {
+            crosshair: true,
+            shared: true,
         },
 
         plotOptions: {
@@ -79,7 +81,8 @@ const thConfig = (dataset, start, end) => {
                 ),
                 yAxis: 1,
                 id:0,
-                color:'#6CF'
+                color:'#6CF',
+                name:'humidity'
             },
             //temperature
             {
@@ -88,7 +91,8 @@ const thConfig = (dataset, start, end) => {
                     (arg) => [arg.d, arg.t]
                 ),
                 id:1,
-                color:'#39F'
+                color:'#39F',
+                name:'temperature'
             }
         ]
     }

@@ -1,0 +1,43 @@
+#padding-ex-left{
+    padding: 0;
+    padding-left: 5px;
+}
+
+#padding-ex-right{
+    padding: 0;
+    padding-right: 5px;
+}
+
+.chart-title{
+    background-color: white;
+    width: 100%;
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(0, 0, 0, .125)
+}
+
+.chart-cont{
+    display: block;
+}
+
+#nomargin{
+    margin: 0;
+}
+
+.chart-title-text{
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+@media(max-width:991px){
+    #padding-ex-left{
+        padding: 0;
+    }
+    
+    #padding-ex-right{
+        padding: 0;
+    }
+}

@@ -1,16 +1,19 @@
 
-// waterTemp Config
-const wtConfig = (dataset)=>{
+// temp, humi Config
+const wtConfig = (dataset, start, end) => {
     return {
+        time:{
+            useUTC:false,
+        },
         chart: {
             zoomType: 'x',
             type: 'spline',
         },
         title: {
-            text: 'Electric Conductivity(2018.08.16.)'
-        },
-        subtitle: {
-            text: 'EC센서로 부터 측정된 식물 양액 흡수'
+            text: '',
+            style: {
+                display: 'none'
+            }
         },
         xAxis: {
             type: 'datetime',
@@ -18,21 +21,31 @@ const wtConfig = (dataset)=>{
                 month: '%e. %b',
                 year: '%b'
             },
-            title: {
-                text: 'Date'
-            }
+            labels: {
+                rotation: -45,
+                // x: 5,
+            },
+            gridLineWidth: 1,
+            minPadding: 0.02,
+            maxPadding: 0.02,
+            tickInterval: 3600 * 1000*2,
+            min: start,
+            max: end+1000,
         },
-        yAxis: {
+        yAxis: [{
             title: {
-                text: 'Snow depth (m)'
+                text: 'CS temp Values (℃)'
             },
             min: 0
-        },
+        }
+        ],
         legend: {
-            enabled: false
+            enabled: true
         },
         //툴팁
         tooltip: {
+            crosshair: true,
+            shared: true,
         },
 
         plotOptions: {
@@ -51,12 +64,17 @@ const wtConfig = (dataset)=>{
         },
         colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
 
-        series: [{
-            // type: 'spline',
-            data: dataset.map(
-                (arg) => [arg.d, arg.ec]
-            )
-        }]
+        series: [
+            //humidity
+            {
+                // type: 'spline',
+                data: dataset.map(
+                    (arg) => [arg.d, arg.h]
+                ),
+                color:'#6CF',
+                name:'cs temp'
+            },
+        ]
     }
 }
 

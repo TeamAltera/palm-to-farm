@@ -1,7 +1,7 @@
 import axios from 'axios';
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
 
-const DOMAIN = 'http://203.250.32.173:9001/smart_plant/';
+const DOMAIN = 'http://203.250.32.91:9001/smart_plant/';
 const USER_NAMESPACE = 'user/';
 const MAIL_NAMESPACE = 'mail/';
 

@@ -9,15 +9,14 @@ const Button = ({ children, onClick, disabled }) => {
     else
         res="diabled";
     return (
-        <input 
-        type="button" 
+        <button
         className="Form-btn"
         onClick={onClick} 
-        value={children}
         disabled={res}
         id="nanum-gothic"
         >
-        </input>
+        {children}
+        </button>
     )
     };
 

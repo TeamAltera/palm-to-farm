@@ -21,6 +21,43 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+.SfDeviceToolbar-left{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.SfDeviceToolbar-tab-btn{
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, .125);
+    color: #6c757d;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    border: 0;
+}
+
+.SfDeviceToolbar-tab-btn:focus{
+    outline: none;
+}
+
+.SfDeviceToolbar-tab-btn.selected{
+    background-color:#2ca8ff;
+    color: white;
+    cursor: default;
+}
+
+.SfDeviceToolbar-right{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.SfDeviceToolbar-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .SfDeviceToolbar-back:hover {
     color: #2ca8ff;
 }
@@ -51,9 +88,9 @@
     flex-wrap: nowrap;
     color: #696f7a;
     align-items: center;
-    height: 48px;
     background: #fff;
     box-shadow: 0 1px 0 0 rgba(29, 34, 43, .1);
+    /* justify-content: space-between; */
 }
 
 .SfDeviceToolbar-container-left {

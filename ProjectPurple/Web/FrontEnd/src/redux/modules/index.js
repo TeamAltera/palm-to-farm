@@ -4,6 +4,7 @@ import main from './main';
 import sensor from './sensor';
 import plant from './plant';
 import base from './base';
+import log from './log';
 import { penderReducer } from 'redux-pender';
 
 /**
@@ -17,5 +18,6 @@ export default combineReducers({
   sensor,
   plant,
   base,
+  log,
   pender: penderReducer,
 });

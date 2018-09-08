@@ -3,7 +3,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import { pender } from 'redux-pender';
 import * as SensorApi from '../../lib/spring_api/sensor';
-import * as DeviceApi from '../../lib/spring_api/device';
+import * as PlantApi from '../../lib/spring_api/plant';
 import { Map, List } from 'immutable';
 import moment from 'moment';
 
@@ -11,7 +11,6 @@ import moment from 'moment';
 const GET_DATASET = 'sensor/GET_DATASET'; // input 값 변경
 const CHANGE_START_DATE = 'sensor/CHANGE_START_DATE';
 const CHANGE_DATE_PICKER = 'sensor/CHANGE_DATE_PICKER';
-const SEND_COMMAND = 'sensor/SEND_COMMAND';
 const BLOCK = 'sensor/BLOCK';
 const CHANGE_MODALS_STATE = 'sensor/CHANGE_MODALS_STATE';
 const CHANGE_INPUT = 'sensor/CHANGE_INPUT';
@@ -19,13 +18,15 @@ const RESET_FARM = 'sensor/RESET_FARM';
 const CHANGE_FARM_COUNT = 'sensor/CHANGE_FARM_COUNT';
 const RESET_PIPE = 'senspr/RESET_PIPE';
 const CHANGE_PLANT = 'senspr/CHANGE_PLANT';
-const RESET_DATA = 'senspr/RESET_DATA';
+const RESET_DATA = 'sensor/RESET_DATA';
+const CHANGE_TAB='sensor/CHANGE_TAB';
+const GET_PORT='sensor/GET_PORT';
 
 //action 생성
 export const getDataset = createAction(GET_DATASET, SensorApi.getDataset);
 export const changeStartDate = createAction(CHANGE_START_DATE);
 export const changeDatePickerToggle = createAction(CHANGE_START_DATE);
-export const sendCommand = createAction(SEND_COMMAND, DeviceApi.sendCommand);
+
 export const block = createAction(BLOCK);
 export const changeModalsState = createAction(CHANGE_MODALS_STATE);
 export const changeInput = createAction(CHANGE_INPUT);
@@ -34,9 +35,12 @@ export const resetPipe = createAction(RESET_PIPE);
 export const changeFarmingCount = createAction(CHANGE_FARM_COUNT);
 export const changePlant = createAction(CHANGE_PLANT);
 export const resetData = createAction(RESET_DATA);
+export const changeTab = createAction(CHANGE_TAB);
+export const getPortInfo = createAction(GET_PORT,PlantApi.getPortInfo);
 
 //state 정의
 const initialState = Map({
+  tabSelected:0,
   startDate: moment(),
   datePickerToggle: false,
   result: Map({}),
@@ -61,6 +65,7 @@ const initialState = Map({
     isConfirm: true,
   }),
   selectedPlant: 1,
+  farmingResult:null,
 
   dataset: List(),
 });
@@ -68,6 +73,10 @@ const initialState = Map({
 //action에 따른 리듀서 수행동작
 export default handleActions(
   {
+    [CHANGE_TAB]: (state, action) => {
+      return state.set('tabSelected', action.payload);
+    },
+
     [CHANGE_PLANT]: (state, action) => {
       return state.set('selectedPlant', action.payload);
     },
@@ -128,9 +137,9 @@ export default handleActions(
     }),
 
     ...pender({
-      type: SEND_COMMAND,
+      type: GET_PORT,
       onSuccess: (state, action) =>
-        state.set('result', Map(action.payload.data)),
+        state.set('farmingResult', List(action.payload.data.data)),
     }),
   },
   initialState

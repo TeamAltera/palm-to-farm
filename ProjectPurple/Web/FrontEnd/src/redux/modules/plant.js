@@ -3,7 +3,6 @@
 import { createAction, handleActions } from 'redux-actions';
 import { pender } from 'redux-pender';
 import * as PlantApi from '../../lib/spring_api/plant';
-import * as DeviceApi from '../../lib/spring_api/device';
 import { Map } from 'immutable';
 
 //action 경로
@@ -16,7 +15,7 @@ export const changeFarming = createAction(CHANGE_FARMING, PlantApi.sendCommand);
 
 //state 정의
 const initialState = Map({
-  result: Map({}),
+  result: null,
 });
 
 //action에 따른 리듀서 수행동작
@@ -31,7 +30,7 @@ export default handleActions(
     ...pender({
       type: CHANGE_FARMING,
       onSuccess: (state, action) =>
-        state.set('result', Map(action.payload.data.data)),
+        state.set('result', Map(action.payload.data.data.plantInfo)),
     }),
 
   },
