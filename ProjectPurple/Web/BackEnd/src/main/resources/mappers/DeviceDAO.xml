@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="device">
-	<select id="getAllAP" resultType="hashmap" parameterType="Integer">
+	<select id="getAllAP" resultMap="apDto" parameterType="Integer">
 		SELECT
 		* FROM AP
 		WHERE USER_CODE=#{userCode}
@@ -22,15 +22,16 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		WHERE AP_CODE=#{apCode}
 	</select>
 
-	<select id="getAllSmartPlant" resultType="hashmap"
+	<select id="getAllSmartPlant" resultMap="devDto"
 		parameterType="Integer">
 		SELECT *
 		FROM SF S,AP A
 		WHERE A.USER_CODE=#{userCode}
 		AND S.AP_CODE=A.AP_CODE
+		ORDER BY S.SF_CODE ASC
 	</select>
 	
-	<select id="getSmartPlant" resultType="hashmap" parameterType="hashmap">
+	<select id="getSmartPlant" resultMap="devDto" parameterType="hashmap">
 		SELECT *
 		FROM SF 
 		WHERE AP_CODE=#{apCode}
@@ -118,7 +119,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			0,
 			2,
 			3,
-			'A', <!-- 장비 상태는 자동(auto) -->
+			'T', <!-- 장비 상태는 자동(auto) -->
 			#{innerIp},
 			#{apCode},
 			'F',<!-- LED상태는 꺼져 있음 -->
@@ -147,7 +148,53 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		WHERE SF_CODE=#{sfCode}
 		AND AP_CODE=#{apCode}
 	</update>
+	
+	<update id="updateMode" parameterType="hashmap">
+		UPDATE SF
+		SET LED_CTRL_MODE=#{mode}
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="updateLED" parameterType="hashmap">
+		UPDATE SF
+		SET LED_ST=#{led}
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="updateCooler" parameterType="hashmap">
+		UPDATE SF
+		SET COOLER_ST=#{cooler}
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+	</update>
 
+
+	<resultMap type="com.spring.smart_plant.device.domain.APInfoDTO" id="apDto">
+		<result property="apRegDate" column="ap_reg_date"/>
+		<result property="apCode" column="ap_code"/>
+		<result property="apPublicIp" column="ap_public_ip"/>
+		<result property="apSsid" column="ap_ssid"/>
+		<result property="userCode" column="user_code"/>
+		<result property="apSfCnt" column="ap_sf_cnt"/>
+		
+	</resultMap>
+	
+	<resultMap type="com.spring.smart_plant.device.domain.SmartFarmInfoDTO" id="devDto">
+		<result property="sfRegDate" column="sf_reg_date"/>
+		<result property="sfCode" column="sf_code"/>
+		<result property="apCode" column="ap_code"/>
+		<result property="sfPortCnt" column="sf_port_cnt"/>
+		<result property="floorCnt" column="floor_cnt"/>
+		<result property="coolerCnt" column="cooler_cnt"/>
+		<result property="ledCtrlMode" column="led_ctrl_mode"/>
+		<result property="coolerSt" column="cooler_st"/>
+		<result property="ledSt" column="led_st"/>
+		<result property="pumpSt" column="pump_st"/>
+		<result property="innerIp" column="inner_ip"/>
+		
+	</resultMap>
 	<!-- <resultMap type="com.spring.smart_plant.device.domain.DeviceHierarchyDTO" 
 		id="deviceHierarchyDTO"> <result property="apInfo" column=""/> <result property="devices" 
 		column=""/> </resultMap> -->

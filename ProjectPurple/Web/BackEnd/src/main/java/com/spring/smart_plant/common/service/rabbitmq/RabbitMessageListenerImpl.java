@@ -1,5 +1,7 @@
 package com.spring.smart_plant.common.service.rabbitmq;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -8,7 +10,6 @@ import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 import com.spring.smart_plant.sensor.command.InsertSensorServiceImpl;
-import com.spring.smart_plant.sensor.dao.SensorDAO;
 
 @Component
 public class RabbitMessageListenerImpl{
@@ -43,25 +44,32 @@ public class RabbitMessageListenerImpl{
 		try {
 			System.out.println(income.toString());
 			this.messagingTemplate.convertAndSend("/topic/messages"+income.get("ap")+income.get("sf"),income);
-			//insertSensorService.execute(income);//센싱 데이터 저장
+			
+			//unix to string
+			Timestamp ts=new Timestamp((int)income.get("d") * 1000L);
+			income.put("d", ts);
+			insertSensorService.execute(income);//센싱 데이터 저장
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*t: temp
+		/*
+		 * 1535456522
+		 * 1535456522000
+		 * 1535456522
+		 * t: temp
 		 * wt: water temp
 		 * wl: water lim
 		 * e: elum, 정수 데이터
 		 * h: humi
 		 * */
 		
-		//STOMP를 사용하여 MQ로 데이터 전달
-		/*double temp=(double) income.get("temp");
-		double humi=(double) income.get("humi");
-		double waterTemp=(double) income.get("waterTemp");
-		double waterLim=(double) income.get("waterLim");
-		double elum=(double) income.get("elum");
-		DAO dao=new DAO();*/
-		/*dao.insertData(new SensorDataDTO(date, sfCode, temp, humi, elum, waterTemp, waterLim));*/
+//		Double.parseDouble((String) income.get("t"));
+//		Double.parseDouble((String) income.get("h"));
+//		Double.parseDouble((String) income.get("ec"));
+//		Double.parseDouble((String) income.get("ph"));
+//		Double.parseDouble((String) income.get("wt"));
+//		Integer.parseInt((String) income.get("wl"));
+//		Integer.parseInt((String) income.get("e"));
 	}
 }

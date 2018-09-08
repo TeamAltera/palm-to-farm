@@ -65,7 +65,7 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					map.put("sfPortCnt", 0);
 					map.put("floorCnt", 2);
 					map.put("coolerCnt", 3);
-					map.put("mode", 'A');
+					map.put("mode", 'T');
 					map.put("ledSt", 'F');
 					map.put("pumpSt", 'F');
 					map.put("coolerSt", 'F');
@@ -86,13 +86,8 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					+ "\"}";
 				urlConnectionService.request(publicIP, PHP_ADD_URL, "POST", reqMsg);
 
-				return ResultDTO.createInstance(true).setMsg(msg).setData(new Object() {
-					private Object deviceInfo=deviceService.selectDevices();
-
-					public Object getDeviceInfo() {
-						return deviceInfo;
-					}
-				});//상태 값 반환
+				return ResultDTO.createInstance(true).setMsg(msg)
+						.setData(deviceService.selectDevices());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

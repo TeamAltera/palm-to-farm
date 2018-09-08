@@ -24,6 +24,7 @@ public class LogDAO {
 	}
 	
 	public List<DeviceLogDTO> getLog(DateSearchDTO dto){
+		System.out.println(dto.getDate());
 		return sql.selectList(namespace+".getLog", dto);
 	}
 	

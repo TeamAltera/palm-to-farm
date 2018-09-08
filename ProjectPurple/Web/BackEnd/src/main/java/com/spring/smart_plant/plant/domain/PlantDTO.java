@@ -9,6 +9,8 @@ public class PlantDTO {
 	private double minTemp;
 	private double minPh;
 	private double maxPh;
+	private double maxEc;
+	private double minEc;
 	private Timestamp farmingDate;
 	private int plantCode;
 	/**
@@ -25,11 +27,13 @@ public class PlantDTO {
 	 * @param minTemp
 	 * @param minPh
 	 * @param maxPh
+	 * @param maxEc
+	 * @param minEc
 	 * @param farmingDate
 	 * @param plantCode
 	 */
 	public PlantDTO(String plantName, double optTemp, double maxTemp, double minTemp, double minPh, double maxPh,
-			Timestamp farmingDate, int plantCode) {
+			double maxEc, double minEc, Timestamp farmingDate, int plantCode) {
 		super();
 		this.plantName = plantName;
 		this.optTemp = optTemp;
@@ -37,6 +41,8 @@ public class PlantDTO {
 		this.minTemp = minTemp;
 		this.minPh = minPh;
 		this.maxPh = maxPh;
+		this.maxEc = maxEc;
+		this.minEc = minEc;
 		this.farmingDate = farmingDate;
 		this.plantCode = plantCode;
 	}
@@ -75,6 +81,18 @@ public class PlantDTO {
 	}
 	public void setMaxPh(double maxPh) {
 		this.maxPh = maxPh;
+	}
+	public double getMaxEc() {
+		return maxEc;
+	}
+	public void setMaxEc(double maxEc) {
+		this.maxEc = maxEc;
+	}
+	public double getMinEc() {
+		return minEc;
+	}
+	public void setMinEc(double minEc) {
+		this.minEc = minEc;
 	}
 	public Timestamp getFarmingDate() {
 		return farmingDate;

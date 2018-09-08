@@ -9,8 +9,10 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		INSERT INTO SENSOR_DATA 
 		(CALC_DT,SF_CODE,AP_CODE,TEMP,HUMI,ELUM,WATER_TEMP,WATER_LIM,EC,PH)
 		VALUES 
-		(TO_DATE(#{d},'YYYY-MM-DD-HH24-MI-SS'),#{sf},#{ap},#{t},#{h},#{e},#{wt},#{wl}
+		(#{d},#{sf},#{ap},#{t},#{h},#{e},#{wt},#{wl}
 		,#{ec},#{ph})
+		<!-- TO_DATE(#{d},'YYYY-MM-DD HH24:MI:SS') -->
+		<!--  -->
 	</insert>
 	
 	<!-- 해당공유기의 가장 최근 날짜의 데이터 가져오기 -->

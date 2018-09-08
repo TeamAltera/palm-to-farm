@@ -1,6 +1,8 @@
 package com.spring.smart_plant.plant.dao;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,6 @@ public class PlantDAO {
 		map.put("sfCode", sfCode);
 		map.put("apCode", apCode);
 		map.put("plantCode", plantCode);
-		System.out.println(apCode+" "+sfCode+" "+plantCode);
 		sql.insert(namespace + ".insertGrowthPlant", map);
 	}
 	
@@ -36,7 +37,28 @@ public class PlantDAO {
 		HashMap<String, Object> map=new HashMap<>();
 		map.put("sfCode", sfCode);
 		map.put("apCode", apCode);
-		System.out.println(apCode+" "+sfCode);
 		sql.delete(namespace + ".deleteGrowthPlant", map);
+	}
+	
+	public void deletePortInfo(int apCode, int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		sql.delete(namespace + ".deletePortInfo", map);
+	}
+	
+	public void insertPortInfo(int apCode, int sfCode, List<Map<String, Object>> portList) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		map.put("portList", portList);
+		sql.insert(namespace + ".insertPortInfo", map);
+	}
+	
+	public List<Integer> getPortInfo(int apCode, int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		return sql.selectList(namespace + ".getPortInfo", map);
 	}
 }

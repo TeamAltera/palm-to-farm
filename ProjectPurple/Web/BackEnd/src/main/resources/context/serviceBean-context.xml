@@ -40,4 +40,6 @@
 	<bean id="insertGrowthPlantService" class="com.spring.smart_plant.plant.command.InsertGrowthPlantServiceImpl"/>
 	<bean id="deleteGrowthPlantService" class="com.spring.smart_plant.plant.command.DeleteGrowthPlantServiceImpl"/>
 	<bean id="farmingService" class="com.spring.smart_plant.plant.command.FarmingServiceImpl"/>
+	<bean id="setFarmingInfoService" class="com.spring.smart_plant.plant.command.SetFarmingInfoServiceImpl"/>
+	<bean id="getPortInfoService" class="com.spring.smart_plant.plant.command.GetPortInfoServiceImpl"/>
 </beans>

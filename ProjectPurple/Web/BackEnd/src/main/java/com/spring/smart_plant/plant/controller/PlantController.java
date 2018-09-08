@@ -14,6 +14,7 @@ import com.spring.smart_plant.device.domain.CommandDTO;
 import com.spring.smart_plant.plant.command.DeleteGrowthPlantServiceImpl;
 import com.spring.smart_plant.plant.command.FarmingServiceImpl;
 import com.spring.smart_plant.plant.command.GetGrowthPlantServiceImpl;
+import com.spring.smart_plant.plant.command.GetPortInfoServiceImpl;
 import com.spring.smart_plant.plant.domain.InfoDTO;
 
 import io.swagger.annotations.Api;
@@ -29,6 +30,9 @@ public class PlantController {
 	
 	@Autowired
 	private FarmingServiceImpl farmingService;
+	
+	@Autowired
+	private GetPortInfoServiceImpl getPortInfoService;
 	
 	/**
 	 * <pre>
@@ -53,5 +57,11 @@ public class PlantController {
 		if (result.hasErrors())
 			return ResultDTO.createInstance(false).setMsg("잘못된 명령 입니다.").setData(result.getAllErrors());
 		return farmingService.execute(command);
+	}
+	
+	@ApiOperation(value = "포트 정보, target:front")
+	@PostMapping(value = "/port")
+	public ResultDTO getPortInfo(@RequestBody InfoDTO info) throws Exception {
+		return getPortInfoService.execute(info);
 	}
 }

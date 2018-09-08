@@ -121,6 +121,30 @@ public class DeviceDAO{
 		sql.update(namespace+".updatePort", map);
 	}
 	
+	public void updateMode(char mode,int apCode, int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("mode", mode);
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		sql.update(namespace+".updateMode", map);
+	}
+	
+	public void updateCooler(char cooler,int apCode, int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("cooler", cooler);
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		sql.update(namespace+".updateCooler", map);
+	}
+	
+	public void updateLED(char led, int apCode, int sfCode) {
+		HashMap<String, Object> map=new HashMap<>();
+		map.put("led", led);
+		map.put("sfCode", sfCode);
+		map.put("apCode", apCode);
+		sql.update(namespace+".updateLED", map);
+	}
+	
 	public String getApIp(int apCode) {
 		return sql.selectOne(namespace+".getApIp", apCode);
 	}

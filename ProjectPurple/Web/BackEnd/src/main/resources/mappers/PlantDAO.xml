@@ -15,6 +15,8 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		P.MIN_TEMP AS MIN_TEMP,
 		P.MIN_PH AS MIN_PH,
 		P.MAX_PH AS MAX_PH,
+		P.MAX_EC AS MAX_EC,
+		P.MIN_EC AS MIN_EC,
 		G.FARMING_DATE AS FARMING_DATE
 		FROM G_PLANT G, PLANT P
 		WHERE G.SF_CODE=#{sfCode} AND G.AP_CODE=#{apCode}
@@ -35,12 +37,46 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			SYSDATE
 		)
 	</insert>
+	
+	<insert id="insertPortInfo" parameterType="hashmap">
+		<if test="portList.size != 0">
+			<!-- INSERT ALL --> 
+			<foreach collection="portList" item="item" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO PORT_INFO (
+			SF_CODE,
+			AP_CODE,
+			PORT_NO,
+			PORT_ST
+			) VALUES
+			(
+				#{sfCode},
+				#{apCode},
+				#{item.portNo},
+				#{item.portSt}
+			)
+			</foreach>	
+			<!-- SELECT * FROM DUAL -->
+		</if>
+	</insert>
 
 	<delete id="deleteGrowthPlant" parameterType="hashmap">
 		DELETE
 		FROM G_PLANT
 		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
 	</delete>
+	
+	<delete id="deletePortInfo" parameterType="hashmap">
+		DELETE
+		FROM PORT_INFO
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+	</delete>
+	
+	<select id="getPortInfo" parameterType="hashmap" resultType="Integer">
+		SELECT PORT_NO
+		FROM PORT_INFO
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+		ORDER BY PORT_NO ASC
+	</select>
 
 	<resultMap type="com.spring.smart_plant.plant.domain.PlantDTO"
 		id="plantDto">
@@ -51,6 +87,8 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		<result property="minTemp" column="min_temp" />
 		<result property="minPh" column="min_ph" />
 		<result property="maxPh" column="max_ph" />
+		<result property="maxEc" column="max_ec" />
+		<result property="minEc" column="min_ec" />
 		<result property="farmingDate" column="farming_date" />
 	</resultMap>
 </mapper>

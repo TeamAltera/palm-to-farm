@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		AND SF_CODE=#{sfCode}
 		AND AP_CODE=#{apCode}
 		]]>
-		ORDER BY CALC_DT DESC
+		ORDER BY USED_DT DESC
 		<!-- 역순으로 정렬--> 
 	</select>
 	
