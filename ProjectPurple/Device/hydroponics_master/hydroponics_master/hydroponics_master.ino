@@ -60,7 +60,7 @@ String sendData(String command, long timeout, boolean debug) {
 		Serial.println(ip_idx);
 		Serial.print("ok_idx : ");
 		Serial.println(ok_idx);
-		device_ip = response.substring(ip_idx, ok_idx - 3);
+		device_ip = response.substring(ip_idx, ok_idx - 4);
 	}
 	if (!debug) {
 		Serial.println(response);
@@ -82,6 +82,7 @@ void esp8266_joinAP() {
 			char res = (char)Serial1.read();
 			Serial.println(res);
 			if (res != '1') {
+				sendData("AT+CIFSR\r\n", 2000, 0);
 				return;
 			}
 		}
@@ -144,15 +145,19 @@ void esp8266_read() { //명령 라우팅
 				String content = "";
 				switch (cmd) //cmd 라우팅
 				{
-					//LED 자동설정
+					//LED, 팬 자동설정
 				case 2:
-					content = "led_auto";
+					content = "led_fan_auto";
 					send_control_val(cmd, 0, true);	//LED 장치 제어
+					automatic_value[0] = true;
+					automatic_value[1] = true;
 					break;
-					//LED 수동설정
+					//LED, 팬 수동설정
 				case 3:
-					content = "led_manual";
+					content = "led_fan_manual";
 					send_control_val(cmd, 0, false);
+					automatic_value[0] = false;
+					automatic_value[1] = false;
 					break;
 				case 4:
 					if (automatic_value[0] != true) {
@@ -170,14 +175,6 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("Led mode is not manual.");
 					break;
-				case 6:
-					content = "fan_auto";
-					send_control_val(cmd, 1, true);
-					break;
-				case 7:
-					content = "fan_manual";
-					send_control_val(cmd, 1, false);
-					break;
 				case 8:
 					if (automatic_value[1] != true) {
 						content = "fan_on";
@@ -194,15 +191,15 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
-				case 10:
+				case 10:		//재배 시작
 					content = "pump_on";
 					digitalWrite(PUMP_RELAY, HIGH);
-					Serial1.print(10);
+					Serial1.print(10);		//슬레이브 보드로 전송
 					break;
-				case 11:
+				case 11:		//재배 중지
 					content = "pump_off";
 					digitalWrite(PUMP_RELAY, LOW);
-					Serial1.print(11);
+					Serial1.print(11);		//슬레이브 보드로 전송
 					break;
 				case 15:  
 					content = "test_button";
@@ -220,7 +217,7 @@ void esp8266_read() { //명령 라우팅
 				response += content.length();
 				response += "\r\n";
 				response += "Access-Control-Allow-Origin:*\r\n";//CORS
-				response += "Connection:close\r\n\r\n";//포함하지 않으면 esp 혼동
+				response += "Connection: close\r\n\r\n";//포함하지 않으면 esp 혼동
 													   //response += "Keep-Alive:timeout=5,max=999\r\n\r\n";
 				response += content;
 				sendData(String("AT+CIPSEND=") + c_id + "," + response.length() + "\r\n", 3000, 0);
@@ -285,16 +282,15 @@ void bluetooth_write(char* cmd, size_t len) {
 }
 
 boolean send_device_ip() {
-	String conn = String("AT+CIPSTART=3,\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	String conn = String("AT+CIPSTART=0,\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
 	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
 		Serial2.flush();
 		return false;
 	}		//서버와 연결하는 부분
-	sendData(String("AT+CIPSTATUS"), 2000, 0);
 	String query = "?ip=" + String(device_ip);
 	String request = "GET " + uri + query + "\r\n";
 	request += "Connection:close\r\n\r\n";
-	sendData(String("AT+CIPSEND=3,") + request.length() + "\r\n", 1000, 0);
+	sendData(String("AT+CIPSEND=0,") + request.length() + "\r\n", 1000, 0);
 	sendData(request, 1000, 0);
 	Serial2.flush();
 	return true;
