@@ -14,7 +14,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// TODO Auto-generated method stub
-		//System.out.println("sec");
+		System.out.println("swagger init");
 		web.ignoring().antMatchers("/swagger-ui.html");
 	}
 

@@ -73,18 +73,20 @@ public class FarmingServiceImpl implements IPlantService {
 		ResultDTO res = null;
 		
 		//미들 서버에 명령 전송
-		/*String requestData = "{\"cmd\":\"" + cmd + "\",\"dest\":\"" + commandSet.getDest() + "\",\"apCode\":\""
+		String requestData = "{\"cmd\":\"" + cmd + "\",\"dest\":\"" + commandSet.getDest() + "\",\"apCode\":\""
 				+ commandSet.getApCode() + "\"}";
 
 		JSONObject json = conn.request(commandSet.getMiddle(), PHP_FORWARD_URL, "POST", requestData);
+		System.out.println((String) json.get("result"));
 		String result = (String) json.get("result");
 		
 		// 수행한 동작에 따라 로그에 저장해야.
-		saveLog(commandSet, result);*/
+		saveLog(commandSet, result);
 
 		if (cmd == 10) {// 수경 재배 시작이라면
 			setFarmingInfoService.execute(commandSet.getOptData().getFarm(), commandSet.getApCode(), commandSet.getSfCode());
 			dao.updatePort(commandSet.getApCode(), commandSet.getSfCode(), commandSet.getOptData().getSfPort(), 'T');
+			dao.updateLED('T', commandSet.getApCode(), commandSet.getSfCode());
 			insertGrowthPlantService.execute(
 					new InfoDTO(commandSet.getApCode(), commandSet.getSfCode(), commandSet.getOptData().getPlant()));
 			res = ResultDTO.createInstance(true)
@@ -96,8 +98,10 @@ public class FarmingServiceImpl implements IPlantService {
 					.setMsg("재배를 시작 하였습니다.");
 		} else if (cmd == 11) {// 수경 재배 취소라면
 			dao.updatePort(commandSet.getApCode(), commandSet.getSfCode(), 0, 'F');
+			dao.updateLED('F', commandSet.getApCode(), commandSet.getSfCode());
 			plantDao.deletePortInfo(commandSet.getApCode(), commandSet.getSfCode());
 			deleteGrowthPlantService.execute(new InfoDTO(commandSet.getApCode(), commandSet.getSfCode(), null));
+			
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("apCode", commandSet.getApCode());
 			map.put("sfCode", commandSet.getSfCode());
@@ -138,9 +142,9 @@ public class FarmingServiceImpl implements IPlantService {
 	}
 
 	private char getResult(String result) {
-		char output = 'Y';
+		char output = 'T';
 		if (result.equals("err"))
-			output = 'N';
+			output = 'F';
 		return output;
 	}
 }

@@ -60,9 +60,8 @@ public class DeviceControlServiceImpl implements IDeviceFrontService{
 		ResultDTO res=ResultDTO.createInstance(false).setMsg("명령 수행에 대한 응답 결과를 받을 수 없습니다.");
 		
 		try {
-//			JSONObject json = conn.request(commandSet.getMiddle(), PHP_FORWARD_URL, "POST", requestData);
-//			final String result=(String)json.get("result");
-			final String result="1";
+			JSONObject json = conn.request(commandSet.getMiddle(), PHP_FORWARD_URL, "POST", requestData);
+			final String result=(String)json.get("result");
 			//수행한 동작에 따라 로그에 저장해야.
 			saveLog(commandSet, result);
 			if(!result.equals("err")) { //명령이 성공했다면

@@ -29,7 +29,7 @@ public class SetFarmingInfoServiceImpl{
 				if(portStatus.getStatus()) {
 					HashMap<String, Object> map=new HashMap<>();
 					map.put("portNo", cnt);
-					map.put("portSt", 'Y');
+					map.put("portSt", 'T');
 					portList.add(map);
 				}
 				cnt++;

@@ -18,12 +18,12 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	<!-- swagger -->
-	<!-- <beans:bean id="swagger2Config"
+	<beans:bean id="swagger2Config"
 	class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration">
 	</beans:bean>
 	<default-servlet-handler />
 	<resources mapping="swagger-ui.html"  location="classpath:/META-INF/resources/"/>
-	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" /> -->
+	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
 	
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
@@ -34,8 +34,8 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<context:component-scan base-package="com.spring.smart_plant.test" />
 	<context:component-scan base-package="com.spring.smart_plant.common.service" />
+	<!-- <context:component-scan base-package="com.spring.smart_plant.common.swagger" /> -->
 	<context:component-scan base-package="com.spring.smart_plant.common.config" />
 	<context:component-scan base-package="com.spring.smart_plant.**.controller" />
 	<context:component-scan base-package="com.spring.smart_plant.mail.command" />
