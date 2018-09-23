@@ -38,7 +38,7 @@ class MainContainer extends Component {
     toastId = null;
 
     _connect(addSfAuto, userCode) {
-        if (!socket) {
+        if (!stompClient) {
             socket = new SockJS(
                 'http://203.250.32.91:9001/smart_plant/device_data'
             );
@@ -62,9 +62,9 @@ class MainContainer extends Component {
         let msg = JSON.parse(message.body);
         deviceInfo.toJS().some(
             (arg, index) => {
-                if (arg.apCode === msg.apCode) {
-                    console.log(index)
-                    console.log('find')
+                //if (arg.apCode === msg.apCode) {
+                //    console.log(index)
+                //    console.log('find')
                     this._getDeviceAllInfo();
 
                     if (sfToggleState) {
@@ -80,7 +80,7 @@ class MainContainer extends Component {
                     // })
                     //this._getDeviceAllInfo();
                     return true;
-                }
+                //}
             }
         );
         this._showAlert({

@@ -69,7 +69,7 @@ const wtConfig = (dataset, start, end) => {
             {
                 // type: 'spline',
                 data: dataset.map(
-                    (arg) => [arg.d, arg.h]
+                    (arg) => [arg.d, arg.wt]
                 ),
                 color:'#6CF',
                 name:'cs temp'

@@ -95,7 +95,7 @@ const ecConfig = (dataset, start, end, minEC, maxEC, minPH, maxPH) => {
             opposite: false,
             tickInterval: 1,
             tickmarkPlacement: 'on',
-            min: 1,
+            min: 0,
             // max: 20,
             plotBands: [{
                 color: '#eeeeee', // Color value
@@ -136,7 +136,7 @@ const ecConfig = (dataset, start, end, minEC, maxEC, minPH, maxPH) => {
             useHTML: true,
             headerFormat: '<small>{point.key}</small><table>',
             pointFormat: '<tr><td>{series.name}: </td>' +
-                '<td style="text-align: right"><b>{point.y} mS/cm</b></td></tr>',
+                '<td style="text-align: right"><b>{point.y}</b></td></tr>',
             // '+<tr><td>maxEC: </td>'+
             // '<td style="text-align: right">'+this.point.y*1.1+' mS/cm</td></tr>'+
             // '<tr><td>minEC: </td>'+
