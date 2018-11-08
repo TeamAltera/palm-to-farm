@@ -14,6 +14,8 @@
 #define MAX_WATER_LEVEL 15	//수위 최대 레벨(cm)
 #define SOL_A_RELAY 52		//EC조절용
 #define SOL_B_RELAY 53		//EC조절용
+#define PH_RELAY 32			//PH전원조절 릴레이 
+#define EC_RELAY 33			//EC전원조절 릴레이
 #define POT1_pin 0
 #define POT2_pin 1
 #define POT3_pin 2
@@ -418,8 +420,21 @@ float getPH(void) {
 	return result;
 }
 
+void control_PH_EC(void) {
+	Serial.println("executed function\"controlPHEC\"");
+	digitalWrite(EC_RELAY, LOW);	//EC센서 전원 ON
+	delay(100);	//대기
+	getEC();
+	digitalWrite(EC_RELAY, HIGH); //EC센서 전원 OFF
+	delay(100);
+	digitalWrite(PH_RELAY, LOW);
+	delay(100);
+	PHcurrent = getPH();
+	digitalWrite(PH_RELAY, HIGH);
+}
+
 void supply_sol(float current_ec) {
-	Serial.println("executed");
+	Serial.println("executed function\"supply_sol\"");
 	if (current_ec < 1.0) {
 		digitalWrite(SOL_A_RELAY, HIGH);
 		digitalWrite(SOL_B_RELAY, HIGH);
@@ -466,6 +481,10 @@ void setup() {
 	sensors_setup();
 	pinMode(SOL_A_RELAY, OUTPUT);
 	pinMode(SOL_B_RELAY, OUTPUT);
+	pinMode(PH_RELAY, OUTPUT);
+	pinMode(EC_RELAY, OUTPUT);
+	digitalWrite(PH_RELAY, HIGH);
+	digitalWrite(EC_RELAY, HIGH);		//ph, ec센서 전부 전원 off
 	//임시
 	pump_state = true;
 	wifi_join = true;
@@ -509,8 +528,6 @@ void loop() {
 		if (ph_index > 9)
 			ph_index = 0;
 		*/
-		getEC();
-		PHcurrent = getPH();
 
 		if (present_millis - ec_control_previousTime > ec_control_interval) {		//EC 조절 후, 30초간 값안정화 대기
 			supply_sol(ECcurrent);
@@ -523,7 +540,7 @@ void loop() {
 	Serial.println(ECcurrent);
 	if (wifi_join && pump_state) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
-
+			control_PH_EC();		//PH, EC 측정.
 			Serial.println(String("Device ip : ") + device_ip);
 			Serial.println(String("LED mode : ") + automatic_led);
 			Serial.print(String("LED state : ") + led_state + "\n");
