@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hydroponics_Slave", "..\hyd
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hydroponics_Control", "..\hydroponics_Control\hydroponics_Control.vcxproj", "{82048526-712F-4A21-86B2-9AE52AED650A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "..\..\..\..\..\Arduino\test\test.vcxproj", "{CA0B8AFA-F35B-41C4-9A35-AC98F6D8C8E7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_ph_ec", "..\..\..\..\..\Arduino\test_ph_ec\test_ph_ec.vcxproj", "{754F6FC7-E095-4B6E-AC10-4033F088F847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{82048526-712F-4A21-86B2-9AE52AED650A}.Debug|x86.Build.0 = Debug|Win32
 		{82048526-712F-4A21-86B2-9AE52AED650A}.Release|x86.ActiveCfg = Release|Win32
 		{82048526-712F-4A21-86B2-9AE52AED650A}.Release|x86.Build.0 = Release|Win32
-		{CA0B8AFA-F35B-41C4-9A35-AC98F6D8C8E7}.Debug|x86.ActiveCfg = Debug|Win32
-		{CA0B8AFA-F35B-41C4-9A35-AC98F6D8C8E7}.Debug|x86.Build.0 = Debug|Win32
-		{CA0B8AFA-F35B-41C4-9A35-AC98F6D8C8E7}.Release|x86.ActiveCfg = Release|Win32
-		{CA0B8AFA-F35B-41C4-9A35-AC98F6D8C8E7}.Release|x86.Build.0 = Release|Win32
+		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Debug|x86.ActiveCfg = Debug|Win32
+		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Debug|x86.Build.0 = Debug|Win32
+		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Release|x86.ActiveCfg = Release|Win32
+		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
