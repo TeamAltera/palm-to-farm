@@ -22,9 +22,14 @@ String buffer = "";
 
 boolean automatic_value[3] = { true, true, true };	//순서대로 LED, 냉각팬, 펌프.
 
+boolean wifi_reconn_flag = false;		//wifi 재접속 파악
+
 SoftwareSerial Serial_C(11, 10);
 
 int buffer_count = 0;
+
+unsigned int wifi_check_previousTime = 0;
+unsigned int wifi_check_interval = 1800000;		//30분마다 네트워크 연결상태 확인.
 
 const int success_led = 49;
 const int fail_led = 51;
@@ -82,6 +87,7 @@ void esp8266_joinAP() {
 			char res = (char)Serial1.read();
 			Serial.println(res);
 			if (res != '1') {
+				Serial.println("slave board not connected to network.");
 				sendData("AT+CIFSR\r\n", 2000, 0);
 				return;
 			}
@@ -92,14 +98,79 @@ void esp8266_joinAP() {
 		delay(1000);
 		noTone(piezo);
 		wifi_join = true;
-		//AP나 서버로 현재 할당받은 내부 아이피 알려줘야 함
-		//AT+CIFSR로 얻은 아이피를 문자열에 저장해야
-		//라즈베리 AP측에서는 해당 정보를 가지고 포트포워딩 해야
 	}
 	else {
 		change_led_state(0);//빨간불
 	}
 }
+
+//주기적으로 wifi 연결 체크.
+void esp_check_connection() {
+	boolean conn_result = false;	//와이파이 연결결과
+	char result = '0';
+	String previous_ip = "0";	//연결이 끊어졌을 경우, 이전 d클래스 저장용.
+	String join = "";		//AP접속을 위한 AT커맨드
+
+	Serial.println("Checking wifi connectioin..");
+	conn_result = (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK")) != -1;		//접속된 AP조회.
+	if (conn_result == true) {
+		Serial.println("wifi connected.");
+		return;
+	}
+	else if (conn_result == false) {		//기존 연결이 끊어졌을 경우,
+		Serial.println("wifi disconnected. reconnect.");
+		wifi_join = false;
+		previous_ip = device_ip;		//이전 ip 저장.
+		sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+		String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
+		sendData(join, 5000, 0); //esp 저장된 AP에 다시연결
+		if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {	//새로운 AP에 접속 성공한 경우.
+			Serial.println("wifi connected.");
+			Serial1.print(15);		//슬레이브 보드에 재접속 준비 명령
+			while (!Serial1.available()) {}
+			delay(1000);
+			if(Serial1.available()) {
+				int response = Serial1.parseInt();
+				if ( response == 1) {		//준비 완료 응답 받으면,
+					Serial1.print(bluetooth_cmd);
+					while (!Serial1.available()) {}
+					delay(1000);
+					while (Serial1.available())
+					{
+						result = (char)Serial1.read();
+						Serial.println(result);
+					}
+					if (result == '1') {
+						change_led_state(1);
+						tone(piezo, 392);
+						delay(1000);
+						noTone(piezo);
+						Serial.println("Slave board connect complete.");
+					}
+					else {
+						Serial.println("slave board not connected to network.");
+					}
+				}
+			}			//슬레이브 보드 접속 과정 완료
+
+			sendData("AT+CIFSR\r\n", 2000, 0); //수행하면 device_ip변수에 새로운 ip저장.
+			if (previous_ip != device_ip) {		//연결된 ip주소가 다를 경우,
+				conn_result = esp_send_changed_ip(previous_ip, device_ip);		//서버로  IP전송.
+				if (conn_result == true) Serial.println("새로운 IP 전송 완료");
+				else Serial.println("새로운 IP 전송 실패");
+				dot_count = 0;		//sfcode 추출을 위한 변수 초기화
+				sf_code = get_sf_code(device_ip);
+			}
+			wifi_join = true;
+			Serial.print("SF Code : ");
+			Serial.println(sf_code);
+			Serial1.print(sf_code);			//슬레이브 보드로 sf_code 전송.
+		}
+		else
+			Serial.println("Connection fail");
+	}
+}
+
 
 void change_led_state(boolean st) {
 	if (st == 0) {//빨강
@@ -296,6 +367,19 @@ boolean send_device_ip() {
 	return true;
 }
 
+boolean esp_send_changed_ip(String before, String after) {
+	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
+		Serial2.flush();
+		return false;
+	}		//서버와 연결하는 부분
+	String query = "?b=" + String(before) + "&a=" + String(after);
+	String request = "GET /change.php" + query + "\r\n";
+	sendData(String("AT+CIPSEND=0,") + request.length() + "\r\n", 1000, 0);
+	sendData(request, 1000, 0);
+	Serial2.flush();
+}
+
 String get_sf_code(String temp_ip) {
 	int dot_idx = temp_ip.indexOf('.');
 	if (dot_idx != '-1') dot_count++;
@@ -315,24 +399,30 @@ void setup() {
 	esp8266Server_setup(); //esp설정
 	bluetooth_setup(); //블루투스 설정, 블루투스 이름정해주는부분 나중에 수정필요
 	change_led_state(0);//빨간불
-	bluetooth_read(); //블루투스에 값이들어올때 까지 대기
+	bluetooth_read(); //블루투스에 값이들어올때 까지 대기. -> AP연결 및 device_ip변수에 할당된 ip저장 까지 수행.
 	Serial.print("device IP : ");
 	Serial.println(device_ip);
-	sf_code = device_ip;
-	boolean result = send_device_ip();
+	boolean result = send_device_ip();		//서버로 할당받은 ip 전송.
 	if (result == true) Serial.println("IP 전송완료");
 	else Serial.println("IP전송실패");
 
 	while (dot_count != 3) {
-		sf_code = get_sf_code(sf_code);
+		sf_code = get_sf_code(device_ip);
 	}
 	Serial.print("SF Code : ");
 	Serial.println(sf_code);
-	Serial1.print(sf_code);
+	Serial1.print(sf_code);			//슬레이브 보드로 sf_code 전송.
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
-	if (wifi_join)
+	unsigned int present_millis = 0;
+	if (wifi_join){
+		present_millis = millis();
+		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
+			esp_check_connection();
+			wifi_check_previousTime = millis();
+		}
 		esp8266_read();
+	}
 }
