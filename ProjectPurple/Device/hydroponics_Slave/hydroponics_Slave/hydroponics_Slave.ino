@@ -359,6 +359,20 @@ void get_masterData() {
 			send_control_data("5", 1);
 			pump_state = false;
 			break;
+		case 15:		//AP 재접속
+			Serial.println("AP reconnect");
+			Serial1.print(15);
+			while (!Serial1.available()) {}//마스터보드로 부터 값 전송 대기
+			delay(2000);
+			while (Serial1.available()) //UART에 값이 들어오면(마스터로부터 받은 값),
+			{
+				bluetooth_cmd += (char)Serial1.read(); //읽어들이고,
+			}
+			Serial.println(bluetooth_cmd);
+			bluetooth_set();//userName, AP ssid, AP PWD값 저장
+			esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
+			get_sf_code();
+			break;
 		default:
 			Serial.println("request from master : error");
 			break;
