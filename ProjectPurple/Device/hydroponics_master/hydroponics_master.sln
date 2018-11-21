@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hydroponics_Control", "..\h
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_ph_ec", "..\..\..\..\..\Arduino\test_ph_ec\test_ph_ec.vcxproj", "{754F6FC7-E095-4B6E-AC10-4033F088F847}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_pump_level", "..\..\..\..\..\Arduino\test_pump_level\test_pump_level.vcxproj", "{C4B94B95-BF91-4953-BD0A-F7A068221639}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -33,6 +35,10 @@ Global
 		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Debug|x86.Build.0 = Debug|Win32
 		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Release|x86.ActiveCfg = Release|Win32
 		{754F6FC7-E095-4B6E-AC10-4033F088F847}.Release|x86.Build.0 = Release|Win32
+		{C4B94B95-BF91-4953-BD0A-F7A068221639}.Debug|x86.ActiveCfg = Debug|Win32
+		{C4B94B95-BF91-4953-BD0A-F7A068221639}.Debug|x86.Build.0 = Debug|Win32
+		{C4B94B95-BF91-4953-BD0A-F7A068221639}.Release|x86.ActiveCfg = Release|Win32
+		{C4B94B95-BF91-4953-BD0A-F7A068221639}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

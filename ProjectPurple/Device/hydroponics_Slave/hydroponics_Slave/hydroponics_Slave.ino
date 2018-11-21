@@ -12,10 +12,11 @@
 #define WATER_LEVEL_trigger 23 //초음파 수위센서(trigger)
 #define TANK_HEIGHT 20	//물탱크 최대 크기(cm)
 #define MAX_WATER_LEVEL 15	//수위 최대 레벨(cm)
-#define SOL_A_RELAY 52		//EC조절용
-#define SOL_B_RELAY 53		//EC조절용
-#define PH_RELAY 32			//PH전원조절 릴레이 
-#define EC_RELAY 33			//EC전원조절 릴레이
+#define SOL_A_RELAY 44		//EC조절용
+#define SOL_B_RELAY 45		//EC조절용
+#define EC_VCC 46			//EC전원조절 릴레이
+#define EC_GND 47			//PH전원조절 릴레이
+#define PH_RELAY 52
 #define POT1_pin 0
 #define POT2_pin 1
 #define POT3_pin 2
@@ -36,6 +37,9 @@ boolean fan_state = 0;		//냉각팬 상태. 0 : OFF, 1 : ON
 boolean led_state = 0;		//LED 상태. 0 : OFF, 1 : ON
 boolean pump_state = 0;		//펌프 상태. 0 : OFF, 1 : ON
 boolean ds18_state = 0;		//연결상태. 0 : 연결X, 1 : 연결O
+boolean ph_flag = false;	//PH처음 측정 파악
+boolean ph_arr_flag = false;	//PH배열 10개 초과 파악
+char pump_run_flag = 'F';	//양액펌프 동작 여부 파악.
 
 int POT_val[5] = { 0, };	//val1, val2, val3, val4, avg
 int water_level = 0.0;	//수위
@@ -43,16 +47,18 @@ int water_level_arr[10] = { 0 };
 
 unsigned long sensor_previousTime = 0;
 unsigned long data_send_previousTime = 0;
-unsigned long ec_read_previousTime = 0;
+unsigned long ph_read_previousTime = 0;
 unsigned long ec_control_previousTime = 0;
 unsigned long sensor_interval = 5000;		//센서 측정 시간.
 unsigned long data_send_interval = 15000;	//센서 전송 시간.
 unsigned long timeout_interval = 5000;
-unsigned long ec_read_interval = 25;		//EC센서 측정시간
-unsigned long ec_control_interval = 30000;	//PH 조절후 안정화 시간.
+unsigned long ph_read_interval = 30000;		//PH센서 측정시간
+unsigned long ec_control_interval = 60000;	//EC 조절후 안정화 시간.
 unsigned long AnalogSampleTime;
 unsigned int AnalogSampleInterval = 25;
 
+float current_ph_arr[10] = { 0, };
+int current_ph_index = 0;
 float ph_array[10] = { 0, };
 int ph_index;
 
@@ -171,16 +177,17 @@ float getTemp(void) {
 
 //수위 측정함수. 
 int getWaterLevel(void) {
-	int distance = 0;
+	double distance = 0;
+	double temp = 0;
 
 	// 초음파를 보낸다. 다 보내면 echo가 HIGH 상태로 대기하게 된다.
 	digitalWrite(WATER_LEVEL_trigger, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(WATER_LEVEL_trigger, LOW);
-
-	// HIGH 였을 때 시간(초음파가 보냈다가 다시 들어온 시간)을 가지고 거리를 계산 한다.
-	distance = MAX_WATER_LEVEL - ((int)pulseIn(WATER_LEVEL_echo, HIGH) / 29 / 2);		// cm단위로 바닥에서 물의 높이.
-	distance = (distance / MAX_WATER_LEVEL) * 100;	//물의 높이를 %로 표현.
+	temp = pulseIn(WATER_LEVEL_echo, HIGH);
+	temp = temp / 29 / 2;
+	distance = MAX_WATER_LEVEL - temp;		// cm단위로 바닥에서 물의 높이.
+	distance = distance / MAX_WATER_LEVEL * 100;
 	// 측정범위 초과시 처리.
 	if (distance <= 0)
 		distance = 0;
@@ -268,14 +275,14 @@ void esp8266_joinAP() {
 //웹서버에 센싱한 값 전송, 매개변수랑 함수내부 코드 수정필요
 //복수개의 수경재배기 운용시, 어느 수경재배기인지 식별해줘야 되므로
 //쿼리스트링에 수경재배기 번호 포함해줘야
-boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, int pot, float ec, float ph, String ip) {
+boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, int pot, float ec, float ph, String ip, boolean p) {
 	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
 	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
 		Serial2.flush();
 		return false;
 	}		//서버와 연결하는 부분
 
-	String query = "?t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot) + "&ec=" + String(ec) + "&ph=" + String(ph) + "&sf=" + String(sf_code);
+	String query = "?t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot) + "&ec=" + String(ec) + "&ph=" + String(ph) + "&sf=" + String(sf_code) + "&p=" + String(pump_run_flag);
 	String request = "GET " + uri + query + "\r\n";
 	request += "Connection:close\r\n\r\n";
 	sendData(String("AT+CIPSEND=") + request.length() + "\r\n", 1000, 0);
@@ -305,6 +312,7 @@ String sendData(String command, long timeout, boolean debug) {
 			response += c;
 		}
 	}
+	//할당받은 IP의 d클래스 추출.
 	if (command == "AT+CIFSR\r\n") {
 		int ip_idx = response.indexOf("192.");
 		int ok_idx = response.indexOf("OK");
@@ -385,11 +393,7 @@ void get_controlData(int type) {		//수동모드의 경우 수행되는 코드.
 	}
 }
 
-void getEC(void) {
-	ECcurrent = analogRead(EC_pin) * 5.00 / 1024;
-}
-
-float getPH(void) {
+float readPH(void) {
 	float sensorValue;
 	long sensorSum;
 	int buf[10];                //buffer for read analog
@@ -420,34 +424,51 @@ float getPH(void) {
 	return result;
 }
 
-void control_PH_EC(void) {
-	Serial.println("executed function\"controlPHEC\"");
-	digitalWrite(EC_RELAY, LOW);	//EC센서 전원 ON
-	delay(100);	//대기
-	getEC();
-	digitalWrite(EC_RELAY, HIGH); //EC센서 전원 OFF
-	delay(100);
+void getPH(void) {
+	Serial.println("executed function : getPH");
 	digitalWrite(PH_RELAY, LOW);
+	delay(500);
+	digitalWrite(EC_VCC, LOW);
+	digitalWrite(EC_GND, LOW);
 	delay(100);
-	PHcurrent = getPH();
+	PHcurrent = readPH();
+	/*
+	current_ph_arr[current_ph_index] = readPH();
+	current_ph_index++;
+	if (current_ph_index > 10) {
+		if (ph_arr_flag == false)
+			ph_arr_flag = true;
+		current_ph_index = 0;
+	}
+	*/
 	digitalWrite(PH_RELAY, HIGH);
+}
+
+void getEC(void) {
+	Serial.println("executed function : getEC");
+	digitalWrite(PH_RELAY, HIGH);
+	delay(500);
+	digitalWrite(EC_VCC, HIGH);
+	digitalWrite(EC_GND, HIGH);
+	delay(100);
+	ECcurrent = analogRead(EC_pin) * 5.00 / 1024;
+	digitalWrite(EC_VCC, LOW);
+	digitalWrite(EC_GND, LOW);
 }
 
 void supply_sol(float current_ec) {
 	Serial.println("executed function\"supply_sol\"");
 	if (current_ec < 1.0) {
-		digitalWrite(SOL_A_RELAY, HIGH);
 		digitalWrite(SOL_B_RELAY, HIGH);
-		delay(1500);
-		digitalWrite(SOL_A_RELAY, LOW);
+		delay(4000);
 		digitalWrite(SOL_B_RELAY, LOW);
-		delay(1500);
+		delay(500);
 		digitalWrite(SOL_A_RELAY, HIGH);
-		digitalWrite(SOL_B_RELAY, HIGH);
-		delay(1500);
+		delay(2700);
 		digitalWrite(SOL_A_RELAY, LOW);
-		digitalWrite(SOL_B_RELAY, LOW);
+		delay(500);
 		Serial.println("Supply SOL A/B 40mL");
+		pump_run_flag = 'T';
 	}
 }
 
@@ -467,36 +488,35 @@ void get_sf_code(void) {
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-	//esp8266Client_setup(); //esp설정
-	//while (!Serial1.available()) {}//AVR스핀(마스터에서 bluetooth_cmd 값 전송 안오면 루프.)
+	esp8266Client_setup(); //esp설정
+	while (!Serial1.available()) {}//AVR스핀(마스터에서 bluetooth_cmd 값 전송 안오면 루프.)
 	delay(2000);
-	//while (Serial1.available()) //UART에 값이 들어오면(마스터로부터 받은 값),
-	//{
-	//	bluetooth_cmd += (char)Serial1.read(); //읽어들이고,
-	//}
-	//Serial.println(bluetooth_cmd);
-	//bluetooth_set();//userName, AP ssid, AP PWD값 저장
-	//esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
-	//get_sf_code();
+	while (Serial1.available()) //UART에 값이 들어오면(마스터로부터 받은 값),
+	{
+		bluetooth_cmd += (char)Serial1.read(); //읽어들이고,
+	}
+	Serial.println(bluetooth_cmd);
+	bluetooth_set();//userName, AP ssid, AP PWD값 저장
+	esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
+	get_sf_code();
 	sensors_setup();
 	pinMode(SOL_A_RELAY, OUTPUT);
 	pinMode(SOL_B_RELAY, OUTPUT);
+	pinMode(EC_VCC, OUTPUT);
+	pinMode(EC_GND, OUTPUT);
 	pinMode(PH_RELAY, OUTPUT);
-	pinMode(EC_RELAY, OUTPUT);
 	digitalWrite(PH_RELAY, HIGH);
-	digitalWrite(EC_RELAY, HIGH);		//ph, ec센서 전부 전원 off
-	//임시
-	pump_state = true;
-	wifi_join = true;
+	digitalWrite(EC_VCC, LOW);		//ph, ec센서 전부 전원 off
+	digitalWrite(EC_GND, LOW);
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
 	get_masterData();		//마스터보드에서 전송한 제어값 수신.
 	Serial1.flush();
-	unsigned long present_millis = millis();	//루프 시작시간
-
+	unsigned long present_millis = 0;
 	if (pump_state == true) {
+		present_millis = millis();	//루프 시작시간
 		//와이파이 연결과 상관없이 센서값 측정.
 		DHT_temp = dht22.readTemperature();
 		DHT_humi = dht22.readHumidity();
@@ -522,25 +542,43 @@ void loop() {
 		else
 			get_controlData(1);
 
-		/*line 513코트 테스트
-		ph_array[ph_index] = getPH();
-		ph_index++;
-		if (ph_index > 9)
-			ph_index = 0;
-		*/
+		if (ph_flag == false) {
+			getPH();
+			getEC();
+			ph_flag = true;
+		}
 
-		if (present_millis - ec_control_previousTime > ec_control_interval) {		//EC 조절 후, 30초간 값안정화 대기
+		if (present_millis - ph_read_previousTime > ph_read_interval) {
+			getPH();
+			getEC();
+			/*
+			if (ph_arr_flag == false) {	
+				for (int i = 0; i < current_ph_index; i++) {
+					PHcurrent += current_ph_arr[current_ph_index];
+				}
+				Serial.print("ph 배열 합 : ");
+				Serial.println(PHcurrent);
+				PHcurrent /= (float)current_ph_index;
+				Serial.print("ph 평균값 : ");
+				Serial.println(PHcurrent);
+			}
+			else if (ph_arr_flag == true) {		//ph평균 배열이 한번 가득 찬 경우, 10번 값을 평균.
+				for (int i = 0; i < 10; i++) {
+					PHcurrent += current_ph_arr[current_ph_index];
+				}
+				PHcurrent /= 10.00;
+			}
+			*/
+			ph_read_previousTime = millis();
+		}
+
+		if (present_millis - ec_control_previousTime > ec_control_interval) {		//EC 조절 후, 1분간 값안정화 대기
 			supply_sol(ECcurrent);
 			ec_control_previousTime = millis();
 		}
 	}
-	Serial.print("PH : ");
-	Serial.println(PHcurrent);
-	Serial.print("EC : ");
-	Serial.println(ECcurrent);
 	if (wifi_join && pump_state) {
 		if (present_millis - sensor_previousTime > sensor_interval) {
-			control_PH_EC();		//PH, EC 측정.
 			Serial.println(String("Device ip : ") + device_ip);
 			Serial.println(String("LED mode : ") + automatic_led);
 			Serial.print(String("LED state : ") + led_state + "\n");
@@ -553,21 +591,20 @@ void loop() {
 			Serial.print(String("EC value : ") + ECcurrent + "ms/cm\n");
 			Serial.print(String("PH value : ") + PHcurrent + "\n");
 			Serial.println();
-			Serial.println();
+
 			sensor_previousTime = millis();
 		}
-		/*
 		if (present_millis - data_send_previousTime > data_send_interval) {
 			Serial.println("====Data Sending start=====");
-			if (esp8266_send(DHT_temp, DHT_humi, water_temp, water_level, POT_val[4], ECcurrent, PHcurrent, device_ip)) {		//서버로 전송 성공할 경우,
+			if (esp8266_send(DHT_temp, DHT_humi, water_temp, water_level, POT_val[4], ECcurrent, PHcurrent, device_ip, pump_run_flag)) {		//서버로 전송 성공할 경우,
 				Serial.println("=====Data sending end..=====");
+				pump_run_flag = 'F';
 			}
 			else {
 				Serial.println("====Data sending fail..====");
 			}
 			data_send_previousTime = millis();
 		}
-		*/
 	}
 	else {
 		if (pump_state == false)	Serial.println("pump not running");
