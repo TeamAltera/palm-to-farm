@@ -22,3 +22,7 @@ yarn-error.log*
 
 #ignore back-end setting files
 *.properties
+ProjectPurple/Device/hydroponics_Slave/hydroponics_Slave/hydroponics_Slave_BASE_25964.ino
+ProjectPurple/Device/hydroponics_Slave/hydroponics_Slave/hydroponics_Slave_BACKUP_25964.ino
+ProjectPurple/Device/hydroponics_Slave/hydroponics_Slave/hydroponics_Slave_REMOTE_25964.ino
+ProjectPurple/Device/hydroponics_Slave/hydroponics_Slave/hydroponics_Slave_LOCAL_25964.ino

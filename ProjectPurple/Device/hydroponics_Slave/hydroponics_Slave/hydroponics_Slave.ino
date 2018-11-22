@@ -39,7 +39,7 @@ boolean pump_state = 0;		//펌프 상태. 0 : OFF, 1 : ON
 boolean ds18_state = 0;		//연결상태. 0 : 연결X, 1 : 연결O
 boolean ph_flag = false;	//PH처음 측정 파악
 boolean ph_arr_flag = false;	//PH배열 10개 초과 파악
-char sol_run_flag = 'F';	//양액펌프 동작 여부 파악.
+char pump_run_flag = 'F';	//양액펌프 동작 여부 파악.
 
 int POT_val[5] = { 0, };	//val1, val2, val3, val4, avg
 int water_level = 0.0;	//수위
@@ -189,12 +189,12 @@ int getWaterLevel(void) {
 	distance = MAX_WATER_LEVEL - temp;		// cm단위로 바닥에서 물의 높이.
 	distance = distance / MAX_WATER_LEVEL * 100;
 	// 측정범위 초과시 처리.
-if (distance <= 0)
-distance = 0;
-else if (distance >= 100)
-distance = 100;
+	if (distance <= 0)
+		distance = 0;
+	else if (distance >= 100)
+		distance = 100;
 
-return distance;
+	return distance;
 }
 
 //조도센서 값 읽는 함수.
@@ -256,28 +256,7 @@ void esp8266Client_setup() {
 	sendData("AT+CWMODE=1\r\n", 2000, 0); //esp모드는 스테이션
 }
 
-//웹서버에 센싱한 값 전송, 매개변수랑 함수내부 코드 수정필요
-//복수개의 수경재배기 운용시, 어느 수경재배기인지 식별해줘야 되므로
-//쿼리스트링에 수경재배기 번호 포함해줘야
-boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, int pot, float ec, float ph, int sfcode, boolean p) {
-	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
-	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
-		Serial2.flush();
-		return false;
-	}		//서버와 연결하는 부분
-
-	String query = "?t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot) + "&ec=" + String(ec) + "&ph=" + String(ph) + "&sf=" + String(sfcode) + "&p=" + String(sol_run_flag);
-	String request = "GET " + uri + query + "\r\n";
-	request += "Connection:close\r\n\r\n";
-	sendData(String("AT+CIPSEND=") + request.length() + "\r\n", 1000, 0);
-	sendData(request, 1000, 0);
-	Serial2.flush();
-	return true;
-}
-
 void esp8266_joinAP() {
-	Serial.print(ssid);
-	Serial.println(psw);
 	sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
 	String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
 	sendData(join, 5000, 0); //esp 새로운 AP에 연결
@@ -293,7 +272,26 @@ void esp8266_joinAP() {
 	}
 }
 
-//건드릴필요없음
+//웹서버에 센싱한 값 전송, 매개변수랑 함수내부 코드 수정필요
+//복수개의 수경재배기 운용시, 어느 수경재배기인지 식별해줘야 되므로
+//쿼리스트링에 수경재배기 번호 포함해줘야
+boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, int pot, float ec, float ph, String ip, boolean p) {
+	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
+		Serial2.flush();
+		return false;
+	}		//서버와 연결하는 부분
+
+	String query = "?t=" + String(temp) + "&h=" + String(humi) + "&wt=" + String(waterTemp) + "&wl=" + String(waterLev) + "&e=" + String(pot) + "&ec=" + String(ec) + "&ph=" + String(ph) + "&sf=" + String(sf_code) + "&p=" + String(pump_run_flag);
+	String request = "GET " + uri + query + "\r\n";
+	request += "Connection:close\r\n\r\n";
+	sendData(String("AT+CIPSEND=") + request.length() + "\r\n", 1000, 0);
+	sendData(request, 1000, 0);
+	Serial2.flush();
+	return true;
+}
+
+//건드릴 필요 없음-
 void bluetooth_set() {
 	StaticJsonBuffer<100> jsonBuffer;
 	JsonObject& jsonValue = jsonBuffer.parseObject(bluetooth_cmd);//json포맷으로 읽어온다
@@ -358,20 +356,6 @@ void get_masterData() {
 			Serial.println("pump_stop");
 			send_control_data("5", 1);
 			pump_state = false;
-			break;
-		case 15:		//AP 재접속
-			Serial.println("AP reconnect");
-			Serial1.print(15);
-			while (!Serial1.available()) {}//마스터보드로 부터 값 전송 대기
-			delay(2000);
-			while (Serial1.available()) //UART에 값이 들어오면(마스터로부터 받은 값),
-			{
-				bluetooth_cmd += (char)Serial1.read(); //읽어들이고,
-			}
-			Serial.println(bluetooth_cmd);
-			bluetooth_set();//userName, AP ssid, AP PWD값 저장
-			esp8266_joinAP();//저장한 정보를 가지고 AP에 연결.
-			get_sf_code();
 			break;
 		default:
 			Serial.println("request from master : error");
@@ -484,7 +468,7 @@ void supply_sol(float current_ec) {
 		digitalWrite(SOL_A_RELAY, LOW);
 		delay(500);
 		Serial.println("Supply SOL A/B 40mL");
-		sol_run_flag = 'T';
+		pump_run_flag = 'T';
 	}
 }
 
@@ -612,9 +596,9 @@ void loop() {
 		}
 		if (present_millis - data_send_previousTime > data_send_interval) {
 			Serial.println("====Data Sending start=====");
-			if (esp8266_send(DHT_temp, DHT_humi, water_temp, water_level, POT_val[4], ECcurrent, PHcurrent, sf_code, sol_run_flag)) {		//서버로 전송 성공할 경우,
+			if (esp8266_send(DHT_temp, DHT_humi, water_temp, water_level, POT_val[4], ECcurrent, PHcurrent, device_ip, pump_run_flag)) {		//서버로 전송 성공할 경우,
 				Serial.println("=====Data sending end..=====");
-				sol_run_flag = 'F';
+				pump_run_flag = 'F';
 			}
 			else {
 				Serial.println("====Data sending fail..====");
