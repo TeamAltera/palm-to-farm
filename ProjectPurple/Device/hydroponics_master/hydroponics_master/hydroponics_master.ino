@@ -306,6 +306,13 @@ void esp_check_connection() {
 			Serial.println(previous_ip);
 			Serial.print("device IP : ");
 			Serial.println(device_ip);
+			dot_count = 0;
+			sf_code = device_ip;
+			while (dot_count != 3) {
+				sf_code = get_sf_code(sf_code);
+			}
+			Serial.print("sf code ; ");
+			Serial.println(sf_code);
 			wifi_join = true;
 		}
 		else { Serial.println("fail AP reconnect.."); }
