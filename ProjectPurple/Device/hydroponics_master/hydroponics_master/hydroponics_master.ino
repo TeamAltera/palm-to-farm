@@ -27,7 +27,7 @@ SoftwareSerial Serial_C(11, 10);
 int buffer_count = 0;
 
 unsigned long wifi_check_previousTime = 0;
-unsigned long wifi_check_interval = 10000;
+unsigned long wifi_check_interval = 1800000;
 
 const int success_led = 49;
 const int fail_led = 51;
@@ -307,11 +307,9 @@ void esp_check_connection() {
 			Serial.print("device IP : ");
 			Serial.println(device_ip);
 			//슬레이브 보드로 재접속 명령 전송.
-			Serial.println("send to slave. ready reconnect");
 			Serial1.print(15);
 			while (!Serial1.available()) {}		//명령전송후 응답 대기.
 			if (Serial1.available()) {
-				Serial.println("get request from slave.");
 				int response = Serial1.parseInt();
 				if (response == 1) Serial.println("Slave board ready for reconnect");	//슬레이브 보드에서 재접속 수행
 
@@ -412,6 +410,7 @@ void loop() {
 	char ch = '0';
 	unsigned long present_millis = 0;
 	if (wifi_join) {
+		/*
 		//테스트 코드시작
 		if (Serial.available()) {
 			ch = Serial.read();
@@ -419,6 +418,7 @@ void loop() {
 				sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
 		}
 		//테스트코드 끝.
+		*/
 		present_millis = millis();
 		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
 			esp_check_connection();
