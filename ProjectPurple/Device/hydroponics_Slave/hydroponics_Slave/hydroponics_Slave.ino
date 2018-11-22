@@ -357,6 +357,13 @@ void get_masterData() {
 			send_control_data("5", 1);
 			pump_state = false;
 			break;
+		case 15:
+			Serial.println("ready for AP reconnect");
+			Serial1.print('1');
+			delay(1000);
+			esp8266_joinAP();
+			get_sf_code();
+			break;
 		default:
 			Serial.println("request from master : error");
 			break;

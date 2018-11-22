@@ -306,13 +306,34 @@ void esp_check_connection() {
 			Serial.println(previous_ip);
 			Serial.print("device IP : ");
 			Serial.println(device_ip);
-			dot_count = 0;
-			sf_code = device_ip;
-			while (dot_count != 3) {
-				sf_code = get_sf_code(sf_code);
+			//슬레이브 보드로 재접속 명령 전송.
+			Serial.println("send to slave. ready reconnect");
+			Serial1.print(15);
+			while (!Serial1.available()) {}		//명령전송후 응답 대기.
+			if (Serial1.available()) {
+				Serial.println("get request from slave.");
+				int response = Serial1.parseInt();
+				if (response == 1) Serial.println("Slave board ready for reconnect");	//슬레이브 보드에서 재접속 수행
+
+				while (!Serial1.available()) {}	//슬레이브 보드 연결결과 대기
+				if (Serial1.available()) {
+					response = Serial1.parseInt();
+					if (response == 1) Serial.println("Slave complete reconnect");	//슬레이브 보드 재접속이 성공한 경우,
+					else Serial.println("Slave fail reconnect");
+				}
 			}
-			Serial.print("sf code ; ");
-			Serial.println(sf_code);
+			//새로 연결된 ip주소가 이전과 다를 경우,
+			if (previous_ip != device_ip) {
+				conn_result = send_device_ip(previous_ip, device_ip);		//서버로 전송
+				dot_count = 0;
+				sf_code = device_ip;
+				while (dot_count != 3) {
+					sf_code = get_sf_code(sf_code);
+				}									//sf_code 새로 추출.
+				Serial.print("sf code ; ");
+				Serial.println(sf_code);
+			}
+			Serial1.print(sf_code);		//슬레이브보드에 sf_code 전달.
 			wifi_join = true;
 		}
 		else { Serial.println("fail AP reconnect.."); }
@@ -336,6 +357,19 @@ boolean send_device_ip() {
 	sendData(request, 1000, 0);
 	Serial2.flush();
 	return true;
+}
+
+boolean send_device_ip(String before, String after) {
+	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
+		Serial2.flush();
+		return false;
+	}		//서버와 연결하는 부분
+	String query = "?b=" + String(before) + "&a=" + String(after);
+	String request = "GET /change.php" + query + "\r\n";
+	sendData(String("AT+CIPSEND=0,") + request.length() + "\r\n", 1000, 0);
+	sendData(request, 1000, 0);
+	Serial2.flush();
 }
 
 String get_sf_code(String temp_ip) {
