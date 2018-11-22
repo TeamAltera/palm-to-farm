@@ -28,8 +28,10 @@ SoftwareSerial Serial_C(11, 10);
 
 int buffer_count = 0;
 
+unsigned int present_millis = 0;
 unsigned int wifi_check_previousTime = 0;
-unsigned int wifi_check_interval = 1800000;		//30분마다 네트워크 연결상태 확인.
+//unsigned int wifi_check_interval = 1800000;		//30분마다 네트워크 연결상태 확인.
+unsigned int wifi_check_interval = 30000;		//30분마다 네트워크 연결상태 확인.
 
 const int success_led = 49;
 const int fail_led = 51;
@@ -405,7 +407,7 @@ void setup() {
 	boolean result = send_device_ip();		//서버로 할당받은 ip 전송.
 	if (result == true) Serial.println("IP 전송완료");
 	else Serial.println("IP전송실패");
-
+	dot_count = 0;
 	while (dot_count != 3) {
 		sf_code = get_sf_code(device_ip);
 	}
@@ -416,7 +418,6 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
-	unsigned int present_millis = 0;
 	if (wifi_join){
 		present_millis = millis();
 		if (present_millis - wifi_check_previousTime > wifi_check_interval) {

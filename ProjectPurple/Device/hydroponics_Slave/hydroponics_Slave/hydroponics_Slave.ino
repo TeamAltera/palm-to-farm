@@ -256,22 +256,6 @@ void esp8266Client_setup() {
 	sendData("AT+CWMODE=1\r\n", 2000, 0); //esp모드는 스테이션
 }
 
-void esp8266_joinAP() {
-	sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
-	String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
-	sendData(join, 5000, 0); //esp 새로운 AP에 연결
-	if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {
-		Serial.println("slave success");
-		Serial1.print('1');//송신 아두이노에게 성공함을 전송
-		sendData("AT+CIFSR\r\n", 2000, 0); //할당받은 아이피는?
-		wifi_join = true;
-	}
-	else {
-		Serial.println("slave fail");
-		Serial1.print('0');//송신 아두이노에게 실패함을 전송
-	}
-}
-
 //웹서버에 센싱한 값 전송, 매개변수랑 함수내부 코드 수정필요
 //복수개의 수경재배기 운용시, 어느 수경재배기인지 식별해줘야 되므로
 //쿼리스트링에 수경재배기 번호 포함해줘야
@@ -291,9 +275,25 @@ boolean esp8266_send(float temp, float humi, float waterTemp, float waterLev, in
 	return true;
 }
 
+void esp8266_joinAP() {
+	Serial.print(ssid);
+	Serial.println(psw);
+	sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+	String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
+	sendData(join, 5000, 0); //esp 새로운 AP에 연결
+	if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {
+		Serial.println("slave success");
+		Serial1.print('1');//송신 아두이노에게 성공함을 전송
+		sendData("AT+CIFSR\r\n", 2000, 0); //할당받은 아이피는?
+		wifi_join = true;
+	}
+	else {
+		Serial.println("slave fail");
+		Serial1.print('0');//송신 아두이노에게 실패함을 전송
+	}
+}
 
-
-//건드릴 필요 없음-
+//건드릴필요없음
 void bluetooth_set() {
 	StaticJsonBuffer<100> jsonBuffer;
 	JsonObject& jsonValue = jsonBuffer.parseObject(bluetooth_cmd);//json포맷으로 읽어온다
