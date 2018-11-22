@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="smart_farm_api.user.repository.UserMapper">
+
+	<!-- 사용자 보유 수경재배기 개수 증가 -->
+	<update id="incrementSfCount" parameterType="Integer">
+		UPDATE PLANT_USER
+		SET SF_CNT=SF_CNT+1
+		WHERE USER_CODE=#{userCode}
+	</update>
+
+	<!-- 사용자 보유 수경재배기 개수 감소 -->
+	<update id="decrementSfCount" parameterType="Integer">
+		UPDATE PLANT_USER
+		SET SF_CNT=SF_CNT-#{count}
+		WHERE USER_CODE=#{userCode}
+	</update>
+
+	<!-- 계정 블락 횟수 초기화 -->
+	<update id="initBlockCount" parameterType="Integer">
+		UPDATE PLANT_USER
+		SET BLOCK=0
+		WHERE USER_CODE=#{userCode}
+	</update>
+
+	<!-- 블락 횟수 증가, 5회 계정 로그인 실패시 블락 -->
+	<update id="incrementBlockCount" parameterType="hashmap">
+		UPDATE PLANT_USER
+		SET BLOCK=BLOCK+1
+		WHERE EMAIL=#{email}
+		<selectKey keyProperty="block" resultType="Integer" order="AFTER">
+			SELECT BLOCK AS BLOCK FROM PLANT_USER WHERE EMAIL=#{email}
+		</selectKey>
+	</update>
+
+	<!-- 로그인 시 사용자 존재 유뮤 조회 -->
+	<select id="searchMember" resultMap="UserInfoDto"
+		parameterMap="LoginDto">
+		SELECT * FROM PLANT_USER
+		WHERE PWD=#{pwd} AND EMAIL=#{email}
+	</select>
+
+	<!-- 사용자 정보 조회 -->
+	<select id="getMemberInfo" resultMap="UserInfoDto" parameterType="Integer">
+		SELECT * FROM PLANT_USER
+		WHERE USER_CODE=#{userCode}
+	</select>
+
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterMap="UserInfoDto">
+		INSERT INTO PLANT_USER
+		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT,BLOCK)
+		VALUES
+		(PLANT_USER_SEQ.NEXTVAL,#{pwd},#{email},#{firstName},#{secondName},0,0)
+	</insert>
+
+	<!-- 이메일 사용 여부 조회 -->
+	<select id="searchEmail" resultType="hashmap" parameterType="String">
+		SELECT * FROM PLANT_USER WHERE EMAIL=#{email}
+	</select>
+
+	<select id="searchBlock" resultType="Integer" parameterType="String">
+		SELECT BLOCK FROM PLANT_USER WHERE EMAIL=#{email}
+	</select>
+
+	<!-- PLANT_USER 칼럼과 UserInfoDTO 변수명간의 매핑 -->
+	<resultMap id="UserInfoDto" type="smart_farm_api.user.domain.UserInfoDto">
+		<result property="email" column="email" />
+		<result property="firstName" column="first_name" />
+		<result property="secondName" column="second_name" />
+		<result property="pwd" column="pwd" />
+		<result property="sfCnt" column="sf_cnt" />
+		<result property="userCode" column="user_code" />
+		<result property="block" column="block" />
+	</resultMap>
+
+	<parameterMap type="smart_farm_api.user.domain.UserInfoDto"
+		id="UserInfoDto">
+		<parameter property="email"/>
+		<parameter property="firstName"/>
+		<parameter property="secondName"/>
+		<parameter property="pwd"/>
+	</parameterMap>
+	
+	<parameterMap type="smart_farm_api.user.domain.LoginDto"
+		id="LoginDto">
+		<parameter property="email"/>
+		<parameter property="pwd"/>
+	</parameterMap>
+</mapper>

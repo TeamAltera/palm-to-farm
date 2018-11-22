@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="smart_farm_api.plant.repository.PlantMapper">
+
+	<select id="getPlantInfo" resultMap="PlantDto"
+		parameterType="hashmap">
+		SELECT
+		G.PLANT_CODE AS PLANT_CODE,
+		P.PLANT_NAME AS PLANT_NAME,
+		P.OPT_TEMP AS OPT_TEMP,
+		P.MAX_TEMP AS MAX_TEMP,
+		P.MIN_TEMP AS MIN_TEMP,
+		P.MIN_PH AS MIN_PH,
+		P.MAX_PH AS MAX_PH,
+		P.MAX_EC AS MAX_EC,
+		P.MIN_EC AS MIN_EC,
+		G.FARMING_DATE AS FARMING_DATE
+		FROM G_PLANT G, PLANT P
+		WHERE G.SF_CODE=#{sfCode} AND G.AP_CODE=#{apCode}
+		AND P.PLANT_CODE=G.PLANT_CODE
+	</select>
+
+	<insert id="insertGrowthPlant" parameterType="hashmap">
+		INSERT INTO G_PLANT (
+			SF_CODE, 
+			AP_CODE, 
+			PLANT_CODE, 
+			FARMING_DATE
+		)
+		VALUES (
+			#{sfCode},
+			#{apCode},
+			#{plantCode},
+			SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertPortInfo" parameterType="hashmap">
+		<if test="portList.size != 0">
+			<!-- INSERT ALL --> 
+			<foreach collection="portList" item="item" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO PORT_INFO (
+			SF_CODE,
+			AP_CODE,
+			PORT_NO,
+			PORT_ST
+			) VALUES
+			(
+				#{sfCode},
+				#{apCode},
+				#{item.portNo},
+				#{item.portSt}
+			)
+			</foreach>	
+			<!-- SELECT * FROM DUAL -->
+		</if>
+	</insert>
+
+	<delete id="deleteGrowthPlant" parameterType="hashmap">
+		DELETE
+		FROM G_PLANT
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+	</delete>
+	
+	<delete id="deletePortInfo" parameterType="hashmap">
+		DELETE
+		FROM PORT_INFO
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+	</delete>
+	
+	<select id="getPortInfo" parameterType="hashmap" resultType="Integer">
+		SELECT PORT_NO
+		FROM PORT_INFO
+		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+		ORDER BY PORT_NO ASC
+	</select>
+
+	<resultMap type="smart_farm_api.plant.domain.PlantDto"
+		id="PlantDto">
+		<result property="plantCode" column="plant_code" />
+		<result property="plantName" column="plant_name" />
+		<result property="optTemp" column="opt_temp" />
+		<result property="maxTemp" column="max_temp" />
+		<result property="minTemp" column="min_temp" />
+		<result property="minPh" column="min_ph" />
+		<result property="maxPh" column="max_ph" />
+		<result property="maxEc" column="max_ec" />
+		<result property="minEc" column="min_ec" />
+		<result property="farmingDate" column="farming_date" />
+	</resultMap>
+</mapper>

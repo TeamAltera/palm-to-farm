@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="smart_farm_api.sensor.repository.SensorMapper">
+	<!-- 센싱되는 데이터셋 삽입 -->
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO SENSOR_DATA 
+		(CALC_DT,SF_CODE,AP_CODE,TEMP,HUMI,ELUM,WATER_TEMP,WATER_LIM,EC,PH)
+		VALUES 
+		(#{d},#{sf},#{ap},#{t},#{h},#{e},#{wt},#{wl}
+		,#{ec},#{ph})
+		<!-- TO_DATE(#{d},'YYYY-MM-DD HH24:MI:SS') -->
+		<!--  -->
+	</insert>
+	
+	<!-- 해당공유기의 가장 최근 날짜의 데이터 가져오기 -->
+	<!-- max는 오라클 함수 -->
+	<select id="getLatestData" resultMap="SensorDataDto" parameterType="hashmap">
+		SELECT MAX(CALC_DT) FROM SENSOR_DATA 
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+	</select>
+	
+	<!-- 특정 날짜의 데이터 가져오기 -->
+	<select id="getDayData" parameterMap="DateSearchDto" resultMap="SensorDataDto">
+		SELECT * FROM SENSOR_DATA
+		<!-- 부등호 태그를 인식하지 못하므로 CDATA를 추가해준다. -->
+		<![CDATA[
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+		AND CALC_DT >= TO_DATE(#{date},'YYYY-MM-DD')
+		AND CALC_DT  < TO_DATE(#{date},'YYYY-MM-DD')+1
+		]]>
+		ORDER BY CALC_DT ASC
+	</select>
+	
+	<delete id="deleteAllSensorData" parameterType="hashmap">
+		DELETE FROM SENSOR_DATA
+		WHERE SF_CODE=#{sfCode}
+		AND AP_CODE=#{apCode}
+	</delete>
+	
+	<resultMap type="smart_farm_api.sensor.domain.SensorDataDto" id="SensorDataDto">
+		<result property="d" column="calc_dt"/>
+		<result property="t" column="temp"/>
+		<result property="h" column="humi"/>
+		<result property="e" column="elum"/>
+		<result property="wt" column="water_temp"/>
+		<result property="wl" column="water_lim"/>
+		<result property="ec" column="ec"/>
+		<result property="ph" column="ph"/>
+	</resultMap>
+	
+	<parameterMap type="smart_farm_api.common.DateSearchDto" id="DateSearchDto">
+		<parameter property="sfCode"/>
+		<parameter property="apCode"/>
+		<parameter property="date"/>
+	</parameterMap>
+</mapper>
