@@ -27,7 +27,7 @@ SoftwareSerial Serial_C(11, 10);
 int buffer_count = 0;
 
 unsigned long wifi_check_previousTime = 0;
-unsigned long wifi_check_interval = 10000;
+unsigned long wifi_check_interval = 1800000;
 
 const int success_led = 49;
 const int fail_led = 51;
@@ -132,6 +132,7 @@ void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변�
 void esp8266_read() { //명령 라우팅
 	Serial2.flush();
 	if (Serial2.available()) {
+		Serial.println("execute esp8266_read");
 		String temp = Serial2.readStringUntil('\n');
 		Serial.println("DEBUG: " + temp);
 		buffer += temp;
@@ -292,10 +293,53 @@ void esp_check_connection() {
 	String join = "";		//AP접속을 위한 AT커맨드
 	conn_result = (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK")) != -1;		//접속된 AP조회.
 	if (conn_result != true) {
-		Serial.println("AP disconnected..");
+		Serial.println("AP disconnected.. try reconnect");
+		wifi_join = false;
+		previous_ip = device_ip;
+		sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+		String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
+		sendData(join, 5000, 0); //esp 저장된 AP에 다시연결
+		if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {	//연결시도 결과.
+			Serial.println("wifi connected.");
+			sendData("AT+CIFSR\r\n", 2000, 0);
+			Serial.print("previous IP : ");
+			Serial.println(previous_ip);
+			Serial.print("device IP : ");
+			Serial.println(device_ip);
+			//슬레이브 보드로 재접속 명령 전송.
+			Serial1.print(15);
+			while (!Serial1.available()) {}		//명령전송후 응답 대기.
+			if (Serial1.available()) {
+				int response = Serial1.parseInt();
+				if (response == 1) Serial.println("Slave board ready for reconnect");	//슬레이브 보드에서 재접속 수행
+
+				while (!Serial1.available()) {}	//슬레이브 보드 연결결과 대기
+				if (Serial1.available()) {
+					response = Serial1.parseInt();
+					if (response == 1) Serial.println("Slave complete reconnect");	//슬레이브 보드 재접속이 성공한 경우,
+					else Serial.println("Slave fail reconnect");
+				}
+			}
+			//새로 연결된 ip주소가 이전과 다를 경우,
+			if (previous_ip != device_ip) {
+				conn_result = send_device_ip(previous_ip, device_ip);		//서버로 전송
+				dot_count = 0;
+				sf_code = device_ip;
+				while (dot_count != 3) {
+					sf_code = get_sf_code(sf_code);
+				}									//sf_code 새로 추출.
+				Serial.print("sf code ; ");
+				Serial.println(sf_code);
+			}
+			Serial1.print(sf_code);		//슬레이브보드에 sf_code 전달.
+			wifi_join = true;
+		}
+		else { Serial.println("fail AP reconnect.."); }
 	}
-	else
+	else {
+		Serial.println(device_ip);
 		Serial.println("AP connection OK.");
+	}
 }
 
 boolean send_device_ip() {
@@ -311,6 +355,19 @@ boolean send_device_ip() {
 	sendData(request, 1000, 0);
 	Serial2.flush();
 	return true;
+}
+
+boolean send_device_ip(String before, String after) {
+	String conn = String("AT+CIPSTART=\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
+	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
+		Serial2.flush();
+		return false;
+	}		//서버와 연결하는 부분
+	String query = "?b=" + String(before) + "&a=" + String(after);
+	String request = "GET /change.php" + query + "\r\n";
+	sendData(String("AT+CIPSEND=0,") + request.length() + "\r\n", 1000, 0);
+	sendData(request, 1000, 0);
+	Serial2.flush();
 }
 
 String get_sf_code(String temp_ip) {
@@ -350,11 +407,22 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
+	char ch = '0';
 	unsigned long present_millis = 0;
 	if (wifi_join) {
+		/*
+		//테스트 코드시작
+		if (Serial.available()) {
+			ch = Serial.read();
+			if (ch == '1')
+				sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+		}
+		//테스트코드 끝.
+		*/
 		present_millis = millis();
 		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
 			esp_check_connection();
+			Serial.println("esp_check_connection end");
 			wifi_check_previousTime = millis();
 		}
 		esp8266_read();
