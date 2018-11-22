@@ -292,10 +292,21 @@ void esp_check_connection() {
 	String join = "";		//AP접속을 위한 AT커맨드
 	conn_result = (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK")) != -1;		//접속된 AP조회.
 	if (conn_result != true) {
-		Serial.println("AP disconnected..");
+		Serial.println("AP disconnected.. try reconnect");
+		wifi_join = false;
+		previous_ip = device_ip;
+		sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+		String join = String("AT+CWJAP=\"") + ssid + "\",\"" + psw + "\"\r\n";
+		sendData(join, 5000, 0); //esp 저장된 AP에 다시연결
+		if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {	//연결시도 결과.
+			Serial.println("wifi connected.");
+		}
+		else { Serial.println("fail AP reconnect.."); }
 	}
-	else
+	else {
+		Serial.println(device_ip);
 		Serial.println("AP connection OK.");
+	}
 }
 
 boolean send_device_ip() {
@@ -350,8 +361,16 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
+	char ch = '0';
 	unsigned long present_millis = 0;
 	if (wifi_join) {
+		//테스트 코드시작
+		if (Serial.available()) {
+			ch = Serial.read();
+			if (ch == '1')
+				sendData("AT+CWQAP\r\n", 2000, 0); //esp 연결된 AP접속 끊기
+		}
+		//테스트코드 끝.
 		present_millis = millis();
 		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
 			esp_check_connection();
