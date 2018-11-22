@@ -132,6 +132,7 @@ void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변�
 void esp8266_read() { //명령 라우팅
 	Serial2.flush();
 	if (Serial2.available()) {
+		Serial.println("execute esp8266_read");
 		String temp = Serial2.readStringUntil('\n');
 		Serial.println("DEBUG: " + temp);
 		buffer += temp;
@@ -300,6 +301,12 @@ void esp_check_connection() {
 		sendData(join, 5000, 0); //esp 저장된 AP에 다시연결
 		if (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK") != -1) {	//연결시도 결과.
 			Serial.println("wifi connected.");
+			sendData("AT+CIFSR\r\n", 2000, 0);
+			Serial.print("previous IP : ");
+			Serial.println(previous_ip);
+			Serial.print("device IP : ");
+			Serial.println(device_ip);
+			wifi_join = true;
 		}
 		else { Serial.println("fail AP reconnect.."); }
 	}
@@ -374,6 +381,7 @@ void loop() {
 		present_millis = millis();
 		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
 			esp_check_connection();
+			Serial.println("esp_check_connection end");
 			wifi_check_previousTime = millis();
 		}
 		esp8266_read();
