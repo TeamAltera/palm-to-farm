@@ -26,6 +26,9 @@ SoftwareSerial Serial_C(11, 10);
 
 int buffer_count = 0;
 
+unsigned long wifi_check_previousTime = 0;
+unsigned long wifi_check_interval = 10000;
+
 const int success_led = 49;
 const int fail_led = 51;
 const int piezo = 53;
@@ -281,6 +284,20 @@ void bluetooth_write(char* cmd, size_t len) {
 	while (Serial3.available()) Serial3.read();
 }
 
+void esp_check_connection() {
+	Serial.println("Check AP connection...");
+	boolean conn_result = false;	//와이파이 연결결과.
+	char result = '0';		//
+	String previous_ip = "0";	//연결이 끊어졌을 경우, 이전 d클래스 저장용.
+	String join = "";		//AP접속을 위한 AT커맨드
+	conn_result = (sendData("AT+CWJAP?\r\n", 3000, 0).indexOf("OK")) != -1;		//접속된 AP조회.
+	if (conn_result != true) {
+		Serial.println("AP disconnected..");
+	}
+	else
+		Serial.println("AP connection OK.");
+}
+
 boolean send_device_ip() {
 	String conn = String("AT+CIPSTART=0,\"TCP\"") + ",\"" + server_ip + "\"," + server_port + "\r\n";
 	if (sendData(conn, 5000, 0).indexOf("OK") == -1) {
@@ -333,6 +350,13 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
-	if (wifi_join)
+	unsigned long present_millis = 0;
+	if (wifi_join) {
+		present_millis = millis();
+		if (present_millis - wifi_check_previousTime > wifi_check_interval) {
+			esp_check_connection();
+			wifi_check_previousTime = millis();
+		}
 		esp8266_read();
+	}
 }
