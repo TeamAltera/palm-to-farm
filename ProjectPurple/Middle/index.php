@@ -15,17 +15,9 @@
     $ip_url_settings = Settings::getInstance('php.ini');
     $ip_setting = $ip_url_settings->ip;
 
-    //echo $ip_setting;
-    //require_once __DIR__ .'/vendor/autoload.php';
+    
     $ip = $_GET['ip']; //Query_string
-    //$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
-    //$self_ip = $_SERVER['SERVER_ADDR']; //my ip
-    //$whois_user = $_SERVER['REMOTE_ADDR']; //웹서버의 요청을 보내는 사용자ip
-    //$using_port = $_SERVER['SERVER_PORT']; //클라이언트 포트
-    //printf("Root : %s<br/>", $site);
-    //printf("SERVER_IP : %s<br/>",$self_ip);
-    //printf("USER_IP : %s<br/>", $whois_user);
-    //printf("PORT : %s<br/>", $using_port);
+    
     echo "QUERY_STRING_IP : ".$ip; echo "</br>";
     if( $ip ){
         $sfCode= explode(".",$ip)[3];//$ip로부터 ip의 D class추출
@@ -71,6 +63,17 @@
     else {
         echo "Please get ip...";
     }
+    
+    //$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
+    //$self_ip = $_SERVER['SERVER_ADDR']; //my ip
+    //$whois_user = $_SERVER['REMOTE_ADDR']; //웹서버의 요청을 보내는 사용자ip
+    //$using_port = $_SERVER['SERVER_PORT']; //클라이언트 포트
+    //printf("Root : %s<br/>", $site);
+    //printf("SERVER_IP : %s<br/>",$self_ip);
+    //printf("USER_IP : %s<br/>", $whois_user);
+    //printf("PORT : %s<br/>", $using_port);
+    //echo $ip_setting;
+    //require_once __DIR__ .'/vendor/autoload.php';
     //chmod("./var/www/html/inner_ip.json", 777);
     //$is_file_exist = file_exists('/var/www/html/inner_ip.json');
     //	$iptables_version = shell_exec("sudo iptables --version");
