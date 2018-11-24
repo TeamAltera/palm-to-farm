@@ -9,11 +9,12 @@
 ?>
 
 <?php
-    require_once __DIR__ . '/path_ip_class.php';
+    //require_once __DIR__ . '/connect_inner_ip.php';
+    require_once __DIR__ .'/path_ip_class.php';
 
     $ip_url_settings = Settings::getInstance('php.ini');
     $ip_setting = $ip_url_settings->ip;
-    //$ip_url_setting = $ip_url_settings->ip_url;
+
     //echo $ip_setting;
     //require_once __DIR__ .'/vendor/autoload.php';
     $ip = $_GET['ip']; //Query_string
@@ -29,7 +30,7 @@
     if( $ip ){
         $sfCode= explode(".",$ip)[3];//$ip로부터 ip의 D class추출
         $mode = 'Y'; // mode 수동'n' / 자동'y' 모드
-        $state = 'N'; // 수경재배기 생육 상태. 'n' : 생육x, 'y':셍육o.
+        $state = 'N'; // 수경재배기 생육 상태. 'n' : 생육x, 'y':생육o.
         $register = 'N'; //등록 상태
 
         $query = "INSERT INTO PRODUCT_INFO (INNER_IP, MODE, STATE, REGISTER, SF_CODE) VALUES ('$ip', '$mode', '$state', '$register', '$sfCode')";

@@ -48,7 +48,7 @@
         //시간 짜기
         date_default_timezone_set('Asia/Seoul'); // 분침 -30분 문제..
         //$current_time = date("Y-m-d-H-i-s"); //날짜 시간 추가..
-        $current_time = date('D M d Y H:i:s');
+        $current_time = strtotime('now');
 
         // ampq //
         $connection = new AMQPStreamConnection($ip_setting, PORT, USER, PASS);
@@ -67,8 +67,8 @@
         //$ap_value = mysqli_fetch_array($result_ap, MYSQLI_BOTH); // 데이터 값을 표현해주는 방식을 ~만들고.
         //$value = $ap_value['AP_CODE'];// row의 0행값을 뽑아서 ~저장.
 
-        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'], 'ap' => $value, 'ec' => $_GET['ec'], 'ph'=> $_GET['ph']];
-        //$temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'] ];
+        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'], 'ap' => $value, 'ec' => $_GET['ec'], 'ph'=> $_GET['ph'], 'p' => $_GET['p']];
+        //$temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'],'p' => $_GET['p']];
         // t: temperature
         // h : 습도
         // wt : 수온

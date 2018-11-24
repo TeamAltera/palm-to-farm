@@ -12,6 +12,7 @@ header('
  ');
 
     $conn = mysqli_connect("localhost", "root", "619412", "water_middle_server");
+    require_once __DIR__ . '/connect_inner_ip.php';
 ?>
 
 <!DOCTYPE html>
@@ -95,11 +96,23 @@ header('
                         // IP 조회
                         $ip_print = $_SERVER['REMOTE_ADDR'];
                         echo "<p>"."Currently connected device IP : " . $ip_print ."</p>"."</br>";
-                        //맥주소 조회
+
+			$temp = shell_exec("/sbin/ifconfig eth0 | grep inet | cut -d: -f2");
+			//echo $temp;
+			$ifcon_part1 = explode(" ", trim($temp));
+			//print_r($ifcon_part1);
+			echo "<p> PUBLIC IP : ".$ifcon_part1[1]."</p><br>";
+
+			//맥주소 조회
                         exec("arp -H ether -n -a ".$_SERVER["REMOTE_ADDR"]."",$values);
                         $parts = explode(' ',$values[0]);
                         echo "<p> Device MAC : ".$parts[3]."</p><br>";
                         ?>
+
+                        <form class="form-horizontal" method = "POST" action = "/delete_device.php">
+                            <button class="btn btn-primary" href="delete_device.php" type = "submit" >Delete Device</button><br>
+                        </form>
+
 
                         <?php
                         $query_SYS = "SELECT * FROM SYS_INFO"; $select_query1 = mysqli_query($conn, $query_SYS) or die ("Error database.. Not select SYS_INFO table.");

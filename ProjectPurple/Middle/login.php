@@ -1,3 +1,7 @@
+<?php
+ require_once __DIR__ . '/connect_inner_ip.php';
+?>
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -80,8 +84,8 @@
                         <input class="form-control text-left" type = "text" name = "id" placeholder="ID">
                         <input class="form-control text-left" type = "password" id="input_pwd" name = "pwd" placeholder="PASSWORD">
                         <br>
-                        <button class="btn btn-primary" href="login_check.html" type = "submit" >LOGIN</button>
-                    </form> <p class="text-left"> <a class="btn btn-primary btn-lg" href="sign_up.html" role="button"> Sign UP </a></p>
+                        <button class="btn btn-primary" href="login_check.php" type = "submit" >LOGIN</button>
+                    </form> <p class="text-left"> <a class="btn btn-primary btn-lg" href="sign_up.php" role="button"> Sign UP </a></p>
                 </div>
             </section>
         </div>

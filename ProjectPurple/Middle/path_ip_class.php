@@ -1,4 +1,6 @@
 <?php
+//require_once __DIR__ . '/connect_inner_ip.php';
+
     class Settings{
         private static $instance;
         private $settings;
