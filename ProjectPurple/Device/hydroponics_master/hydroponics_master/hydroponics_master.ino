@@ -100,7 +100,9 @@ void esp8266_joinAP() {
 		//라즈베리 AP측에서는 해당 정보를 가지고 포트포워딩 해야
 	}
 	else {
+		Serial.println("join AP fail. retry..");
 		change_led_state(0);//빨간불
+		esp8266_joinAP();
 	}
 }
 
@@ -130,7 +132,6 @@ void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변�
 
 #if 1
 void esp8266_read() { //명령 라우팅
-	Serial2.flush();
 	if (Serial2.available()) {
 		Serial.println("execute esp8266_read");
 		String temp = Serial2.readStringUntil('\n');
