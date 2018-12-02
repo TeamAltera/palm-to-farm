@@ -137,11 +137,10 @@ void esp8266_read() { //명령 라우팅
 		String temp = Serial2.readStringUntil('\n');
 		Serial.println("DEBUG: " + temp);
 		buffer += temp;
-		Serial.print("buffer : ");
-		Serial.println(buffer);
 		Serial.print("buffer_count : ");
 		Serial.println(buffer_count);
 		if (temp.charAt(0) == 13) {
+			Serial.println("buffer_count증가");
 			buffer_count++;
 			if (buffer_count == 2) {//\r\n\r\n까지 받아오면 수행
 				buffer_count = 0;
@@ -168,6 +167,7 @@ void esp8266_read() { //명령 라우팅
 					automatic_value[0] = false;
 					automatic_value[1] = false;
 					break;
+
 				case 4:
 					if (automatic_value[0] != true) {
 						content = "led_on";
@@ -176,6 +176,55 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("Led mode is not manual.");
 					break;
+				case 41:		//2층 A
+					if (automatic_value[0] != true) {
+						content = "2F_A led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 42:		//2층 B
+					if (automatic_value[0] != true) {
+						content = "2F_B led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 43:		//3층 A
+					if (automatic_value[0] != true) {
+						content = "3F_A led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 44:		//3층 B
+					if (automatic_value[0] != true) {
+						content = "3F_B led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 45:		//2층 A, B
+					if (automatic_value[0] != true) {
+						content = "1F led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 46:		//3층 A, B
+					if (automatic_value[0] != true) {
+						content = "3F led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+
 				case 5:
 					if (automatic_value[0] != true) {
 						content = "led_off";
@@ -184,6 +233,55 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("Led mode is not manual.");
 					break;
+				case 51:		//2층 A
+					if (automatic_value[0] != true) {
+						content = "2F_A led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 52:		//2층 B
+					if (automatic_value[0] != true) {
+						content = "2F_B led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 53:		//3층 A
+					if (automatic_value[0] != true) {
+						content = "3F_A led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 54:		//3층 B
+					if (automatic_value[0] != true) {
+						content = "3F_B led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 55:		//2층 A, B
+					if (automatic_value[0] != true) {
+						content = "1F led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 56:		//3층 A, B
+					if (automatic_value[0] != true) {
+						content = "3F led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+
 				case 8:
 					if (automatic_value[1] != true) {
 						content = "fan_on";
@@ -192,6 +290,31 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
+				case 81:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 82:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 83:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+
 				case 9:
 					if (automatic_value[1] != true) {
 						content = "fan_off";
@@ -200,6 +323,31 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
+				case 91:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 92:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 93:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+
 				case 10:		//재배 시작
 					content = "pump_on";
 					digitalWrite(PUMP_RELAY, HIGH);
@@ -440,4 +588,5 @@ void loop() {
 		}
 		esp8266_read();
 	}
+	
 }
