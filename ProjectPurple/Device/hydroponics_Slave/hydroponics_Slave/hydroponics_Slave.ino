@@ -439,15 +439,6 @@ void getPH(void) {
 	digitalWrite(EC_GND, LOW);
 	delay(100);
 	PHcurrent = readPH();
-	/*
-	current_ph_arr[current_ph_index] = readPH();
-	current_ph_index++;
-	if (current_ph_index > 10) {
-		if (ph_arr_flag == false)
-			ph_arr_flag = true;
-		current_ph_index = 0;
-	}
-	*/
 	digitalWrite(PH_RELAY, HIGH);
 }
 
@@ -558,24 +549,6 @@ void loop() {
 		if (present_millis - ph_read_previousTime > ph_read_interval) {
 			getPH();
 			getEC();
-			/*
-			if (ph_arr_flag == false) {	
-				for (int i = 0; i < current_ph_index; i++) {
-					PHcurrent += current_ph_arr[current_ph_index];
-				}
-				Serial.print("ph 배열 합 : ");
-				Serial.println(PHcurrent);
-				PHcurrent /= (float)current_ph_index;
-				Serial.print("ph 평균값 : ");
-				Serial.println(PHcurrent);
-			}
-			else if (ph_arr_flag == true) {		//ph평균 배열이 한번 가득 찬 경우, 10번 값을 평균.
-				for (int i = 0; i < 10; i++) {
-					PHcurrent += current_ph_arr[current_ph_index];
-				}
-				PHcurrent /= 10.00;
-			}
-			*/
 			ph_read_previousTime = millis();
 		}
 
