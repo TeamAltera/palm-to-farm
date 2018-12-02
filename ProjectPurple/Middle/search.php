@@ -24,14 +24,16 @@
 
 		$return_arr = array();
 
-		$query = "SELECT INNER_IP FROM PRODUCT_INFO";
+		$query = "SELECT INNER_IP,STAMP FROM PRODUCT_INFO";
 		$result = mysqli_query($conn, $query) or die ('Error Querying database.');
 		//echo "$result";
 
 		while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 			$row_array['INNER_IP'] = $row['INNER_IP'];
+			$row_stamp['STAMP'] = $row['STAMP'];
 
 			array_push($return_arr, $row_array);
+			array_push($return_arr, $row_stamp);
 		}
 		//mysqli_close($conn);
 

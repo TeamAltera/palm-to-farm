@@ -1,4 +1,3 @@
-
 <?php
 // 수경재배기로부터 받아온 데이터를 JSON포맷 형태로 가공하여 rabbitMQ로 전송
 // AMQP를 이용하여 아두이노에서 받은 데이터를 받아 서버로 전송하는 코드.
@@ -25,6 +24,7 @@
     $num = mysqli_num_rows($result_user); //echo "$num";
     //Sys_info의 table 행 개수 저장.
 
+    
     if( $num >= 1) {
 
         //define("HOST", "203.250.32.47"); //수정가능성이 있음.
@@ -67,7 +67,14 @@
         //$ap_value = mysqli_fetch_array($result_ap, MYSQLI_BOTH); // 데이터 값을 표현해주는 방식을 ~만들고.
         //$value = $ap_value['AP_CODE'];// row의 0행값을 뽑아서 ~저장.
 
-        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'], 'ap' => $value, 'ec' => $_GET['ec'], 'ph'=> $_GET['ph'], 'p' => $_GET['p']];
+        $query_sf = "SELECT STAMP FROM PRODUCT_INFO WHERE SF_CODE = '$_GET['sf']'";
+        $result_sf = mysqli_query($link, $query_sf) or die ("Not select table Product_table at query_sf");
+
+        $row = mysqli_fetch_array($result_sf);
+
+        $sta = $row['STAMP'];
+
+        $temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sta' => $sta, 'ap' => $value, 'ec' => $_GET['ec'], 'ph'=> $_GET['ph'], 'p' => $_GET['p']];
         //$temp = ['t' => $_GET['t'], 'h' => $_GET['h'], 'wt' => $_GET['wt'], 'wl' => $_GET['wl'], 'e' => $_GET['e'], 'd' => $current_time, 'sf' => $_GET['sf'],'p' => $_GET['p']];
         // t: temperature
         // h : 습도
@@ -86,6 +93,7 @@
 
         $data = json_encode($temp);
         echo $data;
+
 
         $msg = new AMQPMessage($data, [
             'content_type' => 'application/json',
