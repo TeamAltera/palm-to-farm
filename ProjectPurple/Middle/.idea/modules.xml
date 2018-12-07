@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Modern PHP/.idea/Modern PHP.iml" filepath="$PROJECT_DIR$/../Modern PHP/.idea/Modern PHP.iml" />
+      <module fileurl="file://$USER_HOME$/AppData/Roaming/SPB_Data/blog/.idea/blog.iml" filepath="$USER_HOME$/AppData/Roaming/SPB_Data/blog/.idea/blog.iml" />
+      <module fileurl="file://C:/Apache24/htdocs/.idea/htdocs.iml" filepath="C:/Apache24/htdocs/.idea/htdocs.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/html.iml" filepath="$PROJECT_DIR$/.idea/html.iml" />
+      <module fileurl="file://$USER_HOME$/AppData/Roaming/SPB_Data/myapp/.idea/myapp.iml" filepath="$USER_HOME$/AppData/Roaming/SPB_Data/myapp/.idea/myapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../myapp2/.idea/myapp2.iml" filepath="$PROJECT_DIR$/../myapp2/.idea/myapp2.iml" />
     </modules>
   </component>
 </project>

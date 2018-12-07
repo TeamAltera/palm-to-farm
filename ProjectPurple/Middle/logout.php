@@ -1,15 +1,6 @@
 <?php
-header(' 
-    Cache-Control: no-store, 
-    no-cache, 
-    private, 
-    max-age=0, 
-    must-revalidate, 
-    post-check=0, 
-    pre-check=0; 
-    Pragma: no-cache; 
-    Expires: Sat, 26 jul 1997 05:00:00 GMT; 
- ');
+require_once __DIR__ . '/connect_inner_ip.php';
+
 ?>
 
 

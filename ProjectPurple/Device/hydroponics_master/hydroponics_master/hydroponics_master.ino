@@ -100,7 +100,9 @@ void esp8266_joinAP() {
 		//라즈베리 AP측에서는 해당 정보를 가지고 포트포워딩 해야
 	}
 	else {
+		Serial.println("join AP fail. retry..");
 		change_led_state(0);//빨간불
+		esp8266_joinAP();
 	}
 }
 
@@ -130,13 +132,15 @@ void send_control_val(int cmd, int device, boolean stat) {		//제어 모드 변�
 
 #if 1
 void esp8266_read() { //명령 라우팅
-	Serial2.flush();
 	if (Serial2.available()) {
 		Serial.println("execute esp8266_read");
 		String temp = Serial2.readStringUntil('\n');
 		Serial.println("DEBUG: " + temp);
 		buffer += temp;
+		Serial.print("buffer_count : ");
+		Serial.println(buffer_count);
 		if (temp.charAt(0) == 13) {
+			Serial.println("buffer_count증가");
 			buffer_count++;
 			if (buffer_count == 2) {//\r\n\r\n까지 받아오면 수행
 				buffer_count = 0;
@@ -163,6 +167,7 @@ void esp8266_read() { //명령 라우팅
 					automatic_value[0] = false;
 					automatic_value[1] = false;
 					break;
+
 				case 4:
 					if (automatic_value[0] != true) {
 						content = "led_on";
@@ -171,6 +176,55 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("Led mode is not manual.");
 					break;
+				case 41:		//2층 A
+					if (automatic_value[0] != true) {
+						content = "2F_A led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 42:		//2층 B
+					if (automatic_value[0] != true) {
+						content = "2F_B led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 43:		//3층 A
+					if (automatic_value[0] != true) {
+						content = "3F_A led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 44:		//3층 B
+					if (automatic_value[0] != true) {
+						content = "3F_B led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 45:		//2층 A, B
+					if (automatic_value[0] != true) {
+						content = "1F led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 46:		//3층 A, B
+					if (automatic_value[0] != true) {
+						content = "3F led_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+
 				case 5:
 					if (automatic_value[0] != true) {
 						content = "led_off";
@@ -179,6 +233,55 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("Led mode is not manual.");
 					break;
+				case 51:		//2층 A
+					if (automatic_value[0] != true) {
+						content = "2F_A led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 52:		//2층 B
+					if (automatic_value[0] != true) {
+						content = "2F_B led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 53:		//3층 A
+					if (automatic_value[0] != true) {
+						content = "3F_A led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 54:		//3층 B
+					if (automatic_value[0] != true) {
+						content = "3F_B led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 55:		//2층 A, B
+					if (automatic_value[0] != true) {
+						content = "1F led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+				case 56:		//3층 A, B
+					if (automatic_value[0] != true) {
+						content = "3F led_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("Led mode is not manual.");
+					break;
+
 				case 8:
 					if (automatic_value[1] != true) {
 						content = "fan_on";
@@ -187,6 +290,31 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
+				case 81:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 82:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 83:
+					if (automatic_value[1] != true) {
+						content = "no.1 fan_on";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+
 				case 9:
 					if (automatic_value[1] != true) {
 						content = "fan_off";
@@ -195,6 +323,31 @@ void esp8266_read() { //명령 라우팅
 					else
 						Serial.println("fan mode is not manual.");
 					break;
+				case 91:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 92:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+				case 93:
+					if (automatic_value[1] != true) {
+						content = "fan_off";
+						send_control_val(cmd);
+					}
+					else
+						Serial.println("fan mode is not manual.");
+					break;
+
 				case 10:		//재배 시작
 					content = "pump_on";
 					digitalWrite(PUMP_RELAY, HIGH);
@@ -205,7 +358,7 @@ void esp8266_read() { //명령 라우팅
 					digitalWrite(PUMP_RELAY, LOW);
 					Serial1.print(11);		//슬레이브 보드로 전송
 					break;
-				case 15:  
+				case 15:	//공유기 연결 해제 코드 작성 필요.
 					content = "test_button";
 					send_control_val(cmd);
 					break;
@@ -214,7 +367,8 @@ void esp8266_read() { //명령 라우팅
 					break;
 				}
 				buffer = ""; //String 버퍼 클리어
-
+				Serial.println("명령 처리 완료.");
+				
 				String response = "HTTP/1.1 200 OK\r\n";
 				response += "Content-Type:text/html;charset=UTF-8\r\n";//CORS 핸들링에  따른 content-type만 가능
 				response += "Content-Length:";
@@ -226,6 +380,7 @@ void esp8266_read() { //명령 라우팅
 				response += content;
 				sendData(String("AT+CIPSEND=") + c_id + "," + response.length() + "\r\n", 3000, 0);
 				sendData(response, 1000, 1);
+				Serial.println("서버에 응답 완료");
 				Serial2.flush();
 			}
 		}
@@ -389,6 +544,12 @@ void setup() {
 	esp8266Server_setup(); //esp설정
 	bluetooth_setup(); //블루투스 설정, 블루투스 이름정해주는부분 나중에 수정필요
 	change_led_state(0);//빨간불
+	tone(piezo, 392);//AP연결 설정이 끝났으므로 소리로 알려준다.
+	delay(500);
+	noTone(piezo);
+	tone(piezo, 392);//AP연결 설정이 끝났으므로 소리로 알려준다.
+	delay(500);
+	noTone(piezo);
 	bluetooth_read(); //블루투스에 값이들어올때 까지 대기
 	Serial.print("device IP : ");
 	Serial.println(device_ip);
@@ -427,4 +588,5 @@ void loop() {
 		}
 		esp8266_read();
 	}
+	
 }

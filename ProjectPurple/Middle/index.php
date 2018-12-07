@@ -9,30 +9,25 @@
 ?>
 
 <?php
-    require_once __DIR__ . '/path_ip_class.php';
+    //require_once __DIR__ . '/connect_inner_ip.php';
+    require_once __DIR__ .'/path_ip_class.php';
 
     $ip_url_settings = Settings::getInstance('php.ini');
     $ip_setting = $ip_url_settings->ip;
-    //$ip_url_setting = $ip_url_settings->ip_url;
-    //echo $ip_setting;
-    //require_once __DIR__ .'/vendor/autoload.php';
+
+    
     $ip = $_GET['ip']; //Query_string
-    //$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
-    //$self_ip = $_SERVER['SERVER_ADDR']; //my ip
-    //$whois_user = $_SERVER['REMOTE_ADDR']; //웹서버의 요청을 보내는 사용자ip
-    //$using_port = $_SERVER['SERVER_PORT']; //클라이언트 포트
-    //printf("Root : %s<br/>", $site);
-    //printf("SERVER_IP : %s<br/>",$self_ip);
-    //printf("USER_IP : %s<br/>", $whois_user);
-    //printf("PORT : %s<br/>", $using_port);
+    
     echo "QUERY_STRING_IP : ".$ip; echo "</br>";
     if( $ip ){
         $sfCode= explode(".",$ip)[3];//$ip로부터 ip의 D class추출
         $mode = 'Y'; // mode 수동'n' / 자동'y' 모드
-        $state = 'N'; // 수경재배기 생육 상태. 'n' : 생육x, 'y':셍육o.
+        $state = 'N'; // 수경재배기 생육 상태. 'n' : 생육x, 'y':생육o.
         $register = 'N'; //등록 상태
+        date_default_timezone_set('Asia/Seoul');
+        $stamp = strtotime('now'); //시간 넣기
 
-        $query = "INSERT INTO PRODUCT_INFO (INNER_IP, MODE, STATE, REGISTER, SF_CODE) VALUES ('$ip', '$mode', '$state', '$register', '$sfCode')";
+        $query = "INSERT INTO PRODUCT_INFO (INNER_IP, MODE, STATE, REGISTER, SF_CODE, STAMP) VALUES ('$ip', '$mode', '$state', '$register', '$sfCode', '$stamp')";
         $result_ip = mysqli_query($conn, $query) or die ('Error database.. not connect product table.');
         echo '  Customer added.'; echo "</br>";
         // 아랫줄부터 user_code의 존재여부를 확인 후 POST 방식으로 전송함.
@@ -44,14 +39,20 @@
         if( $num >= 1) {
             $exist_query = "SELECT * FROM SYS_INFO";
             $exist_result = mysqli_query($conn, $exist_query) or die ("Error database.. not connect Sys_info 2 table.");
+
             $row = mysqli_fetch_array($exist_result, MYSQLI_ASSOC);
             $ap_code = $row['AP_CODE']; //ap_code를 변수에 넣음.
+
+            $stamp_query = "SELECT STAMP FROM PRODUCT_INFO";
+            $stamp_result = mysqli_query($conn, $stamp_query) or die ("Error database.. not connect Stamp_query.");
+
             $fields = array(
                     'sfCode' => $sfCode,
                     'ipInfo' => $ip,
-                    'apCode' => $ap_code
+                    'apCode' => $ap_code,
+                    'stamp' => $stamp
             );
-            $url = $ip_setting.':9001/smart_plant/device/add/sf/auto'; //이것도 변경 가능성이 있음. -> ip세팅 완료.!
+            $url = $ip_setting.':9001/device/add/sf/auto'; //이것도 변경 가능성이 있음. -> ip세팅 완료.!
 
             $c = curl_init($url);
             curl_setopt($c, CURLOPT_RETURNTRANSFER, true); // 요청 설정을 POST로 한다.
@@ -70,6 +71,17 @@
     else {
         echo "Please get ip...";
     }
+    
+    //$site = $_SERVER['DOCUMENT_ROOT']; //index.php road
+    //$self_ip = $_SERVER['SERVER_ADDR']; //my ip
+    //$whois_user = $_SERVER['REMOTE_ADDR']; //웹서버의 요청을 보내는 사용자ip
+    //$using_port = $_SERVER['SERVER_PORT']; //클라이언트 포트
+    //printf("Root : %s<br/>", $site);
+    //printf("SERVER_IP : %s<br/>",$self_ip);
+    //printf("USER_IP : %s<br/>", $whois_user);
+    //printf("PORT : %s<br/>", $using_port);
+    //echo $ip_setting;
+    //require_once __DIR__ .'/vendor/autoload.php';
     //chmod("./var/www/html/inner_ip.json", 777);
     //$is_file_exist = file_exists('/var/www/html/inner_ip.json');
     //	$iptables_version = shell_exec("sudo iptables --version");
