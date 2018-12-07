@@ -14,7 +14,6 @@ public class IpDtoValidator implements Validator{
 	@Override
 	public boolean supports(Class<?> arg0) {
 		// TODO Auto-generated method stub
-		System.out.println(arg0);
 		return IpDto.class.isAssignableFrom(arg0);
 	}
 

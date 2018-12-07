@@ -17,7 +17,7 @@ public class InsertGrowthPlantServiceImpl implements IPlantService{
 	public ResultDto execute(Object obj) throws Exception {
 		// TODO Auto-generated method stub
 		InfoDto info=(InfoDto)obj;
-		plantMapper.insertGrowthPlant(info.getApCode(), info.getSfCode(), info.getPlantCode());
+		plantMapper.insertGrowthPlant(info.getApCode(), info.getStamp(), info.getPlantCode());
 		return null;
 	}
 

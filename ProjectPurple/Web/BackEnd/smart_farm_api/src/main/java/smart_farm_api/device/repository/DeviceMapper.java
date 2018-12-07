@@ -15,7 +15,7 @@ public interface DeviceMapper {
 	
 	List<SmartFarmInfoDto> getAllSmartPlant(int userCode);
 	
-	Object getSmartPlant(@Param("apCode") int apCode,@Param("sfCode") int sfCode);
+	Object getSmartPlant(@Param("apCode") int apCode,@Param("stamp") int stamp);
 	
 	int insertAP(APInfoDto dto);
 	
@@ -25,19 +25,47 @@ public interface DeviceMapper {
 	
 	void insertSmartFarmDeviceList(@Param("deviceList") List<Map<String, Object>> deviceList, @Param("apCode") int apCode);
 	
-	void insertSmartFarmDevice(@Param("sfCode") int sfCode, @Param("innerIp") String innerIp, @Param("apCode") int apCode);
+	void insertSmartFarmDevice(@Param("stamp") int stamp, @Param("sfCode") int sfCode, @Param("innerIp") String innerIp, @Param("apCode") int apCode);
 	
-	void deleteSmartFarmDevice(int sfCode);
+	void deleteSmartFarmDevice(int stamp);
 	
 	int deleteSmartFarmAPAllDevice(int apCode);
 	
-	void updatePort(@Param("apCode") int apCode, @Param("sfCode") int sfCode, @Param("sfPort") int sfPort, @Param("pumpSt") char pumpSt);
+	void updatePort(@Param("apCode") int apCode, @Param("stamp") int stamp, @Param("sfPort") int sfPort, @Param("pumpSt") char pumpSt);
 	
-	void updateMode(@Param("mode") char mode,@Param("apCode") int apCode,@Param("sfCode") int sfCode);
+	void updateMode(@Param("mode") char mode,@Param("apCode") int apCode,@Param("stamp") int stamp);
 	
-	void updateCooler(@Param("cooler") char cooler,@Param("apCode") int apCode,@Param("sfCode") int sfCode);
+	void updateCooler(@Param("cooler1") char cooler1, @Param("cooler2") char cooler2, @Param("cooler3") char cooler3,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
 	
-	void updateLED(@Param("led") char led,@Param("apCode") int apCode,@Param("sfCode") int sfCode);
+	void updateCoolerA(@Param("cooler1") char cooler1,@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void updateCoolerB(@Param("cooler2") char cooler2,@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void updateCoolerC(@Param("cooler3") char cooler3,@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void updateLED(@Param("led21") char led21, @Param("led22") char led22, @Param("led31") char led31, @Param("led32") char led32,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update2floorLED(@Param("led21") char led21, @Param("led22") char led22,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update3floorLED(@Param("led31") char led31, @Param("led32") char led32,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update2floorALED(@Param("led21") char led21, 
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update2floorBLED(@Param("led22") char led22,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update3floorALED(@Param("led31") char led31,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void update3floorBLED(@Param("led32") char led32,
+			@Param("apCode") int apCode,@Param("stamp") int stamp);
+	
+	void changeInnerIp(@Param("before") int before, @Param("after") int after, @Param("afterIp") String afterIp, @Param("stamp") int stamp, @Param("apCode") int apCode);
 	
 	String getApIp(int apCode);
 	

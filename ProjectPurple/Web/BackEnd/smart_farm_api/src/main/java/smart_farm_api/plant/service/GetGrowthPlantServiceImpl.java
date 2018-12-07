@@ -18,7 +18,7 @@ public class GetGrowthPlantServiceImpl implements IPlantService{
 		// TODO Auto-generated method stub
 		InfoDto info=(InfoDto)obj;
 		return ResultDto.createInstance(true)
-				.setData(plantMapper.getPlantInfo(info.getApCode(), info.getSfCode()));
+				.setData(plantMapper.getPlantInfo(info.getApCode(), info.getStamp()));
 	}
 
 }

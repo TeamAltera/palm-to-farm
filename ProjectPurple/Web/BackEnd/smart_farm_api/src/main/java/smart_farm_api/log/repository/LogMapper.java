@@ -14,5 +14,5 @@ public interface LogMapper {
 	
 	void deleteAllLog(int apCode);
 	
-	int deleteSingleLog(@Param("sfCode") int sfCode,@Param("apCode") int apCode);
+	int deleteSingleLog(@Param("stamp") int stamp,@Param("apCode") int apCode);
 }

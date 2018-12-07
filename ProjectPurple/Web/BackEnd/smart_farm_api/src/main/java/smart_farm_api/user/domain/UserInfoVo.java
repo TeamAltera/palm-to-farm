@@ -5,9 +5,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserInfoDto {
+public class UserInfoVo {
+	
+	private int userCode;
 	private String email;
-	private String pwd;
 	private String firstName;
 	private String secondName;
+	private int sfCnt;
+	
 }

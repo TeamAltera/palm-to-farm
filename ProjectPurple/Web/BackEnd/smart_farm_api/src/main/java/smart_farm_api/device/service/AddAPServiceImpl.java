@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import smart_farm_api.common.ResultDto;
-import smart_farm_api.common.service.JwtServiceImpl;
+import smart_farm_api.common.utils.JwtServiceImpl;
 import smart_farm_api.device.domain.APInfoDto;
 import smart_farm_api.device.repository.DeviceMapper;
 import smart_farm_api.user.repository.UserMapper;
@@ -53,7 +53,7 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 				int count=arr.length();
 				
 				// DB에 공유기정보 삽입, 삽입 후 공유기 코드(apCode) 받아옴.
-				APInfoDto dto=new APInfoDto(publicIP, (String) json.get("ssid"), userCode, count);
+				APInfoDto dto=APInfoDto.builder().apPublicIp(publicIP).apSsid((String) json.get("ssid")).userCode(userCode).apSfCnt(count).build();
 				deviceMapper.insertAP(dto);
 				Integer apCode=dto.getApCode();
 				
@@ -61,7 +61,9 @@ public class AddAPServiceImpl implements IDeviceFrontService {
 					JSONObject item=arr.getJSONObject(i);
 					Map<String, Object> map = new HashMap<String, Object>();
 					String innerIp=(String) item.get("INNER_IP");
+					int stamp=Integer.parseInt(item.get("STAMP").toString());
 					map.put("innerIp", innerIp);
+					map.put("stamp", stamp);
 					map.put("sfCode", innerIp.substring(innerIp.lastIndexOf('.')+1, innerIp.length()));
 					map.put("sfPortCnt", 0);
 					map.put("floorCnt", 2);

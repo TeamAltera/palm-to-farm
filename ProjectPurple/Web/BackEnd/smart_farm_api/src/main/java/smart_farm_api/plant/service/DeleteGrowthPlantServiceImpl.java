@@ -17,8 +17,7 @@ public class DeleteGrowthPlantServiceImpl implements IPlantService{
 	public ResultDto execute(Object obj) throws Exception {
 		// TODO Auto-generated method stub
 		InfoDto info=(InfoDto)obj;
-		System.out.println(info.getApCode()+"  "+info.getSfCode());
-		plantMapper.deleteGrowthPlant(info.getApCode(), info.getSfCode());
+		plantMapper.deleteGrowthPlant(info.getApCode(), info.getStamp());
 		return null;
 	}
 

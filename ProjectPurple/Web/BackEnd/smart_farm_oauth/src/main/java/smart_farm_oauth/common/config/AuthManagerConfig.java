@@ -9,7 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.AllArgsConstructor;
 
@@ -39,13 +40,13 @@ public class AuthManagerConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
-                //.passwordEncoder(encoder());
     }
 	
-    /*@Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }*/
+	@Bean
+	public PasswordEncoder oauthClientPasswordEncoder() {
+		// 테스트 나중에 Bcrypt로 교체해야
+		return NoOpPasswordEncoder.getInstance();
+	}
 
 	//인증 관리자
 	@Bean

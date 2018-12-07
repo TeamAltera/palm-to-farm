@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.AllArgsConstructor;
 import smart_farm_api.common.ResultDto;
-import smart_farm_api.common.service.JwtServiceImpl;
+import smart_farm_api.common.utils.JwtServiceImpl;
 import smart_farm_api.device.domain.CommandDto;
 import smart_farm_api.device.domain.SmartFarmInfoDto;
 import smart_farm_api.device.repository.DeviceMapper;
@@ -22,7 +23,8 @@ import smart_farm_api.plant.domain.PlantDto;
 import smart_farm_api.plant.repository.PlantMapper;
 import smart_farm_api.sensor.service.DeleteSensorDataServiceImpl;
 
-@Service("farmingService")
+@Service
+@AllArgsConstructor
 public class FarmingServiceImpl implements IPlantService {
 
 	private final String PHP_FORWARD_URL = "/forward.php";
@@ -34,13 +36,15 @@ public class FarmingServiceImpl implements IPlantService {
 	private DeleteGrowthPlantServiceImpl deleteGrowthPlantService;
 
 	private DeleteSensorDataServiceImpl deleteSensorDataService;
-	
+
 	private SetFarmingInfoServiceImpl setFarmingInfoService;
+	
+	private UrlConnectionServiceImpl urlConnectionService;
 
 	private DeviceMapper deviceMapper;
 
 	private PlantMapper plantMapper;
-	
+
 	private JwtServiceImpl jwtService;
 
 	@Override
@@ -60,65 +64,72 @@ public class FarmingServiceImpl implements IPlantService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class }) // 이 메소드를 트랜잭션 처리
 	private ResultDto setFarming(Object obj) throws Exception {
 		CommandDto commandSet = (CommandDto) obj;
-		UrlConnectionServiceImpl conn = new UrlConnectionServiceImpl();
 		int cmd = commandSet.getCmd();
-		int userCode = jwtService.get();
+		int apCode = commandSet.getApCode();
+		int stamp = commandSet.getStamp();
 		ResultDto res = null;
-		
-		//미들 서버에 명령 전송
+
+		// 미들 서버에 명령 전송
 		String requestData = "{\"cmd\":\"" + cmd + "\",\"dest\":\"" + commandSet.getDest() + "\",\"apCode\":\""
 				+ commandSet.getApCode() + "\"}";
 
-		JSONObject json = conn.request(commandSet.getMiddle(), PHP_FORWARD_URL, "POST", requestData);
-		System.out.println((String) json.get("result"));
-		String result = (String) json.get("result");
+		 JSONObject json = urlConnectionService.request(commandSet.getMiddle(), PHP_FORWARD_URL,"POST", requestData); 
+		 System.out.println((String) json.get("result")); 
+		 String result = (String) json.get("result");
+		 
+		//String result = "OK";
+
+		if (cmd == 10) {// 수경 재배 시작이라면
+			System.out.println("farm start");
+			setFarmingInfoService.execute(commandSet.getOptData().getFarm(), apCode, stamp);
+			deviceMapper.updatePort(apCode, stamp, commandSet.getOptData().getSfPort(), 'T');
+			deviceMapper.updateLED('T','T','T','T', apCode, stamp);
+			insertGrowthPlantService.execute(new InfoDto(apCode, stamp, commandSet.getOptData().getPlant()));
+
+			res = ResultDto.createInstance(true).setData(new Object() {
+				public PlantDto plantInfo = plantMapper.getPlantInfo(apCode, stamp);
+				public SmartFarmInfoDto deviceInfo = (SmartFarmInfoDto) deviceMapper.getSmartPlant(apCode, stamp);
+			}).setMsg("재배를 시작 하였습니다.");
+		} else if (cmd == 11) {// 수경 재배 취소라면
+			System.out.println("farm stop");
+			deviceMapper.updatePort(apCode, stamp, 0, 'F');
+			deviceMapper.updateLED('F','F','F','F', apCode, stamp);
+			plantMapper.deletePortInfo(apCode, stamp);
+			deleteGrowthPlantService.execute(InfoDto.builder().apCode(apCode).stamp(stamp).build());
+
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("apCode", apCode);
+			map.put("stamp", stamp);
+			//deleteSensorDataService.execute(map);
+			res = ResultDto.createInstance(true).setData(new Object() {
+				public PlantDto plantInfo = plantMapper.getPlantInfo(apCode, stamp);
+				public SmartFarmInfoDto deviceInfo = (SmartFarmInfoDto) deviceMapper.getSmartPlant(apCode, stamp);
+			}).setMsg("재배가 중지 되었습니다.");
+		}
 		
 		// 수행한 동작에 따라 로그에 저장해야.
 		saveLog(commandSet, result);
 
-		if (cmd == 10) {// 수경 재배 시작이라면
-			setFarmingInfoService.execute(commandSet.getOptData().getFarm(), commandSet.getApCode(), commandSet.getSfCode());
-			deviceMapper.updatePort(commandSet.getApCode(), commandSet.getSfCode(), commandSet.getOptData().getSfPort(), 'T');
-			deviceMapper.updateLED('T', commandSet.getApCode(), commandSet.getSfCode());
-			insertGrowthPlantService.execute(
-					new InfoDto(commandSet.getApCode(), commandSet.getSfCode(), commandSet.getOptData().getPlant()));
-			res = ResultDto.createInstance(true)
-					.setData(new Object() {
-							public PlantDto plantInfo=plantMapper.getPlantInfo(commandSet.getApCode(), commandSet.getSfCode());
-							public SmartFarmInfoDto deviceInfo=(SmartFarmInfoDto) deviceMapper.getSmartPlant(commandSet.getApCode(),commandSet.getSfCode());
-						}
-					)
-					.setMsg("재배를 시작 하였습니다.");
-		} else if (cmd == 11) {// 수경 재배 취소라면
-			deviceMapper.updatePort(commandSet.getApCode(), commandSet.getSfCode(), 0, 'F');
-			deviceMapper.updateLED('F', commandSet.getApCode(), commandSet.getSfCode());
-			plantMapper.deletePortInfo(commandSet.getApCode(), commandSet.getSfCode());
-			deleteGrowthPlantService.execute(new InfoDto(commandSet.getApCode(), commandSet.getSfCode(), null));
-			
-			HashMap<String, Object> map = new HashMap<>();
-			map.put("apCode", commandSet.getApCode());
-			map.put("sfCode", commandSet.getSfCode());
-			deleteSensorDataService.execute(map);
-			res = ResultDto.createInstance(true)
-					.setData(new Object() {
-						public PlantDto plantInfo=plantMapper.getPlantInfo(commandSet.getApCode(), commandSet.getSfCode());
-						public SmartFarmInfoDto deviceInfo=(SmartFarmInfoDto) deviceMapper.getSmartPlant(commandSet.getApCode(),commandSet.getSfCode());
-					}
-				)
-				.setMsg("재배가 중지 되었습니다.");
-		}
-		
 		return res;
 	}
 
 	private void saveLog(CommandDto commandSet, String result) {
 		Timestamp ts = new Timestamp(new Date().getTime());
-		int sfCode = commandSet.getSfCode();
+		int stamp = commandSet.getStamp();
 		int apCode = commandSet.getApCode();
 		String usedIp = commandSet.getUsedIp();
 		String actName = getCommandType(commandSet.getCmd());
 		char res = getResult(result);
-		insertLogService.execute(new DeviceLogDto(ts, sfCode, apCode, usedIp, actName, res));
+		insertLogService.execute(
+				DeviceLogDto.builder()
+					.stamp(stamp)
+					.apCode(apCode)
+					.usedIp(usedIp)
+					.actName(actName)
+					.result(res)
+					.usedDate(ts)
+					.build()
+				);
 	}
 
 	private String getCommandType(int cmd) {

@@ -1,6 +1,7 @@
 package smart_farm_api.common.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -41,6 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		web
 			.ignoring()
 			.antMatchers("/resources/**")
+			.antMatchers(HttpMethod.GET, "/user")
+			.antMatchers(HttpMethod.POST, "/user")
 			.antMatchers("/user/**")
 			.antMatchers("/device/**")
 			.antMatchers("/log/**")

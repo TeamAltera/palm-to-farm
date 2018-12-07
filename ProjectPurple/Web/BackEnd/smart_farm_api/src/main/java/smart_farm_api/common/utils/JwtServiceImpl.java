@@ -1,4 +1,4 @@
-package smart_farm_api.common.service;
+package smart_farm_api.common.utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,23 +15,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class JwtServiceImpl{
-	private static final String SALT = "luvookSecret";
 
 	@SuppressWarnings("unchecked")
-	public Integer get() {// JWT에 있는 데이터를 가져오는 코드
-		// TODO Auto-generated method stub
+	public Integer get() {
+		
+		//request를 가져옴
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
+		
+		//Authorization헤더에서 Bearer를 제외한 값 추출 
 		String accessToken = request.getHeader("Authorization").split(" ")[1];
+		
+		//토큰 값 디코딩
 		Jwt jwt=JwtHelper.decode(accessToken);
 		String claims=jwt.getClaims();
 		HashMap<String, Object> claimsMap = null;
 		try {
 			claimsMap = new ObjectMapper().readValue(claims, HashMap.class);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//토큰으로부터 key값 반환
 		return Integer.parseInt(claimsMap.get("key").toString());
 	}
 }

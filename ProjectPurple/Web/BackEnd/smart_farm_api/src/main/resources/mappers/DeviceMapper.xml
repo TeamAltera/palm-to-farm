@@ -26,14 +26,14 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		SELECT *
 		FROM SF
 		WHERE AP_CODE=(SELECT AP_CODE FROM AP WHERE USER_CODE=#{userCode})
-		ORDER BY SF_CODE ASC
+		ORDER BY STAMP ASC
 	</select>
 	
 	<select id="getSmartPlant" resultMap="SmartFarmInfoDto" parameterType="hashmap">
 		SELECT *
 		FROM SF 
 		WHERE AP_CODE=#{apCode}
-		AND SF_CODE=#{sfCode}
+		AND STAMP=#{stamp}
 	</select>
 	
 	<select id="getUserCodeOfAP" resultType="Integer" parameterType="Integer">
@@ -65,9 +65,10 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 
 	<insert id="insertSmartFarmDeviceList" parameterType="hashmap">
 		<if test="deviceList.size != 0">
-			<!-- INSERT ALL --> 
+			<!-- INSERT ALL -->
 			<foreach collection="deviceList" item="item" separator="," open="INSERT ALL" close="SELECT * FROM DUAL">
 			INTO SF (
+			STAMP,
 			SF_CODE,
 			SF_PORT_CNT,
 			FLOOR_CNT,
@@ -75,12 +76,18 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			LED_CTRL_MODE,
 			INNER_IP,
 			AP_CODE,
-			LED_ST,
+			LED21_ST,
+			LED22_ST,
+			LED31_ST,
+			LED32_ST,
 			PUMP_ST,
-			COOLER_ST,
+			COOLER1_ST,
+			COOLER2_ST,
+			COOLER3_ST,
 			SF_REG_DATE
 			) VALUES
 			(
+				#{item.stamp},
 				#{item.sfCode},
 				#{item.sfPortCnt},
 				#{item.floorCnt},
@@ -88,9 +95,14 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 				#{item.mode},<!-- 장비 상태는 자동(auto) -->
 				#{item.innerIp},
 				#{apCode},
-				#{item.ledSt},<!-- LED상태는 꺼져 있음 -->
+				'F',<!-- LED상태는 꺼져 있음 -->
+				'F',
+				'F',
+				'F',
 				#{item.pumpSt},<!-- 펌프 상태는 꺼져 있음 -->
-				#{item.coolerSt},<!-- 쿨러 상태는 꺼져 있음 -->
+				'F',
+				'F',
+				'F',
 				SYSDATE
 			)
 			</foreach>	
@@ -100,6 +112,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 
 	<insert id="insertSmartFarmDevice" parameterType="hashmap">
 		INSERT INTO SF (
+		STAMP,
 		SF_CODE,
 		SF_PORT_CNT,
 		FLOOR_CNT,
@@ -107,12 +120,18 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		LED_CTRL_MODE,
 		INNER_IP,
 		AP_CODE,
-		LED_ST,
+		LED21_ST,
+		LED22_ST,
+		LED31_ST,
+		LED32_ST,
 		PUMP_ST,
-		COOLER_ST,
+		COOLER1_ST,
+		COOLER2_ST,
+		COOLER3_ST,
 		SF_REG_DATE
 		)VALUES
 		(
+			#{stamp},
 			#{sfCode},
 			0,
 			2,
@@ -121,15 +140,20 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			#{innerIp},
 			#{apCode},
 			'F',<!-- LED상태는 꺼져 있음 -->
+			'F',<!-- LED상태는 꺼져 있음 -->
+			'F',<!-- LED상태는 꺼져 있음 -->
+			'F',<!-- LED상태는 꺼져 있음 -->
 			'F',<!-- 펌프 상태는 꺼져 있음 -->
 			'F',<!-- 쿨러 상태는 꺼져 있음 -->
+			'F',
+			'F',
 			SYSDATE 
 		)
 	</insert>
 
 	<delete id="deleteSmartFarmDevice" parameterType="Integer">
 		DELETE FROM SF
-		WHERE SF_CODE=#{sfCode}
+		WHERE STAMP=#{stamp}
 		AND AP_CODE=#{apCode}
 	</delete>
 
@@ -143,29 +167,111 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		UPDATE SF
 		SET SF_PORT_CNT=#{sfPort},
 		PUMP_ST=#{pumpSt}
-		WHERE SF_CODE=#{sfCode}
+		WHERE STAMP=#{stamp}
 		AND AP_CODE=#{apCode}
 	</update>
 	
 	<update id="updateMode" parameterType="hashmap">
 		UPDATE SF
 		SET LED_CTRL_MODE=#{mode}
-		WHERE SF_CODE=#{sfCode}
+		WHERE STAMP=#{stamp}
 		AND AP_CODE=#{apCode}
 	</update>
 	
 	<update id="updateLED" parameterType="hashmap">
 		UPDATE SF
-		SET LED_ST=#{led}
-		WHERE SF_CODE=#{sfCode}
+		SET 
+		LED21_ST=#{led21},
+		LED22_ST=#{led22},
+		LED31_ST=#{led31},
+		LED32_ST=#{led32}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update2floorLED" parameterType="hashmap">
+		UPDATE SF
+		SET LED21_ST=#{led21},
+		LED22_ST=#{led22}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update2floorALED" parameterType="hashmap">
+		UPDATE SF
+		SET LED21_ST=#{led21}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update2floorBLED" parameterType="hashmap">
+		UPDATE SF
+		SET
+		LED22_ST=#{led22}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update3floorLED" parameterType="hashmap">
+		UPDATE SF
+		SET 
+		LED31_ST=#{led31},
+		LED32_ST=#{led32}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update3floorALED" parameterType="hashmap">
+		UPDATE SF
+		SET LED31_ST=#{led31}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="update3floorBLED" parameterType="hashmap">
+		UPDATE SF
+		SET
+		LED32_ST=#{led32}
+		WHERE STAMP=#{stamp}
 		AND AP_CODE=#{apCode}
 	</update>
 	
 	<update id="updateCooler" parameterType="hashmap">
 		UPDATE SF
-		SET COOLER_ST=#{cooler}
-		WHERE SF_CODE=#{sfCode}
+		SET 
+		COOLER1_ST=#{cooler1},
+		COOLER2_ST=#{cooler2},
+		COOLER3_ST=#{cooler3}
+		WHERE STAMP=#{stamp}
 		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="updateCoolerA" parameterType="hashmap">
+		UPDATE SF
+		SET COOLER1_ST=#{cooler1}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="updateCoolerB" parameterType="hashmap">
+		UPDATE SF
+		SET COOLER2_ST=#{cooler2}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="updateCoolerC" parameterType="hashmap">
+		UPDATE SF
+		SET COOLER3_ST=#{cooler3}
+		WHERE STAMP=#{stamp}
+		AND AP_CODE=#{apCode}
+	</update>
+	
+	<update id="changeInnerIp" parameterType="hashmap">
+		UPDATE SF
+		SET SF_CODE=#{after},
+		INNER_IP=#{afterIp}
+		WHERE STAMP=#{stamp} AND AP_CODE=#{apCode}
 	</update>
 
 
@@ -180,14 +286,20 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	
 	<resultMap type="smart_farm_api.device.domain.SmartFarmInfoDto" id="SmartFarmInfoDto">
 		<result property="sfRegDate" column="sf_reg_date"/>
+		<result property="stamp" column="stamp"/>
 		<result property="sfCode" column="sf_code"/>
 		<result property="apCode" column="ap_code"/>
 		<result property="sfPortCnt" column="sf_port_cnt"/>
 		<result property="floorCnt" column="floor_cnt"/>
 		<result property="coolerCnt" column="cooler_cnt"/>
 		<result property="ledCtrlMode" column="led_ctrl_mode"/>
-		<result property="coolerSt" column="cooler_st"/>
-		<result property="ledSt" column="led_st"/>
+		<result property="cooler1St" column="cooler1_st"/>
+		<result property="cooler2St" column="cooler2_st"/>
+		<result property="cooler3St" column="cooler3_st"/>
+		<result property="led21St" column="led21_st"/>
+		<result property="led22St" column="led22_st"/>
+		<result property="led31St" column="led31_st"/>
+		<result property="led32St" column="led32_st"/>
 		<result property="pumpSt" column="pump_st"/>
 		<result property="innerIp" column="inner_ip"/>
 	</resultMap>

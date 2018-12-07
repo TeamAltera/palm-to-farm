@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import smart_farm_api.common.ResultDto;
-import smart_farm_api.common.service.JwtServiceImpl;
+import smart_farm_api.common.utils.JwtServiceImpl;
 import smart_farm_api.device.repository.DeviceMapper;
 import smart_farm_api.log.repository.LogMapper;
 import smart_farm_api.user.repository.UserMapper;
@@ -29,6 +29,8 @@ public class DeleteApServiceImpl implements IDeviceFrontService {
 	private GetDeviceServiceImpl deviceService;
 	
 	private JwtServiceImpl jwtService;
+	
+	private UrlConnectionServiceImpl urlConnectionService;
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class }) // 이 메소드를 트랜잭션 처리
@@ -36,9 +38,8 @@ public class DeleteApServiceImpl implements IDeviceFrontService {
 		// TODO Auto-generated method stub
 		int apCode = (int) obj;
 		int userCode = jwtService.get();
-		UrlConnectionServiceImpl cmd = new UrlConnectionServiceImpl();
 		try {
-			JSONObject json = cmd.request(deviceMapper.getApIp(apCode), PHP_DELETE_URL, "GET", null);
+			JSONObject json = urlConnectionService.request(deviceMapper.getApIp(apCode), PHP_DELETE_URL, "GET", null);
 			if (json.get("result").equals("OK")) {
 				int count;
 				// SF테이블과, AP테이블을 사용한 delete join을 수행하므로

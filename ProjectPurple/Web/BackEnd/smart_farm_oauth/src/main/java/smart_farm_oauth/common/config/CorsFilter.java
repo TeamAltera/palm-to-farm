@@ -35,7 +35,6 @@ public class CorsFilter implements Filter {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-        	System.out.println("go");
             chain.doFilter(req, res);
         }
     }

@@ -10,7 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value= {
 		"classpath:static/properties/oauth2.properties",
 		"classpath:static/properties/rabbit.properties",
-		"classpath:static/properties/websocket.properties"
+		"classpath:static/properties/websocket.properties",
+		"classpath:static/properties/system_settings.properties"
 },ignoreResourceNotFound=true)
 //ignoreResourceNotFound를 통해 없는 파일은 무시
 public class SmartFarmApiApplication {

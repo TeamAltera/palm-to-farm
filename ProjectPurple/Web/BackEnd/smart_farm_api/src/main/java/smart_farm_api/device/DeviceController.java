@@ -18,11 +18,13 @@ import lombok.AllArgsConstructor;
 import smart_farm_api.common.ResultDto;
 import smart_farm_api.common.validators.CommandDtoValidator;
 import smart_farm_api.common.validators.IpDtoValidator;
+import smart_farm_api.device.domain.ChangeSfDto;
 import smart_farm_api.device.domain.CommandDto;
 import smart_farm_api.device.domain.DeviceInfoDto;
 import smart_farm_api.device.domain.IpDto;
 import smart_farm_api.device.service.AddAPServiceImpl;
 import smart_farm_api.device.service.AddDeviceAutoServiceImpl;
+import smart_farm_api.device.service.ChangeDeviceServiceImpl;
 import smart_farm_api.device.service.ConfirmAPServiceImpl;
 import smart_farm_api.device.service.DeleteApServiceImpl;
 import smart_farm_api.device.service.DeleteDeviceServiceImpl;
@@ -48,6 +50,8 @@ public class DeviceController {
 	private DeleteDeviceServiceImpl deleteDeviceService;
 
 	private GetDeviceServiceImpl getDeviceService;
+	
+	private ChangeDeviceServiceImpl changeDeviceService;
 
 	// InnerIpDTO에 대한 유효성 검사, 첫글자는 반드시 소문자여야
 	@InitBinder("ipDto")
@@ -103,7 +107,6 @@ public class DeviceController {
 	@ApiOperation(value = "수경재배기 자동 추가, target:device")
 	@PostMapping(value = "/add/sf/auto")
 	public ResultDto addDeviceAuto(@RequestBody DeviceInfoDto deviceInfo) {
-		System.out.println("add auto");
 		return addDeviceAutoService.execute(deviceInfo);
 	}
 
@@ -119,9 +122,9 @@ public class DeviceController {
 	 * @return
 	 */
 	@ApiOperation(value = "수경재배기 수동 삭제, target:front")
-	@PostMapping(value = "/delete/sf/manual/{sfCode}")
-	public ResultDto deleteDevice(@PathVariable int sfCode) {
-		return deleteDeviceService.execute(sfCode);
+	@PostMapping(value = "/delete/sf/manual/{stamp}")
+	public ResultDto deleteDevice(@PathVariable String stamp) {
+		return deleteDeviceService.execute(Integer.parseInt(stamp));
 	}
 
 	/**
@@ -157,9 +160,10 @@ public class DeviceController {
 	 * @return
 	 */
 	@ApiOperation(value = "디바이스 IP주소 변경, target:device")
-	@PostMapping(value = "/change/device")
-	public ResultDto changeDevice() {
-		return null;
+	@PostMapping(value = "/change")
+	public ResultDto changeDevice(@RequestBody ChangeSfDto changeSfDto) {
+		System.out.println("ch");
+		return changeDeviceService.execute(changeSfDto);
 	}
 
 	/**

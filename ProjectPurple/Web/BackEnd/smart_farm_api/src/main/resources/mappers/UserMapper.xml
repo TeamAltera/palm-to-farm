@@ -36,15 +36,8 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		</selectKey>
 	</update>
 
-	<!-- 로그인 시 사용자 존재 유뮤 조회 -->
-	<select id="searchMember" resultMap="UserInfoDto"
-		parameterMap="LoginDto">
-		SELECT * FROM PLANT_USER
-		WHERE PWD=#{pwd} AND EMAIL=#{email}
-	</select>
-
 	<!-- 사용자 정보 조회 -->
-	<select id="getMemberInfo" resultMap="UserInfoDto" parameterType="Integer">
+	<select id="getMember" resultMap="UserInfoVo" parameterType="Integer">
 		SELECT * FROM PLANT_USER
 		WHERE USER_CODE=#{userCode}
 	</select>
@@ -52,9 +45,9 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<!-- 회원가입 -->
 	<insert id="insertMember" parameterMap="UserInfoDto">
 		INSERT INTO PLANT_USER
-		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT,BLOCK)
+		(USER_CODE,PWD,EMAIL,FIRST_NAME,SECOND_NAME,SF_CNT,BLOCK,ENABLED)
 		VALUES
-		(PLANT_USER_SEQ.NEXTVAL,#{pwd},#{email},#{firstName},#{secondName},0,0)
+		(PLANT_USER_SEQ.NEXTVAL,#{pwd},#{email},#{firstName},#{secondName},0,0,'F')
 	</insert>
 
 	<!-- 이메일 사용 여부 조회 -->
@@ -66,28 +59,20 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		SELECT BLOCK FROM PLANT_USER WHERE EMAIL=#{email}
 	</select>
 
-	<!-- PLANT_USER 칼럼과 UserInfoDTO 변수명간의 매핑 -->
-	<resultMap id="UserInfoDto" type="smart_farm_api.user.domain.UserInfoDto">
-		<result property="email" column="email" />
-		<result property="firstName" column="first_name" />
-		<result property="secondName" column="second_name" />
-		<result property="pwd" column="pwd" />
-		<result property="sfCnt" column="sf_cnt" />
-		<result property="userCode" column="user_code" />
-		<result property="block" column="block" />
-	</resultMap>
-
-	<parameterMap type="smart_farm_api.user.domain.UserInfoDto"
-		id="UserInfoDto">
+	<parameterMap id="UserInfoDto" type="smart_farm_api.user.domain.UserInfoDto">
 		<parameter property="email"/>
 		<parameter property="firstName"/>
 		<parameter property="secondName"/>
 		<parameter property="pwd"/>
 	</parameterMap>
+
+	<resultMap type="smart_farm_api.user.domain.UserInfoVo"
+		id="UserInfoVo">
+		<result property="userCode" column="user_code"/>
+		<result property="email" column="email"/>
+		<result property="firstName" column="first_name"/>
+		<result property="secondName" column="second_name" />
+		<result property="sfCnt" column="sf_cnt"/>
+	</resultMap >
 	
-	<parameterMap type="smart_farm_api.user.domain.LoginDto"
-		id="LoginDto">
-		<parameter property="email"/>
-		<parameter property="pwd"/>
-	</parameterMap>
 </mapper>

@@ -29,7 +29,7 @@ public class GetPortInfoServiceImpl implements IPlantService{
 			out.add(list);
 		}
 		InfoDto info=(InfoDto)obj;
-		List<Integer> list=plantMapper.getPortInfo(info.getApCode(), info.getSfCode());
+		List<Integer> list=plantMapper.getPortInfo(info.getApCode(), info.getStamp());
 		for (Integer index : list) {
 			out.get(index/8).get(index%8).setStatus(true);
 		}

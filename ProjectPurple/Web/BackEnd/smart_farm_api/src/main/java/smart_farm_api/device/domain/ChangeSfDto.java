@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class DeviceInfoDto {
-	private int apCode;
-	private int sfCode;
+public class ChangeSfDto {
+	private int after;
+	private int before;
 	private int stamp;
-	private String ipInfo;
+	private int apCode;
 }

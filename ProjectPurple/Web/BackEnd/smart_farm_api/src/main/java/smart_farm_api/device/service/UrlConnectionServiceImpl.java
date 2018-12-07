@@ -5,15 +5,28 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Service
+@NoArgsConstructor
+@AllArgsConstructor
 public class UrlConnectionServiceImpl {
+	
+	RestTemplate restTemplate;
+	
 	public JSONObject request(String ip, String urlPath, String reqMethod, String sendData) throws IOException {
+		
 		HttpURLConnection conn;
 		URL url = new URL("http://" + ip + urlPath);
 		conn = (HttpURLConnection) url.openConnection();

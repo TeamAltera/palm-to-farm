@@ -19,19 +19,19 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		P.MIN_EC AS MIN_EC,
 		G.FARMING_DATE AS FARMING_DATE
 		FROM G_PLANT G, PLANT P
-		WHERE G.SF_CODE=#{sfCode} AND G.AP_CODE=#{apCode}
+		WHERE G.STAMP=#{stamp} AND G.AP_CODE=#{apCode}
 		AND P.PLANT_CODE=G.PLANT_CODE
 	</select>
 
 	<insert id="insertGrowthPlant" parameterType="hashmap">
 		INSERT INTO G_PLANT (
-			SF_CODE, 
+			STAMP, 
 			AP_CODE, 
 			PLANT_CODE, 
 			FARMING_DATE
 		)
 		VALUES (
-			#{sfCode},
+			#{stamp},
 			#{apCode},
 			#{plantCode},
 			SYSDATE
@@ -43,13 +43,13 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 			<!-- INSERT ALL --> 
 			<foreach collection="portList" item="item" separator="" open="INSERT ALL" close="SELECT * FROM DUAL">
 			INTO PORT_INFO (
-			SF_CODE,
+			STAMP,
 			AP_CODE,
 			PORT_NO,
 			PORT_ST
 			) VALUES
 			(
-				#{sfCode},
+				#{stamp},
 				#{apCode},
 				#{item.portNo},
 				#{item.portSt}
@@ -62,19 +62,19 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<delete id="deleteGrowthPlant" parameterType="hashmap">
 		DELETE
 		FROM G_PLANT
-		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+		WHERE AP_CODE=#{apCode} AND STAMP=#{stamp}
 	</delete>
 	
 	<delete id="deletePortInfo" parameterType="hashmap">
 		DELETE
 		FROM PORT_INFO
-		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+		WHERE AP_CODE=#{apCode} AND STAMP=#{stamp}
 	</delete>
 	
 	<select id="getPortInfo" parameterType="hashmap" resultType="Integer">
 		SELECT PORT_NO
 		FROM PORT_INFO
-		WHERE AP_CODE=#{apCode} AND SF_CODE=#{sfCode}
+		WHERE AP_CODE=#{apCode} AND STAMP=#{stamp}
 		ORDER BY PORT_NO ASC
 	</select>
 

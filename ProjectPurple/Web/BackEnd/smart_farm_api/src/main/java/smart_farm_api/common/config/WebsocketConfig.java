@@ -1,6 +1,5 @@
 package smart_farm_api.common.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer{
 
-	@Value("${websocket.host}")
+	/*@Value("${websocket.host}")
 	private String host;
 	
 	@Value("${websocket.port}")
@@ -27,19 +26,20 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer{
 	private String systemLogin;
 	
 	@Value("${websocket.system.passcode}")
-	private String systemPasscode;
+	private String systemPasscode;*/
 	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.setApplicationDestinationPrefixes("/app")
-			.enableStompBrokerRelay("/topic") //broker relay 설정
-			.setRelayHost(host)
+		registry.enableSimpleBroker("/topic"); //broker relay 설정
+			/*.setRelayHost(host)
 			.setRelayPort(port)
 			.setClientLogin(clientLogin)
 			.setClientPasscode(clientPasscode)
 			.setSystemLogin(systemLogin)
-			.setSystemPasscode(systemPasscode);
+			.setSystemPasscode(systemPasscode);*/
+		registry.setApplicationDestinationPrefixes("/app");
+		//registry.setUserDestinationPrefix("/user").setUserRegistryOrder(40);
 	}
 
 	@Override

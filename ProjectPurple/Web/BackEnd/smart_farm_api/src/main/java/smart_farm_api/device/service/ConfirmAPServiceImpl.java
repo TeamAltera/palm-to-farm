@@ -2,7 +2,6 @@ package smart_farm_api.device.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -26,6 +25,8 @@ public class ConfirmAPServiceImpl implements IDeviceFrontService {
 	private final int FAIL_CODE=201;//실패한 경우
 	private final int UNKNOWN_CODE=202;//pending, 존재하지 않는 공유기인 경우
 	
+	private UrlConnectionServiceImpl urlConnectionService;
+	
 	private DeviceMapper deviceMapper;
 	
 	@Override
@@ -33,11 +34,11 @@ public class ConfirmAPServiceImpl implements IDeviceFrontService {
 		// TODO Auto-generated method stub
 		String ip = (String) obj;
 		String msg=null;
-		APStatusDto code=new APStatusDto(FAIL_CODE);
+		APStatusDto code=APStatusDto.builder().code(FAIL_CODE).build();
 		boolean httpStatus=true;
 		if (deviceMapper.getAP(ip)==null){//AP가 존재하지 않는다면 미들서버로부터 정보를 받아온다.
 			try {
-				JSONObject json=new UrlConnectionServiceImpl().request(ip, PHP_SEARCH_URL, "POST",null);
+				JSONObject json=urlConnectionService.request(ip, PHP_SEARCH_URL, "POST",null);
 	            if(json.get("state").equals("FAIL")) {//이미 사용중
 	            	msg=FAIL_MSG;
 	            }

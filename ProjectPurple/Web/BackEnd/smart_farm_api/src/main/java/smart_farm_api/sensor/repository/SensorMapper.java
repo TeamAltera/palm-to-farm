@@ -11,9 +11,11 @@ import smart_farm_api.sensor.domain.SensorDataDto;
 public interface SensorMapper {
 	void insertData(HashMap<String, Object> map);
 	
-	SensorDataDto getLatestData(@Param("sfCode") int sfCode, @Param("apCode") int apCode);
+	SensorDataDto getLatestData(@Param("stamp") int stamp, @Param("apCode") int apCode);
 	
 	List<SensorDataDto> getDayData(DateSearchDto dto);
+	
+	SensorDataDto getLastData(DateSearchDto dto);
 	
 	void deleteAllSensorData(HashMap<String, Integer> map);
 }

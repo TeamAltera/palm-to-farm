@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -32,7 +33,7 @@ import lombok.AllArgsConstructor;
 @Configuration
 @EnableAuthorizationServer
 @AllArgsConstructor
-public class IkeeperOauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
+public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	// @Autowired
 	// private PasswordEncoder oauthClientPasswordEncoder;
@@ -105,12 +106,6 @@ public class IkeeperOauth2ServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
-	}
-
-	@Bean
-	public PasswordEncoder oauthClientPasswordEncoder() {
-		// 테스트 나중에 Bcrypt로 교체해야
-		return NoOpPasswordEncoder.getInstance();
 	}
 
 	@Bean

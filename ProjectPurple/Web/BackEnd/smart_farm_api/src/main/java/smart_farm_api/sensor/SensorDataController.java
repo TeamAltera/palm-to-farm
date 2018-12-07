@@ -16,6 +16,7 @@ import smart_farm_api.common.DateSearchDto;
 import smart_farm_api.common.ResultDto;
 import smart_farm_api.common.validators.DateSearchDtoValidator;
 import smart_farm_api.sensor.service.GetSensorDataServiceImpl;
+import smart_farm_api.sensor.service.GetSensorLastDataService;
 
 /**
  * @author AN
@@ -26,13 +27,14 @@ import smart_farm_api.sensor.service.GetSensorDataServiceImpl;
 @AllArgsConstructor
 public class SensorDataController {
 
-	@InitBinder("dateSearchDTO")
+	@InitBinder("dateSearchDto")
 	protected void initUserInfoDTOBinder(WebDataBinder binder) {
 		binder.setValidator(new DateSearchDtoValidator());
 	}
 
-	private GetSensorDataServiceImpl getSensorDataService; 
-
+	private GetSensorDataServiceImpl getSensorDataService;
+	
+	private GetSensorLastDataService getSensorLastDataService;
 	/**
 	 *<pre>
 	 * target: front
@@ -54,5 +56,14 @@ public class SensorDataController {
 			return ResultDto.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
 		}
 		return getSensorDataService.execute(dto);
+	}
+	
+	@PostMapping("/day/last")
+	public ResultDto getLastDataSet(@Valid @RequestBody DateSearchDto dto, BindingResult result) {
+		// validation 수행
+		if (result.hasErrors()) {
+			return ResultDto.createInstance(false).setMsg("입력 형식에 맞지 않습니다.").setData(result.getAllErrors());
+		}
+		return getSensorLastDataService.execute(dto);
 	}
 }

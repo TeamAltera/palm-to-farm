@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CorsFilter implements Filter {
 	
+	@Value("${server-ip-info}")
+	private String ip;
+	
+	@Value("${server-port-info}")
+	private String port;
+	
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
-        response.setHeader("Access-Control-Allow-Origin", "http://203.250.32.37:3000");
+        response.setHeader("Access-Control-Allow-Origin", "http://"+ip+":"+port);
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization, Content-Type, credential, X-XSRF-TOKEN");

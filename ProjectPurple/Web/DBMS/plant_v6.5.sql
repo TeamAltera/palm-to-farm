@@ -21,43 +21,23 @@ ALTER TABLE AP
 
 
 
-CREATE TABLE CS
-(
-	CS_PROVIDE_CNT       NUMBER(3) NULL ,
-	CS_CNT               NUMBER(3) NULL ,
-	SF_CODE              NUMBER(3) NOT NULL ,
-	AP_CODE              NUMBER(8) NOT NULL 
-);
-
-
-
-CREATE UNIQUE INDEX XPK배양액 ON CS
-(SF_CODE   ASC,AP_CODE   ASC);
-
-
-
-ALTER TABLE CS
-	ADD CONSTRAINT  XPK배양액 PRIMARY KEY (SF_CODE,AP_CODE);
-
-
-
 CREATE TABLE CS_LOG
 (
-	SF_CODE              NUMBER(3) NOT NULL ,
 	CS_PROVIDE_DT        CHAR(18) NOT NULL ,
 	CS_RES               CHAR(1) NULL ,
-	AP_CODE              NUMBER(8) NOT NULL 
+	AP_CODE              NUMBER(8) NOT NULL ,
+	STAMP                NUMBER(11) NOT NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK배양액공급기록 ON CS_LOG
-(SF_CODE   ASC,CS_PROVIDE_DT   ASC,AP_CODE   ASC);
+(CS_PROVIDE_DT   ASC,AP_CODE   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE CS_LOG
-	ADD CONSTRAINT  XPK배양액공급기록 PRIMARY KEY (SF_CODE,CS_PROVIDE_DT,AP_CODE);
+	ADD CONSTRAINT  XPK배양액공급기록 PRIMARY KEY (CS_PROVIDE_DT,AP_CODE,STAMP);
 
 
 
@@ -67,19 +47,19 @@ CREATE TABLE DEVICE_LOG
 	ACT_NAME             VARCHAR(24) NULL ,
 	USED_IP              VARCHAR(15) NULL ,
 	USED_RES             CHAR(1) NULL ,
-	SF_CODE              NUMBER(3) NOT NULL ,
-	AP_CODE              NUMBER(8) NOT NULL 
+	AP_CODE              NUMBER(8) NOT NULL ,
+	STAMP                NUMBER(11) NOT NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK로그기록 ON DEVICE_LOG
-(USED_DT   ASC,SF_CODE   ASC,AP_CODE   ASC);
+(USED_DT   ASC,AP_CODE   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE DEVICE_LOG
-	ADD CONSTRAINT  XPK로그기록 PRIMARY KEY (USED_DT,SF_CODE,AP_CODE);
+	ADD CONSTRAINT  XPK로그기록 PRIMARY KEY (USED_DT,AP_CODE,STAMP);
 
 
 
@@ -87,19 +67,46 @@ CREATE TABLE G_PLANT
 (
 	FARMING_DATE         DATE NULL ,
 	PLANT_CODE           NUMBER(4) NOT NULL ,
-	SF_CODE              NUMBER(3) NOT NULL ,
-	AP_CODE              NUMBER(8) NOT NULL 
+	AP_CODE              NUMBER(8) NOT NULL ,
+	STAMP                NUMBER(11) NOT NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK생육식물 ON G_PLANT
-(PLANT_CODE   ASC,AP_CODE   ASC,SF_CODE   ASC);
+(PLANT_CODE   ASC,AP_CODE   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE G_PLANT
-	ADD CONSTRAINT  XPK생육식물 PRIMARY KEY (PLANT_CODE,AP_CODE,SF_CODE);
+	ADD CONSTRAINT  XPK생육식물 PRIMARY KEY (PLANT_CODE,AP_CODE,STAMP);
+
+
+
+CREATE TABLE OAUTH_CLIENT_DETAILS
+(
+	CLIENT_ID            VARCHAR(256) NOT NULL ,
+	RESOURCE_IDS         VARCHAR(128) NULL ,
+	CLIENT_SECRET        VARCHAR(256) NULL ,
+	SCOPE                VARCHAR(256) NULL ,
+	AUTHORIZED_GRANT_TYPES VARCHAR(256) NULL ,
+	WEB_SERVER_REDIRECT_URI VARCHAR(256) NULL ,
+	AUTHORITIES          VARCHAR(256) NULL ,
+	ACCESS_TOKEN_VALIDITY NUMBER(8) NULL ,
+	REFRESH_TOKEN_VALIDITY NUMBER(8) NULL ,
+	ADDITIONAL_INFORMATION VARCHAR(256) NULL ,
+	AUTOAPPROVE          VARCHAR(256) NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK클라이언트 ON OAUTH_CLIENT_DETAILS
+(CLIENT_ID   ASC);
+
+
+
+ALTER TABLE OAUTH_CLIENT_DETAILS
+	ADD CONSTRAINT  XPK클라이언트 PRIMARY KEY (CLIENT_ID);
 
 
 
@@ -134,9 +141,10 @@ CREATE TABLE PLANT_USER
 	PWD                  VARCHAR(64) NULL ,
 	EMAIL                VARCHAR(30) NULL ,
 	FIRST_NAME           VARCHAR(16) NULL ,
-	SF_CNT               NUMBER(3) NULL ,
+	SF_CNT               INTEGER NULL ,
 	SECOND_NAME          VARCHAR(30) NULL ,
-	BLOCK                NUMBER(1) NULL 
+	BLOCK                NUMBER(1) NULL ,
+	ENABLED              CHAR(1) NULL 
 );
 
 
@@ -153,21 +161,21 @@ ALTER TABLE PLANT_USER
 
 CREATE TABLE PORT_INFO
 (
-	SF_CODE              NUMBER(3) NOT NULL ,
 	AP_CODE              NUMBER(8) NOT NULL ,
 	PORT_ST              CHAR(1) NULL ,
-	PORT_NO              NUMBER(2) NOT NULL 
+	PORT_NO              NUMBER(2) NOT NULL ,
+	STAMP                NUMBER(11) NOT NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK포트정보 ON PORT_INFO
-(SF_CODE   ASC,AP_CODE   ASC,PORT_NO   ASC);
+(AP_CODE   ASC,PORT_NO   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE PORT_INFO
-	ADD CONSTRAINT  XPK포트정보 PRIMARY KEY (SF_CODE,AP_CODE,PORT_NO);
+	ADD CONSTRAINT  XPK포트정보 PRIMARY KEY (AP_CODE,PORT_NO,STAMP);
 
 
 
@@ -175,58 +183,58 @@ CREATE TABLE SENSOR_DATA
 (
 	CALC_DT              DATE NOT NULL ,
 	TEMP                 NUMBER(5,2) NULL ,
-	SF_CODE              NUMBER(3) NOT NULL ,
 	HUMI                 NUMBER(5,2) NULL ,
-	ELUM                 NUMBER(3) NULL ,
+	ELUM                 NUMBER(4) NULL ,
 	WATER_TEMP           NUMBER(5,2) NULL ,
 	WATER_LIM            NUMBER(3) NULL ,
 	AP_CODE              NUMBER(8) NOT NULL ,
-	EC                   NUMBER(5,2) NULL ,
-	PH                   NUMBER(5,2) NULL 
+	EC                   NUMBER(6,2) NULL ,
+	PH                   NUMBER(5,2) NULL ,
+	STAMP                NUMBER(11) NOT NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK센서데이터 ON SENSOR_DATA
-(CALC_DT   ASC,SF_CODE   ASC,AP_CODE   ASC);
+(CALC_DT   ASC,AP_CODE   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE SENSOR_DATA
-	ADD CONSTRAINT  XPK센서데이터 PRIMARY KEY (CALC_DT,SF_CODE,AP_CODE);
+	ADD CONSTRAINT  XPK센서데이터 PRIMARY KEY (CALC_DT,AP_CODE,STAMP);
 
 
 
 CREATE TABLE SF
 (
-	SF_CODE              NUMBER(3) NOT NULL ,
+	SF_CODE              NUMBER(3) NULL ,
 	SF_PORT_CNT          NUMBER(2) NULL ,
 	FLOOR_CNT            NUMBER(2) NULL ,
 	COOLER_CNT           NUMBER(2) NULL ,
 	LED_CTRL_MODE        CHAR(1) NULL ,
 	INNER_IP             VARCHAR(15) NULL ,
 	AP_CODE              NUMBER(8) NOT NULL ,
-	COOLER_ST            CHAR(1) NULL ,
-	LED_ST               CHAR(1) NULL ,
+	COOLER1_ST           CHAR(1) NULL ,
+	LED21_ST             CHAR(1) NULL ,
 	PUMP_ST              CHAR(1) NULL ,
-	SF_REG_DATE          DATE NULL 
+	SF_REG_DATE          DATE NULL ,
+	STAMP                NUMBER(11) NOT NULL ,
+	LED22_ST             CHAR(1) NULL ,
+	LED31_ST             CHAR(1) NULL ,
+	LED32_ST             CHAR(1) NULL ,
+	COOLER2_ST           CHAR(1) NULL ,
+	COOLER3_ST           CHAR(1) NULL 
 );
 
 
 
 CREATE UNIQUE INDEX XPK수경재배기 ON SF
-(SF_CODE   ASC,AP_CODE   ASC);
+(AP_CODE   ASC,STAMP   ASC);
 
 
 
 ALTER TABLE SF
-	ADD CONSTRAINT  XPK수경재배기 PRIMARY KEY (SF_CODE,AP_CODE);
-
-
-
-CREATE  VIEW DEV_VIEW ( AP_SSID,USER_CODE,AP_PUBLIC_IP,SF_CODE,SF_PORT_CNT,FLOOR_CNT,COOLER_CNT,LED_CTRL_MODE,INNER_IP ) 
-	 AS  SELECT AP.AP_SSID,AP.USER_CODE,AP.AP_PUBLIC_IP,SF.SF_CODE,SF.SF_PORT_CNT,SF.FLOOR_CNT,SF.COOLER_CNT,SF.LED_CTRL_MODE,SF.INNER_IP
-		FROM SF,AP;
+	ADD CONSTRAINT  XPK수경재배기 PRIMARY KEY (AP_CODE,STAMP);
 
 
 
@@ -235,18 +243,13 @@ ALTER TABLE AP
 
 
 
-ALTER TABLE CS
-	ADD (CONSTRAINT R_27 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
-
-
-
 ALTER TABLE CS_LOG
-	ADD (CONSTRAINT R_28 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES CS (SF_CODE, AP_CODE));
+	ADD (CONSTRAINT R_58 FOREIGN KEY (AP_CODE, STAMP) REFERENCES SF (AP_CODE, STAMP));
 
 
 
 ALTER TABLE DEVICE_LOG
-	ADD (CONSTRAINT R_11 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+	ADD (CONSTRAINT R_11 FOREIGN KEY (AP_CODE, STAMP) REFERENCES SF (AP_CODE, STAMP));
 
 
 
@@ -256,17 +259,17 @@ ALTER TABLE G_PLANT
 
 
 ALTER TABLE G_PLANT
-	ADD (CONSTRAINT R_54 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+	ADD (CONSTRAINT R_54 FOREIGN KEY (AP_CODE, STAMP) REFERENCES SF (AP_CODE, STAMP));
 
 
 
 ALTER TABLE PORT_INFO
-	ADD (CONSTRAINT R_55 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+	ADD (CONSTRAINT R_55 FOREIGN KEY (AP_CODE, STAMP) REFERENCES SF (AP_CODE, STAMP));
 
 
 
 ALTER TABLE SENSOR_DATA
-	ADD (CONSTRAINT R_5 FOREIGN KEY (SF_CODE, AP_CODE) REFERENCES SF (SF_CODE, AP_CODE));
+	ADD (CONSTRAINT R_5 FOREIGN KEY (AP_CODE, STAMP) REFERENCES SF (AP_CODE, STAMP));
 
 
 
@@ -395,148 +398,23 @@ END;
 /
 
 
-CREATE  TRIGGER tI_CS BEFORE INSERT ON CS for each row
--- ERwin Builtin Trigger
--- INSERT trigger on CS 
-DECLARE NUMROWS INTEGER;
-BEGIN
-    /* ERwin Builtin Trigger */
-    /* SF  CS on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000e057", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="CS"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_27", FK_COLUMNS="SF_CODE""AP_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM SF
-      WHERE
-        /* %JoinFKPK(:%New,SF," = "," AND") */
-        :new.SF_CODE = SF.SF_CODE AND
-        :new.AP_CODE = SF.AP_CODE;
-    IF (
-      /* %NotnullFK(:%New," IS NOT NULL AND") */
-      
-      NUMROWS = 0
-    )
-    THEN
-      raise_application_error(
-        -20002,
-        'Cannot insert CS because SF does not exist.'
-      );
-    END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
-
-CREATE  TRIGGER  tD_CS AFTER DELETE ON CS for each row
--- ERwin Builtin Trigger
--- DELETE trigger on CS 
-DECLARE NUMROWS INTEGER;
-BEGIN
-    /* ERwin Builtin Trigger */
-    /* CS  CS_LOG on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000dbcd", PARENT_OWNER="", PARENT_TABLE="CS"
-    CHILD_OWNER="", CHILD_TABLE="CS_LOG"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_28", FK_COLUMNS="SF_CODE""AP_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM CS_LOG
-      WHERE
-        /*  %JoinFKPK(CS_LOG,:%Old," = "," AND") */
-        CS_LOG.SF_CODE = :old.SF_CODE AND
-        CS_LOG.AP_CODE = :old.AP_CODE;
-    IF (NUMROWS > 0)
-    THEN
-      raise_application_error(
-        -20001,
-        'Cannot delete CS because CS_LOG exists.'
-      );
-    END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
-
-CREATE  TRIGGER tU_CS AFTER UPDATE ON CS for each row
--- ERwin Builtin Trigger
--- UPDATE trigger on CS 
-DECLARE NUMROWS INTEGER;
-BEGIN
-  /* ERwin Builtin Trigger */
-  /* CS  CS_LOG on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0001fe67", PARENT_OWNER="", PARENT_TABLE="CS"
-    CHILD_OWNER="", CHILD_TABLE="CS_LOG"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_28", FK_COLUMNS="SF_CODE""AP_CODE" */
-  IF
-    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
-  THEN
-    SELECT count(*) INTO NUMROWS
-      FROM CS_LOG
-      WHERE
-        /*  %JoinFKPK(CS_LOG,:%Old," = "," AND") */
-        CS_LOG.SF_CODE = :old.SF_CODE AND
-        CS_LOG.AP_CODE = :old.AP_CODE;
-    IF (NUMROWS > 0)
-    THEN 
-      raise_application_error(
-        -20005,
-        'Cannot update CS because CS_LOG exists.'
-      );
-    END IF;
-  END IF;
-
-  /* ERwin Builtin Trigger */
-  /* SF  CS on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="CS"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_27", FK_COLUMNS="SF_CODE""AP_CODE" */
-  SELECT count(*) INTO NUMROWS
-    FROM SF
-    WHERE
-      /* %JoinFKPK(:%New,SF," = "," AND") */
-      :new.SF_CODE = SF.SF_CODE AND
-      :new.AP_CODE = SF.AP_CODE;
-  IF (
-    /* %NotnullFK(:%New," IS NOT NULL AND") */
-    
-    NUMROWS = 0
-  )
-  THEN
-    raise_application_error(
-      -20007,
-      'Cannot update CS because SF does not exist.'
-    );
-  END IF;
-
-
--- ERwin Builtin Trigger
-END;
-/
-
-
 CREATE  TRIGGER tI_CS_LOG BEFORE INSERT ON CS_LOG for each row
 -- ERwin Builtin Trigger
 -- INSERT trigger on CS_LOG 
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
-    /* CS  CS_LOG on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000efe6", PARENT_OWNER="", PARENT_TABLE="CS"
+    /* SF  CS_LOG on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000e0d5", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="CS_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_28", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_58", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
-      FROM CS
+      FROM SF
       WHERE
-        /* %JoinFKPK(:%New,CS," = "," AND") */
-        :new.SF_CODE = CS.SF_CODE AND
-        :new.AP_CODE = CS.AP_CODE;
+        /* %JoinFKPK(:%New,SF," = "," AND") */
+        :new.AP_CODE = SF.AP_CODE AND
+        :new.STAMP = SF.STAMP;
     IF (
       /* %NotnullFK(:%New," IS NOT NULL AND") */
       
@@ -545,7 +423,7 @@ BEGIN
     THEN
       raise_application_error(
         -20002,
-        'Cannot insert CS_LOG because CS does not exist.'
+        'Cannot insert CS_LOG because SF does not exist.'
       );
     END IF;
 
@@ -560,17 +438,17 @@ CREATE  TRIGGER tU_CS_LOG AFTER UPDATE ON CS_LOG for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
-  /* CS  CS_LOG on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0000ed6b", PARENT_OWNER="", PARENT_TABLE="CS"
+  /* SF  CS_LOG on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0000dcf3", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="CS_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_28", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_58", FK_COLUMNS="AP_CODE""STAMP" */
   SELECT count(*) INTO NUMROWS
-    FROM CS
+    FROM SF
     WHERE
-      /* %JoinFKPK(:%New,CS," = "," AND") */
-      :new.SF_CODE = CS.SF_CODE AND
-      :new.AP_CODE = CS.AP_CODE;
+      /* %JoinFKPK(:%New,SF," = "," AND") */
+      :new.AP_CODE = SF.AP_CODE AND
+      :new.STAMP = SF.STAMP;
   IF (
     /* %NotnullFK(:%New," IS NOT NULL AND") */
     
@@ -579,7 +457,7 @@ BEGIN
   THEN
     raise_application_error(
       -20007,
-      'Cannot update CS_LOG because CS does not exist.'
+      'Cannot update CS_LOG because SF does not exist.'
     );
   END IF;
 
@@ -596,16 +474,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
     /* SF  DEVICE_LOG on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000edab", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="0000f688", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="DEVICE_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_11", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_11", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM SF
       WHERE
         /* %JoinFKPK(:%New,SF," = "," AND") */
-        :new.SF_CODE = SF.SF_CODE AND
-        :new.AP_CODE = SF.AP_CODE;
+        :new.AP_CODE = SF.AP_CODE AND
+        :new.STAMP = SF.STAMP;
     IF (
       /* %NotnullFK(:%New," IS NOT NULL AND") */
       
@@ -630,16 +508,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
   /* SF  DEVICE_LOG on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0000e98c", PARENT_OWNER="", PARENT_TABLE="SF"
+  /* ERWIN_RELATION:CHECKSUM="0000f4ff", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="DEVICE_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_11", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_11", FK_COLUMNS="AP_CODE""STAMP" */
   SELECT count(*) INTO NUMROWS
     FROM SF
     WHERE
       /* %JoinFKPK(:%New,SF," = "," AND") */
-      :new.SF_CODE = SF.SF_CODE AND
-      :new.AP_CODE = SF.AP_CODE;
+      :new.AP_CODE = SF.AP_CODE AND
+      :new.STAMP = SF.STAMP;
   IF (
     /* %NotnullFK(:%New," IS NOT NULL AND") */
     
@@ -665,16 +543,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
     /* SF  G_PLANT on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0001e760", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="0001dc39", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM SF
       WHERE
         /* %JoinFKPK(:%New,SF," = "," AND") */
-        :new.SF_CODE = SF.SF_CODE AND
-        :new.AP_CODE = SF.AP_CODE;
+        :new.AP_CODE = SF.AP_CODE AND
+        :new.STAMP = SF.STAMP;
     IF (
       /* %NotnullFK(:%New," IS NOT NULL AND") */
       
@@ -722,16 +600,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
   /* SF  G_PLANT on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0001ebe7", PARENT_OWNER="", PARENT_TABLE="SF"
+  /* ERWIN_RELATION:CHECKSUM="0001d9a0", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="AP_CODE""STAMP" */
   SELECT count(*) INTO NUMROWS
     FROM SF
     WHERE
       /* %JoinFKPK(:%New,SF," = "," AND") */
-      :new.SF_CODE = SF.SF_CODE AND
-      :new.AP_CODE = SF.AP_CODE;
+      :new.AP_CODE = SF.AP_CODE AND
+      :new.STAMP = SF.STAMP;
   IF (
     /* %NotnullFK(:%New," IS NOT NULL AND") */
     
@@ -908,16 +786,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
     /* SF  PORT_INFO on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000e699", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="0000ec8d", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_55", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM SF
       WHERE
         /* %JoinFKPK(:%New,SF," = "," AND") */
-        :new.SF_CODE = SF.SF_CODE AND
-        :new.AP_CODE = SF.AP_CODE;
+        :new.AP_CODE = SF.AP_CODE AND
+        :new.STAMP = SF.STAMP;
     IF (
       /* %NotnullFK(:%New," IS NOT NULL AND") */
       
@@ -942,16 +820,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
   /* SF  PORT_INFO on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0000e51e", PARENT_OWNER="", PARENT_TABLE="SF"
+  /* ERWIN_RELATION:CHECKSUM="0000eeee", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_55", FK_COLUMNS="AP_CODE""STAMP" */
   SELECT count(*) INTO NUMROWS
     FROM SF
     WHERE
       /* %JoinFKPK(:%New,SF," = "," AND") */
-      :new.SF_CODE = SF.SF_CODE AND
-      :new.AP_CODE = SF.AP_CODE;
+      :new.AP_CODE = SF.AP_CODE AND
+      :new.STAMP = SF.STAMP;
   IF (
     /* %NotnullFK(:%New," IS NOT NULL AND") */
     
@@ -977,16 +855,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
     /* SF  SENSOR_DATA on child insert restrict */
-    /* ERWIN_RELATION:CHECKSUM="0000f75b", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="0000ed83", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="SENSOR_DATA"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_5", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_5", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM SF
       WHERE
         /* %JoinFKPK(:%New,SF," = "," AND") */
-        :new.SF_CODE = SF.SF_CODE AND
-        :new.AP_CODE = SF.AP_CODE;
+        :new.AP_CODE = SF.AP_CODE AND
+        :new.STAMP = SF.STAMP;
     IF (
       /* %NotnullFK(:%New," IS NOT NULL AND") */
       
@@ -1011,16 +889,16 @@ DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
   /* SF  SENSOR_DATA on child update restrict */
-  /* ERWIN_RELATION:CHECKSUM="0000f484", PARENT_OWNER="", PARENT_TABLE="SF"
+  /* ERWIN_RELATION:CHECKSUM="0000edbf", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="SENSOR_DATA"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_5", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_5", FK_COLUMNS="AP_CODE""STAMP" */
   SELECT count(*) INTO NUMROWS
     FROM SF
     WHERE
       /* %JoinFKPK(:%New,SF," = "," AND") */
-      :new.SF_CODE = SF.SF_CODE AND
-      :new.AP_CODE = SF.AP_CODE;
+      :new.AP_CODE = SF.AP_CODE AND
+      :new.STAMP = SF.STAMP;
   IF (
     /* %NotnullFK(:%New," IS NOT NULL AND") */
     
@@ -1078,17 +956,37 @@ CREATE  TRIGGER  tD_SF AFTER DELETE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
     /* ERwin Builtin Trigger */
+    /* SF  CS_LOG on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0004ab1e", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="CS_LOG"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_58", FK_COLUMNS="AP_CODE""STAMP" */
+    SELECT count(*) INTO NUMROWS
+      FROM CS_LOG
+      WHERE
+        /*  %JoinFKPK(CS_LOG,:%Old," = "," AND") */
+        CS_LOG.AP_CODE = :old.AP_CODE AND
+        CS_LOG.STAMP = :old.STAMP;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete SF because CS_LOG exists.'
+      );
+    END IF;
+
+    /* ERwin Builtin Trigger */
     /* SF  PORT_INFO on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="0004bb74", PARENT_OWNER="", PARENT_TABLE="SF"
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_55", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM PORT_INFO
       WHERE
         /*  %JoinFKPK(PORT_INFO,:%Old," = "," AND") */
-        PORT_INFO.SF_CODE = :old.SF_CODE AND
-        PORT_INFO.AP_CODE = :old.AP_CODE;
+        PORT_INFO.AP_CODE = :old.AP_CODE AND
+        PORT_INFO.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
@@ -1102,13 +1000,13 @@ BEGIN
     /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM G_PLANT
       WHERE
         /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
-        G_PLANT.SF_CODE = :old.SF_CODE AND
-        G_PLANT.AP_CODE = :old.AP_CODE;
+        G_PLANT.AP_CODE = :old.AP_CODE AND
+        G_PLANT.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
@@ -1118,37 +1016,17 @@ BEGIN
     END IF;
 
     /* ERwin Builtin Trigger */
-    /* SF  CS on parent delete restrict */
-    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="CS"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_27", FK_COLUMNS="SF_CODE""AP_CODE" */
-    SELECT count(*) INTO NUMROWS
-      FROM CS
-      WHERE
-        /*  %JoinFKPK(CS,:%Old," = "," AND") */
-        CS.SF_CODE = :old.SF_CODE AND
-        CS.AP_CODE = :old.AP_CODE;
-    IF (NUMROWS > 0)
-    THEN
-      raise_application_error(
-        -20001,
-        'Cannot delete SF because CS exists.'
-      );
-    END IF;
-
-    /* ERwin Builtin Trigger */
     /* SF  DEVICE_LOG on parent delete restrict */
     /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="DEVICE_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_11", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_11", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM DEVICE_LOG
       WHERE
         /*  %JoinFKPK(DEVICE_LOG,:%Old," = "," AND") */
-        DEVICE_LOG.SF_CODE = :old.SF_CODE AND
-        DEVICE_LOG.AP_CODE = :old.AP_CODE;
+        DEVICE_LOG.AP_CODE = :old.AP_CODE AND
+        DEVICE_LOG.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
@@ -1162,13 +1040,13 @@ BEGIN
     /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="SENSOR_DATA"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_5", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_5", FK_COLUMNS="AP_CODE""STAMP" */
     SELECT count(*) INTO NUMROWS
       FROM SENSOR_DATA
       WHERE
         /*  %JoinFKPK(SENSOR_DATA,:%Old," = "," AND") */
-        SENSOR_DATA.SF_CODE = :old.SF_CODE AND
-        SENSOR_DATA.AP_CODE = :old.AP_CODE;
+        SENSOR_DATA.AP_CODE = :old.AP_CODE AND
+        SENSOR_DATA.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN
       raise_application_error(
@@ -1188,22 +1066,48 @@ CREATE  TRIGGER tU_SF AFTER UPDATE ON SF for each row
 DECLARE NUMROWS INTEGER;
 BEGIN
   /* ERwin Builtin Trigger */
-  /* SF  PORT_INFO on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00068051", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+  /* SF  CS_LOG on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="000668ef", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="CS_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_55", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_58", FK_COLUMNS="AP_CODE""STAMP" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
+    :old.AP_CODE <> :new.AP_CODE OR 
+    :old.STAMP <> :new.STAMP
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM CS_LOG
+      WHERE
+        /*  %JoinFKPK(CS_LOG,:%Old," = "," AND") */
+        CS_LOG.AP_CODE = :old.AP_CODE AND
+        CS_LOG.STAMP = :old.STAMP;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update SF because CS_LOG exists.'
+      );
+    END IF;
+  END IF;
+
+  /* ERwin Builtin Trigger */
+  /* SF  PORT_INFO on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
+    CHILD_OWNER="", CHILD_TABLE="PORT_INFO"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="R_55", FK_COLUMNS="AP_CODE""STAMP" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.AP_CODE <> :new.AP_CODE OR 
+    :old.STAMP <> :new.STAMP
   THEN
     SELECT count(*) INTO NUMROWS
       FROM PORT_INFO
       WHERE
         /*  %JoinFKPK(PORT_INFO,:%Old," = "," AND") */
-        PORT_INFO.SF_CODE = :old.SF_CODE AND
-        PORT_INFO.AP_CODE = :old.AP_CODE;
+        PORT_INFO.AP_CODE = :old.AP_CODE AND
+        PORT_INFO.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
@@ -1218,18 +1122,18 @@ BEGIN
   /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="G_PLANT"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_54", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_54", FK_COLUMNS="AP_CODE""STAMP" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
+    :old.AP_CODE <> :new.AP_CODE OR 
+    :old.STAMP <> :new.STAMP
   THEN
     SELECT count(*) INTO NUMROWS
       FROM G_PLANT
       WHERE
         /*  %JoinFKPK(G_PLANT,:%Old," = "," AND") */
-        G_PLANT.SF_CODE = :old.SF_CODE AND
-        G_PLANT.AP_CODE = :old.AP_CODE;
+        G_PLANT.AP_CODE = :old.AP_CODE AND
+        G_PLANT.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
@@ -1240,48 +1144,22 @@ BEGIN
   END IF;
 
   /* ERwin Builtin Trigger */
-  /* SF  CS on parent update restrict */
-  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
-    CHILD_OWNER="", CHILD_TABLE="CS"
-    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_27", FK_COLUMNS="SF_CODE""AP_CODE" */
-  IF
-    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
-  THEN
-    SELECT count(*) INTO NUMROWS
-      FROM CS
-      WHERE
-        /*  %JoinFKPK(CS,:%Old," = "," AND") */
-        CS.SF_CODE = :old.SF_CODE AND
-        CS.AP_CODE = :old.AP_CODE;
-    IF (NUMROWS > 0)
-    THEN 
-      raise_application_error(
-        -20005,
-        'Cannot update SF because CS exists.'
-      );
-    END IF;
-  END IF;
-
-  /* ERwin Builtin Trigger */
   /* SF  DEVICE_LOG on parent update restrict */
   /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="DEVICE_LOG"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_11", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_11", FK_COLUMNS="AP_CODE""STAMP" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
+    :old.AP_CODE <> :new.AP_CODE OR 
+    :old.STAMP <> :new.STAMP
   THEN
     SELECT count(*) INTO NUMROWS
       FROM DEVICE_LOG
       WHERE
         /*  %JoinFKPK(DEVICE_LOG,:%Old," = "," AND") */
-        DEVICE_LOG.SF_CODE = :old.SF_CODE AND
-        DEVICE_LOG.AP_CODE = :old.AP_CODE;
+        DEVICE_LOG.AP_CODE = :old.AP_CODE AND
+        DEVICE_LOG.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
@@ -1296,18 +1174,18 @@ BEGIN
   /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="SF"
     CHILD_OWNER="", CHILD_TABLE="SENSOR_DATA"
     P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
-    FK_CONSTRAINT="R_5", FK_COLUMNS="SF_CODE""AP_CODE" */
+    FK_CONSTRAINT="R_5", FK_COLUMNS="AP_CODE""STAMP" */
   IF
     /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
-    :old.SF_CODE <> :new.SF_CODE OR 
-    :old.AP_CODE <> :new.AP_CODE
+    :old.AP_CODE <> :new.AP_CODE OR 
+    :old.STAMP <> :new.STAMP
   THEN
     SELECT count(*) INTO NUMROWS
       FROM SENSOR_DATA
       WHERE
         /*  %JoinFKPK(SENSOR_DATA,:%Old," = "," AND") */
-        SENSOR_DATA.SF_CODE = :old.SF_CODE AND
-        SENSOR_DATA.AP_CODE = :old.AP_CODE;
+        SENSOR_DATA.AP_CODE = :old.AP_CODE AND
+        SENSOR_DATA.STAMP = :old.STAMP;
     IF (NUMROWS > 0)
     THEN 
       raise_application_error(
@@ -1355,25 +1233,18 @@ COMMENT ON TABLE AP IS '공유기';
     COMMENT ON COLUMN AP.AP_REG_DATE IS '공유기등록일';  
     COMMENT ON COLUMN AP.AP_SF_CNT IS '재배기수';  
     
-COMMENT ON TABLE CS IS '배양액';
- 
-    COMMENT ON COLUMN CS.SF_CODE IS '재배기코드';  
-    COMMENT ON COLUMN CS.AP_CODE IS '공유기코드';  
-    COMMENT ON COLUMN CS.CS_PROVIDE_CNT IS '공급횟수';  
-    COMMENT ON COLUMN CS.CS_CNT IS '남은횟수';  
-    
 COMMENT ON TABLE CS_LOG IS '배양액공급기록';
  
-    COMMENT ON COLUMN CS_LOG.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN CS_LOG.CS_PROVIDE_DT IS '공급일자';  
     COMMENT ON COLUMN CS_LOG.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN CS_LOG.STAMP IS '스탬프';  
     COMMENT ON COLUMN CS_LOG.CS_RES IS '결과';  
     
 COMMENT ON TABLE DEVICE_LOG IS '로그기록';
  
     COMMENT ON COLUMN DEVICE_LOG.USED_DT IS '사용일자';  
-    COMMENT ON COLUMN DEVICE_LOG.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN DEVICE_LOG.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN DEVICE_LOG.STAMP IS '스탬프';  
     COMMENT ON COLUMN DEVICE_LOG.ACT_NAME IS '동작이름';  
     COMMENT ON COLUMN DEVICE_LOG.USED_IP IS '수행IP';  
     COMMENT ON COLUMN DEVICE_LOG.USED_RES IS '수행결과';  
@@ -1382,8 +1253,22 @@ COMMENT ON TABLE G_PLANT IS '생육식물';
  
     COMMENT ON COLUMN G_PLANT.PLANT_CODE IS '식물코드';  
     COMMENT ON COLUMN G_PLANT.AP_CODE IS '공유기코드';  
-    COMMENT ON COLUMN G_PLANT.SF_CODE IS '재배기코드';  
+    COMMENT ON COLUMN G_PLANT.STAMP IS '스탬프';  
     COMMENT ON COLUMN G_PLANT.FARMING_DATE IS '재배시작일';  
+    
+COMMENT ON TABLE OAUTH_CLIENT_DETAILS IS '클라이언트';
+ 
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.CLIENT_ID IS '클라이언트코드';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.RESOURCE_IDS IS '리소스아이디';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.CLIENT_SECRET IS '시크릿';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.SCOPE IS '범위';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.AUTHORIZED_GRANT_TYPES IS '그랜트';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.WEB_SERVER_REDIRECT_URI IS '리디렉션';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.AUTHORITIES IS '인증권한';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.ACCESS_TOKEN_VALIDITY IS '토큰';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.REFRESH_TOKEN_VALIDITY IS '리프레쉬';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.ADDITIONAL_INFORMATION IS '부가정보';  
+    COMMENT ON COLUMN OAUTH_CLIENT_DETAILS.AUTOAPPROVE IS '자동어프로브';  
     
 COMMENT ON TABLE PLANT IS '식물';
  
@@ -1406,19 +1291,20 @@ COMMENT ON TABLE PLANT_USER IS '사용자';
     COMMENT ON COLUMN PLANT_USER.SF_CNT IS '보유재배기갯수';  
     COMMENT ON COLUMN PLANT_USER.SECOND_NAME IS '이름';  
     COMMENT ON COLUMN PLANT_USER.BLOCK IS '계정중지';  
+    COMMENT ON COLUMN PLANT_USER.ENABLED IS '사용가능여부';  
     
 COMMENT ON TABLE PORT_INFO IS '포트정보';
  
-    COMMENT ON COLUMN PORT_INFO.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN PORT_INFO.AP_CODE IS '공유기코드';  
     COMMENT ON COLUMN PORT_INFO.PORT_NO IS '포트번호';  
+    COMMENT ON COLUMN PORT_INFO.STAMP IS '스탬프';  
     COMMENT ON COLUMN PORT_INFO.PORT_ST IS '포트상태';  
     
 COMMENT ON TABLE SENSOR_DATA IS '센서데이터';
  
     COMMENT ON COLUMN SENSOR_DATA.CALC_DT IS '측정시간';  
-    COMMENT ON COLUMN SENSOR_DATA.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN SENSOR_DATA.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN SENSOR_DATA.STAMP IS '스탬프';  
     COMMENT ON COLUMN SENSOR_DATA.TEMP IS '온도';  
     COMMENT ON COLUMN SENSOR_DATA.HUMI IS '습도';  
     COMMENT ON COLUMN SENSOR_DATA.ELUM IS '조도';  
@@ -1429,17 +1315,23 @@ COMMENT ON TABLE SENSOR_DATA IS '센서데이터';
     
 COMMENT ON TABLE SF IS '수경재배기';
  
-    COMMENT ON COLUMN SF.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN SF.AP_CODE IS '공유기코드';  
+    COMMENT ON COLUMN SF.STAMP IS '스탬프';  
+    COMMENT ON COLUMN SF.SF_CODE IS '재배기코드';  
     COMMENT ON COLUMN SF.SF_PORT_CNT IS '화분수';  
     COMMENT ON COLUMN SF.FLOOR_CNT IS '층수';  
     COMMENT ON COLUMN SF.COOLER_CNT IS '쿨러갯수';  
     COMMENT ON COLUMN SF.LED_CTRL_MODE IS 'LED제어모드';  
     COMMENT ON COLUMN SF.INNER_IP IS '내부ip';  
-    COMMENT ON COLUMN SF.COOLER_ST IS '쿨러상태';  
-    COMMENT ON COLUMN SF.LED_ST IS 'LED상태';  
+    COMMENT ON COLUMN SF.COOLER1_ST IS '쿨러A상태';  
+    COMMENT ON COLUMN SF.LED21_ST IS 'LED21상태';  
+    COMMENT ON COLUMN SF.LED22_ST IS 'LED22상태';  
+    COMMENT ON COLUMN SF.LED31_ST IS 'LED31상태';  
+    COMMENT ON COLUMN SF.LED32_ST IS 'LED32상태';  
     COMMENT ON COLUMN SF.PUMP_ST IS '펌프상태';  
     COMMENT ON COLUMN SF.SF_REG_DATE IS '재배기등록일';  
+    COMMENT ON COLUMN SF.COOLER2_ST IS '쿨러B상태';  
+    COMMENT ON COLUMN SF.COOLER3_ST IS '쿨러C상태';  
     
 
 

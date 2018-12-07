@@ -17,7 +17,7 @@ public class SetFarmingInfoServiceImpl{
 
 	private PlantMapper plantMapper;
 	
-	public void execute(Object farm, int apCode, int sfCode) throws Exception {
+	public void execute(Object farm, int apCode, int stamp) throws Exception {
 		// TODO Auto-generated method stub
 
 		List<Map<String, Object>> portList = new ArrayList<Map<String, Object>>();
@@ -26,7 +26,7 @@ public class SetFarmingInfoServiceImpl{
 		List<List<PortStatusDto>> farming=(List<List<PortStatusDto>>) farm;
 		for (List<PortStatusDto> list : farming) {
 			for (PortStatusDto portStatus : list) {
-				if(portStatus.getStatus()) {
+				if(portStatus.isStatus()) {
 					HashMap<String, Object> map=new HashMap<>();
 					map.put("portNo", cnt);
 					map.put("portSt", 'T');
@@ -36,7 +36,7 @@ public class SetFarmingInfoServiceImpl{
 			}
 		}
 		System.out.println(portList.size());
-		plantMapper.insertPortInfo(apCode, sfCode, portList);
+		plantMapper.insertPortInfo(apCode, stamp, portList);
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import smart_farm_api.common.ResultDto;
-import smart_farm_api.common.service.JwtServiceImpl;
+import smart_farm_api.common.utils.JwtServiceImpl;
 import smart_farm_api.device.domain.APInfoDto;
 import smart_farm_api.device.domain.SmartFarmInfoDto;
 import smart_farm_api.device.repository.DeviceMapper;

@@ -2,10 +2,15 @@ package smart_farm_api.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -13,16 +18,18 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+@Configuration
+@EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	
-	@Value("${farm.token-endpoint-url}")
+	/*@Value("${farm.token-endpoint-url}")
 	private String tokenEndPointUrl;
 	
 	@Value("${farm.client-id}")
 	private String clientId;
 	
 	@Value("${farm.client-secret}")
-	private String clientSecret;
+	private String clientSecret;*/
 	
 	@Value("${farm.security.oauth.resource.jwt.key-value}")
 	private String publicKey;
@@ -32,10 +39,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		//리소스 서버의 uri경로를 OAuth2 인증받게 만들도록 설정하는 부분
 		http
 			//.addFilterBefore(filter, beforeFilter)
-			.cors()
-				.and()
 			.csrf()
-				.disable()
+				.disable() //Disables CSRF protection, as it is uneccesary for an API
 			.headers()
 				.frameOptions()
 				.disable() //헤더 충돌 방지
@@ -85,5 +90,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bcryptEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
