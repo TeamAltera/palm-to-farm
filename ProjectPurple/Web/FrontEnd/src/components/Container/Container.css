@@ -1,23 +1,83 @@
-#SigninWrapper {
+/*#SigninWrapper {
     position: absolute;
-    /* top: 45px;
+    top: 45px;
     right: 0;
     bottom: 0;
-    left: 45px; */
+    left: 45px;
     height: 100%;
     width:100%;
     z-index: 0;
     overflow: hidden;
-    background: url('../../resources/img/mountain.png') no-repeat center center fixed;
+    background: url('../../resources/img/login.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+  }*/
+
+  #SigninWrapper {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    bottom: 0;
+    left: 0px;
+    height: 100%;
+    width:100%;
+    z-index: 0;
+    overflow: hidden;
+    background: url('../../resources/img/login.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.style__basicLayout__page {
+  margin-top: 35px;
+  margin-left: 24px;
+  margin-right: 24px;
+  padding-top: 35px;
+  padding-bottom: 30px;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  font-family: "nanum";
+  font-size: 1rem;
+  background-color: white;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+@font-face{
+  font-family: "nanum";
+  font-weight: 300;
+  src: url("../../resources/fonts/NanumGothicCoding-Regular.woff")
+}
+
+@font-face{
+  font-family: "go-a1";
+
+  src: url("../../resources/fonts/GothicA1-SemiBold.woff")
+}
+
+@media (min-width: 351px) {
+  .style__basicLayout__page {
+      width: 330px;
+      margin-left: auto;
+      margin-right: auto;
   }
-  
-  .cont{
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .style__basicLayout__page {
+      margin-top: 100px;
+      padding-bottom: 30px;
+      width: 350px;
   }
+}
+
+/*display: -ms-flexbox;
+display: flex;
+-ms-flex-direction: column;
+flex-direction: column;
+background-color: #f5f5f5;
+min-height: 100vh;*/

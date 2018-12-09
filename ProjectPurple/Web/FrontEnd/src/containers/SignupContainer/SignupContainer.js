@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from '../../redux/modules/auth';
@@ -6,23 +6,24 @@ import { withRouter } from 'react-router';
 import {
     Container,
     Column,
+    Copyright,
     FormHeader,
     FormBody,
     FormInput,
     Button,
     FormError,
-    Form,
     FormGroup,
     TextCenter,
     FormRow,
     PasswordProg,
     PageLink,
-    SignupProg,
 } from '../../components';
 import scorePassword from '../../utils/scorePassword';
 import emailValidator from '../../utils/emailValidator';
 import { Collapse } from 'reactstrap';
 import { PulseLoader } from 'react-spinners';
+import validator from 'validator';
+
 
 class SignupContainer extends Component {
 
@@ -120,6 +121,18 @@ class SignupContainer extends Component {
             case 7:// 인증코드가 일치하지 않는 경우
                 msg = '인증코드가 일치하지 않습니다. 다시 입력해주세요.'
                 break;
+            case 8:
+                msg = '성을 입력하세요.'
+                break;
+            case 9:
+                msg = '이름을 입력하세요.'
+                break;
+            case 10:
+                msg = '이메일을 입력하세요.'
+                break;
+            case 11:
+                msg = '비밀번호를 입력하세요.'
+                break;
             default:
         }
         return (<FormError isSuccess={success}>{msg}</FormError>);
@@ -154,22 +167,34 @@ class SignupContainer extends Component {
 
         AuthActions.setSpinnerLoading(true);
         try {
-            await AuthActions.checkAuthCode(authCode);
-            if(this.props.result.toJS().status==="OK"){
-                await AuthActions.doSignup(email, password, firstName, secondName);
-                if(this.props.result.toJS().status==="OK")
-                    history.push('/');
-                else //회원가입 실패
-                    AuthActions.setSpinnerLoading(false);
-            }
-            else{
+            await AuthActions.doSignup(email, password, firstName, secondName);
+            if (this.props.result.toJS().status === "OK")
+                history.push('/');
+            else //회원가입 실패
                 this._removeInputValue();
-                AuthActions.setSpinnerLoading(false);
-                AuthActions.setAuthCodeConfirm(7);
-            }
+            AuthActions.setSpinnerLoading(true);
         }
         catch (e) {
             console.log(e);
+        }
+    }
+
+    _validation = () => {
+        const { email, password, firstName, secondName, authCode } = this.props.form.toJS();
+        if (validator.isEmpty(firstName)) {
+
+        }
+        else if (validator.isEmpty(secondName)) {
+
+        }
+        else if (validator.isEmpty(email)) {
+
+        }
+        else if (validator.isEmail(email)) {
+
+        }
+        else if (validator.isEmpty(password)) {
+
         }
     }
 
@@ -201,128 +226,122 @@ class SignupContainer extends Component {
             isAutenticated,
             error,
             spinnerLoading,
-            isAuthCodeConfirm
+            isAuthCodeConfirm,
+            isFirstNameExist,
+            isSecondNameExist,
+            isEmailExist,
         } = this.props;
 
         return (
-            <Container>
-                <Column option="mt-5">
-                    <Form type="login">
-                        <FormBody>
-                            <SignupProg />
-                            <FormGroup>
-                                <FormRow>
-                                    <Column option="-md-6">
-                                        <FormInput
-                                            id="firstName"
-                                            type="text"
-                                            placeholder="성"
-                                            onChange={this._handleChange}
-                                            value={firstName}
-                                            name="firstName"
-                                            disabled={spinnerLoading || isAutenticated}
-                                        />
-                                    </Column>
-                                    <Column option="-md-6">
-                                        <FormInput
-                                            id="secondName"
-                                            type="text"
-                                            placeholder="이름"
-                                            onChange={this._handleChange}
-                                            value={secondName}
-                                            name="secondName"
-                                            disabled={spinnerLoading || isAutenticated}
-                                        />
-                                    </Column>
-                                </FormRow>
-                            </FormGroup>
+            <Fragment>
+                <Container>
+                    <FormHeader />
+                    <FormBody>
+                        <FormGroup>
+                            <FormRow>
+                                <Column option="-md-6">
+                                    <FormInput
+                                        id="firstName"
+                                        type="text"
+                                        placeholder="성"
+                                        onChange={this._handleChange}
+                                        value={firstName}
+                                        name="firstName"
+                                        disabled={spinnerLoading || isAutenticated}
+                                    />
+                                    <TextCenter>
+                                    </TextCenter>
+                                </Column>
+                                <Column option="-md-6">
+                                    <FormInput
+                                        id="secondName"
+                                        type="text"
+                                        placeholder="이름"
+                                        onChange={this._handleChange}
+                                        value={secondName}
+                                        name="secondName"
+                                        disabled={spinnerLoading || isAutenticated}
+                                    />
+                                    <TextCenter>
+                                    </TextCenter>
+                                </Column>
+                            </FormRow>
+                        </FormGroup>
+                        <FormGroup>
+                            <FormInput
+                                id="email"
+                                type="email"
+                                placeholder="이메일"
+                                onChange={this._handleChange}
+                                value={email}
+                                name="email"
+                                disabled={spinnerLoading || isAutenticated}
+                            />
+                        </FormGroup>
+                        <FormGroup option="mb-2">
+                            <FormInput
+                                id="password"
+                                type="password"
+                                placeholder="비밀번호 (8~15자)"
+                                onChange={this._handleChange}
+                                value={password}
+                                name="password"
+                                disabled={spinnerLoading || isAutenticated}
+                            />
+                            <PasswordProg value={passwordScore} option="mt-1" />
+                        </FormGroup>
+                        <FormGroup>
+                            <FormInput
+                                id="passwordCofirm"
+                                type="password"
+                                placeholder="비밀번호 확인"
+                                onChange={this._handleChange}
+                                value={passwordConfirm}
+                                name="passwordConfirm"
+                                disabled={spinnerLoading || isAutenticated}
+                            />
+                        </FormGroup>
+                        <TextCenter>
+                            <PulseLoader
+                                color={'#123abc'}
+                                loading={spinnerLoading && !isAutenticated}
+                            />
+                        </TextCenter>
+                        <Button onClick={this._handleSignup} option="primary" disabled={true}>
+                            가입하기
+                        </Button>
+                        {/*<Collapse isOpen={isAutenticated} onEntered={this.onEntered}>
                             <FormGroup>
                                 <FormInput
-                                    aria="emailHelp"
-                                    id="email"
-                                    type="email"
-                                    placeholder="이메일"
+                                    id="authCode"
+                                    type="text"
+                                    placeholder="인증코드 입력"
                                     onChange={this._handleChange}
-                                    value={email}
-                                    name="email"
-                                    disabled={spinnerLoading || isAutenticated}
+                                    value={authCode}
+                                    name="authCode"
+                                    addon={true}
+                                    addonText={"3:00"}
+                                    disabled={false}
                                 />
-                                {this._renderMsg(isExists)}
-                            </FormGroup>
-                            <FormGroup option="mb-2">
-                                <FormInput
-                                    id="password"
-                                    type="password"
-                                    placeholder="비밀번호"
-                                    onChange={this._handleChange}
-                                    value={password}
-                                    name="password"
-                                    disabled={spinnerLoading || isAutenticated}
-                                />
-                                <PasswordProg value={passwordScore} option="mt-2" />
-                            </FormGroup>
-                            <FormGroup>
-                                <FormInput
-                                    id="passwordCofirm"
-                                    type="password"
-                                    placeholder="비밀번호 확인"
-                                    onChange={this._handleChange}
-                                    value={passwordConfirm}
-                                    name="passwordConfirm"
-                                    disabled={spinnerLoading || isAutenticated}
-                                />
-                                {this._renderMsg(isPasswordConfirm)}
                             </FormGroup>
                             <TextCenter>
                                 <PulseLoader
                                     color={'#123abc'}
-                                    loading={spinnerLoading && !isAutenticated}
+                                    loading={spinnerLoading}
                                 />
                             </TextCenter>
-                            {this._renderFormError(error, 1)}
-                            {!spinnerLoading && !isAutenticated &&
-                                <Button onClick={this._sendEmail} option="primary"
-                                    disabled={isExists === 2 && isPasswordConfirm === 5}>
-                                    가입하기
-                                </Button>}
-                            <Collapse isOpen={isAutenticated} onEntered={this.onEntered}>
-                                <FormGroup>
-                                    <FormInput
-                                        id="authCode"
-                                        type="text"
-                                        placeholder="인증코드 입력"
-                                        onChange={this._handleChange}
-                                        value={authCode}
-                                        name="authCode"
-                                        addon={true}
-                                        addonText={"3:00"}
-                                        disabled={false}
-                                    />
-                                    {this._renderMsg(isAuthCodeConfirm)}
-                                </FormGroup>
-                                <TextCenter>
-                                    <PulseLoader
-                                        color={'#123abc'}
-                                        loading={spinnerLoading}
-                                    />
-                                </TextCenter>
-                                {!spinnerLoading &&<Button onClick={this._handleSignup} 
-                                    option="primary"
-                                    disabled={authCode.trim() !== ""}>
-                                    코드입력
-                                </Button>}
-                            </Collapse>
-                            <TextCenter option="mt-3">
-                                <PageLink
-                                    preChildren="이미 가입하셨다면?"
-                                    middleChildren="로그인"
-                                    link="/"
-                                />
-                            </TextCenter>
-                        </FormBody>
-                    </Form>
-                </Column>
-            </Container>
+                        </Collapse>*/}
+                        <TextCenter option="mt-3">
+                            <PageLink
+                                preChildren="이미 계정이 있으시다면? "
+                                middleChildren="로그인"
+                                link="/"
+                            />
+                        </TextCenter>
+                    </FormBody>
+                </Container>
+                <Copyright />
+            </Fragment>
         );
     }
 }

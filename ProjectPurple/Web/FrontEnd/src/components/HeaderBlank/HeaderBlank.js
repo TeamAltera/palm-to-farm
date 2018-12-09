@@ -6,7 +6,7 @@ const HeaderBlank = ({ children }) => {
     return (
         <div className="HeaderBlank">
             {children}
-            <div className="HeaderBlank-btn mt-2 ml-3">
+            <div className="HeaderBlank-btn">
                 <MdMenu size={25}/>
             </div>
         </div>

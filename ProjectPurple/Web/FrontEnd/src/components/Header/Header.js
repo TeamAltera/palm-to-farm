@@ -3,6 +3,7 @@ import './Header.css';
 import PropTypes from 'prop-types';
 import { MdChevronRight, MdChevronLeft, MdAccountCircle } from 'react-icons/lib/md';
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
+import UserIcon from '../../resources/img/user.svg';
 
 const Header = ({ onClick, popover, user }) => {
     let firstName='';
@@ -23,16 +24,17 @@ const Header = ({ onClick, popover, user }) => {
             <div className="Header-container">
                 <div className="Header-box-left">
                     <span className="main-header-text">
-                        <span className="main-header-text bold">S
-                        </span>mart <span className="main-header-text bold">P</span>lant
+                        <span className="main-header-text bold">P
+                        </span>alm <span className="main-header-text bold">T</span>o
+                        <span className="main-header-text bold"> F</span>arm
                     </span>
                 </div>
                 <div className="Header-box-right">
-                    <span className="main-header-username size-7 mr-2 mt-1" id="nanum-gothic">
+                    <span className="main-header-username size-7" id="nanum-gothic">
                         {firstName} {secondName}
                     </span>
                     <a className="Header-toggle" onClick={onClick[0]} id="Popover1">
-                        <MdAccountCircle size={35} color="#2ca8ff" />
+                        <img src={UserIcon}/>
                     </a>
                     <Popover placement="bottom" isOpen={popover} target="Popover1" toggle={onClick[0]}>
                         <PopoverHeader>

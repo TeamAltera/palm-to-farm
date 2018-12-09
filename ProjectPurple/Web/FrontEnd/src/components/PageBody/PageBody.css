@@ -1,12 +1,19 @@
+#PageBody-addiction{
+    max-width: 1037px;
+    margin: 0 auto;
+}
+
 #PageBody{
+    width: 100%;
     position: relative;
+    margin: 0 auto;
     z-index: 0;
     flex: 1 1;
-    overflow: auto;
     contain: strict;
-    -webkit-overflow-scrolling: touch;
     display: block;
     height: 100%;
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
 }
 
 #PageBody::-webkit-scrollbar {
@@ -27,4 +34,10 @@
     height: 12px;
     border-radius: 6px;
     background: #f3f4f5;
+}
+
+.router-list{
+    font-size: 20px;
+    color: #181818;
+    font-weight: 300;
 }

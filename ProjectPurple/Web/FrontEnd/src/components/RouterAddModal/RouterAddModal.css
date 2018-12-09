@@ -1,3 +1,8 @@
+@font-face{
+    font-family: 'sansr';
+    src: url('../../resources/fonts/NotoSansKR-Regular.woff');
+}
+
 #RouterAddModal-content{
     border-radius: .2rem;
 }
@@ -14,6 +19,16 @@
     display: flex;
     width: 100%;
     flex-direction: row;
+}
+
+#RouterAddModal-body{
+    background-color: #f9fafc;
+    padding-bottom: 0;
+}
+
+#RouterAddModal-footer{
+    background-color: #f9fafc;
+    border-top: solid 1px #e7e7e7;
 }
 
 .RouterAddModal-close{
@@ -40,8 +55,8 @@
 .ip-input-container{
     display: inline-block;
     font-size: 0;
-    border: 1px solid #ccc;
-    padding: 6px 0;
+    border: solid 1px #e7e7e7;
+    padding: 1px 0;
   }
   .ip-input-container .ip-input-item{
     border: none;
@@ -51,6 +66,7 @@
     text-align: center;
     vertical-align: bottom;
     font-size: 13px;
+    background-color: #f9fafc
   }
   .ip-input-container .ip-input-dot{
     display: inline-block;
@@ -62,35 +78,34 @@
     vertical-align: bottom;
   }
 
+.router-name-input{
+    border: none;
+    outline: 0;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    vertical-align: bottom;
+    font-size: 13px;
+    background-color: #f9fafc
+}
+
+
 .RouterAddModal-title{
     font-size: 1rem;
 }
 
 .RouterAddModal-btn{
+    padding-top:'4px';
+    background-color:none;
+    color: #696f7a;
     border: 1px solid rgba(0,0,0,.125);
-    background-color: white;
-    color: black;
     padding-bottom: 3px;
     padding-top: 3px;
     padding-left: 7px;
     padding-right: 7px;
-    font-weight: bold;
+    font-size: 12px;
     cursor: pointer;
-    outline: none;
-}
-
-.RouterAddModal-btn:hover:not([disabled]){
-    background-color: #2ca8ff;
-    border: 1px solid #2ca8ff;
-    color: white;
-    text-decoration: none;
-}
-
-.RouterAddModal-btn[disabled]{
-    background-color: white;
-    border: 1px solid rgba(0,0,0,.125);
-    color: rgba(0,0,0,.125);
-    cursor: default;
+    height: 24px;
 }
 
 #padding-right-8{
@@ -103,6 +118,48 @@
 
 .RouterAddModal-align{
     align-content: center;
+}
+
+.router-ip{
+    border-radius: 6px;
+    background-color: #999999;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+}
+
+.search-btn{
+    padding-top:'4px';
+    background-color:#6293d7;
+    color:white;
+    border: 1px solid #6293d7;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 12px;
+    cursor: pointer;
+    height: 24px;
+}
+
+.search-btn:hover{
+    background-color:#2ca8ff;
+    border: 1px solid #2ca8ff;
+}
+
+.RouterAddModal-btn:hover:not([disabled]){
+    background-color:none;
+    color: #696f7a;
+    border: 1px solid rgba(0,0,0,.125);
+    text-decoration: none;
+}
+
+.RouterAddModal-btn[disabled]{
+    background-color: white;
+    border: 1px solid rgba(0,0,0,.125);
+    color: rgba(0,0,0,.125);
+    cursor: default;
 }
 
 /* .modal {

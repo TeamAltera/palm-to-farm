@@ -31,6 +31,7 @@ import {
     StartFarmingModal,
     Chart,
     DeviceInfo,
+    Copyright,
 } from '../../components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,6 +43,7 @@ import { Loader } from 'react-loaders';
 import 'react-block-ui/style.css';
 import 'loaders.css/loaders.min.css';
 import './sfDeviceContainer.css';
+import { DOMAIN } from '../../lib/spring_api/urlSetting';
 
 var stompClient = null;
 var socket = null;
@@ -68,10 +70,10 @@ class SfDeviceContainer extends Component {
     _connect(draw) {
         const { selectedSf, selectedAp, dataset } = this.props;
         var apCode = selectedAp.apCode;
-        var sfCode = selectedSf.toJS().sfCode;
+        var stamp = selectedSf.toJS().stamp;
 
         socket = new SockJS(
-            'http://203.250.32.91:9001/smart_plant/sensing_data'
+            DOMAIN + 'sensing_data'
         );
 
         socket.onclose = () => {
@@ -82,7 +84,7 @@ class SfDeviceContainer extends Component {
         stompClient = Stomp.over(socket);
         stompClient.connect('manager', 'manager', function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/messages' + apCode + sfCode, draw);
+            stompClient.subscribe('/topic/messages' + apCode + stamp, draw);
         });
     }
 
@@ -131,7 +133,7 @@ class SfDeviceContainer extends Component {
             this.dash_e_ref.style.strokeDasharray = e_d + ',1023';
             this._blink(this.ref_ec, this.ref_ph, this.ref_wt);
         }
-        else{
+        else {
 
         }
     }
@@ -184,7 +186,7 @@ class SfDeviceContainer extends Component {
 
     _handleLog = (date) => {
         const { SensorActions, LogActions, selectedSf, selectedAp } = this.props;
-        const { sfCode } = selectedSf.toJS();
+        const { stamp } = selectedSf.toJS();
         const { apCode } = selectedAp;
         if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
             console.log('conn')
@@ -194,10 +196,10 @@ class SfDeviceContainer extends Component {
             this._disconnect();
         }
         SensorActions.changeStartDate(date);
-        SensorActions.getDataset(apCode, sfCode, date.format('YYYY-MM-DD'));
+        SensorActions.getDataset(apCode, stamp, date.format('YYYY-MM-DD'));
         LogActions.getDataset({
             apCode: apCode,
-            sfCode: sfCode,
+            stamp: stamp,
             date: date.format('YYYY-MM-DD')
         })
     }
@@ -213,11 +215,11 @@ class SfDeviceContainer extends Component {
             farmingCount,
             farming,
         } = this.props;
-        const { innerIp, sfCode } = selectedSf.toJS();
+        const { innerIp, stamp } = selectedSf.toJS();
         const { apIp, apCode } = selectedAp;
         this._blocking(null);
         var prev = new Date();
-        this._addLog(code,'P');
+        this._addLog(code, 'P');
         try {
             if (code === 10) {// 재배시작인 경우
                 if (farmingCount === 0) {
@@ -235,7 +237,7 @@ class SfDeviceContainer extends Component {
                 cmd: code,
                 dest: innerIp,
                 middle: apIp,
-                sfCode: sfCode,
+                stamp: stamp,
                 usedIp: ip.address(),
                 optData: {
                     sfPort: farmingCount,
@@ -247,7 +249,7 @@ class SfDeviceContainer extends Component {
                     console.log(res.data.data.deviceInfo);
                     MainActions.changeSelectedSf(res.data.data.deviceInfo);
                     this._getPortInfo();
-                    this._changeFirstLog(res.data.status==='OK'?'T':'F')
+                    this._changeFirstLog(res.data.status === 'OK' ? 'T' : 'F')
                     this._blocking(prev, res.data);
                     return res;
                 }
@@ -283,18 +285,18 @@ class SfDeviceContainer extends Component {
             selectedAp,
             farmingCount,
         } = this.props;
-        const { innerIp, sfCode } = selectedSf.toJS();
+        const { innerIp, stamp } = selectedSf.toJS();
         const { apIp, apCode } = selectedAp;
         this._blocking(null);
         var prev = new Date();
-        this._addLog(code,'P');
+        this._addLog(code, 'P');
         try {
             await LogActions.sendCommand({
                 apCode: apCode,
                 cmd: code,
                 dest: innerIp,
                 middle: apIp,
-                sfCode: sfCode,
+                stamp: stamp,
                 usedIp: ip.address(),
                 optData: null,
             }).then(
@@ -327,7 +329,7 @@ class SfDeviceContainer extends Component {
         else
             SensorActions.block(!blocking);
     }
- 
+
     //alert출력
     _showAlert = (data) => {
         let type = toast.TYPE.SUCCESS;
@@ -423,9 +425,9 @@ class SfDeviceContainer extends Component {
             selectedPlant,
             startDate
         } = this.props;
-        const { sfCode } = selectedSf.toJS();
+        const { stamp } = selectedSf.toJS();
         const { apCode } = selectedAp;
-        await PlantActions.getDataset(apCode, sfCode, selectedPlant)
+        await PlantActions.getDataset(apCode, stamp, selectedPlant)
             .then(
                 res => {
                     //재배기가 현재 재배중이고 오늘 날짜라면 stomp connect
@@ -449,12 +451,22 @@ class SfDeviceContainer extends Component {
     }
 
     //특정 날짜의 센싱 데이터 조회
-    _getData = async (apCode, sfCode, startDate) => {
+    _getData = async (apCode, stamp, startDate) => {
         const { SensorActions } = this.props;
         await SensorActions.getDataset(
             apCode,
-            sfCode,
+            stamp,
             startDate.format('YYYY-MM-DD'));
+    }
+
+    //최근 센싱 데이터 조회
+    _getLastData = async (apCode, stamp, date) => {
+        const { SensorActions } = this.props;
+        await SensorActions.getLastDataset(
+            apCode,
+            stamp,
+            date
+        )
     }
 
     //사용자가 데이터 로거 페이지에 계속 머물 경우
@@ -475,11 +487,11 @@ class SfDeviceContainer extends Component {
     //수경 재배기의 포트 정보를 받아옴
     _getPortInfo = async () => {
         const { SensorActions, selectedSf, selectedAp, } = this.props;
-        const { sfCode } = selectedSf.toJS();
+        const { stamp } = selectedSf.toJS();
         const { apCode } = selectedAp;
         SensorActions.getPortInfo({
             apCode: apCode,
-            sfCode: sfCode,
+            stamp: stamp,
         })
     }
 
@@ -558,15 +570,24 @@ class SfDeviceContainer extends Component {
 
     componentDidMount() {
         //this._sfItemContainerControlClose();
-        const { farmingResult, startDate } = this.props;
-        this._resetData(); //데이터 말소
-        this._sbChange(1);
-        this._tabChange(0);//선택된 탭 초기화
-        if (farmingResult === null)
-            this._getPortInfo();
-        this._getPlantInfo();
-        this._updatePage();
+        const { farmingResult, startDate, history } = this.props;
 
+        //if (farmingResult === null)
+        //    this._getPortInfo();
+
+        //저장된 토큰 값이 존재한다면
+        if (localStorage.getItem("jwtToken")) {
+            this._resetData(); //데이터 말소
+            this._sbChange(1);
+            this._tabChange(0);//선택된 탭 초기화
+            this._getPortInfo();
+            this._getPlantInfo();
+            this._updatePage();
+            console.log(farmingResult)
+        }
+        else {
+            history.push('/');
+        }
     }
 
     componentWillUnmount() {
@@ -614,9 +635,11 @@ class SfDeviceContainer extends Component {
             sidebarSelected,
             farmingResult,
             logset,
+            lastDataset
         } = this.props;
+        console.log(plantResult);
         const { apCode } = selectedAp;
-        const { sfCode, pumpSt } = selectedSf.toJS();
+        const { sfCode, pumpSt, stamp } = selectedSf.toJS();
         let dt = moment();
         if (plantResult && plantResult.toJS().farmingDate) {
             dt = moment(new Date(plantResult.toJS().farmingDate))
@@ -668,59 +691,68 @@ class SfDeviceContainer extends Component {
                                 </div>
                             </DatePicker>
                         </SfDeviceToolbar>
-                        <PageBody>
-                            <ToastContainer />
-                            <StartFarmingModal
-                                isOpen={modalsState}
-                                modalFunc={this._changeModalsOpen}
-                                sendFunc={this._changeFarming}
-                                sfName={'sf-device#' + sfCode}
-                                onChange={this._setFarming}
-                                farm={farming}
-                                farmRes={farmingResult}
-                                resetFunc={this._setFarmingReset}
-                                resetPipeFunc={this._setFarmingResetPipe}
-                                resetFloorFunc={this._setFarmingResetFloor}
-                                farmingCount={farmingCount}
-                                isConfirm={isConfirm}
-                                plantChange={this._plantChange}
-                            />
-                            {/* 형상 정보 */}
-                            {
-                                tabSelected === 0 &&
-                                <DeviceInfo sfCode={sfCode} farm={farmingResult}
-                                    sendFunc={this._sendCommand}
-                                    logset={logset}
-                                    selectedSf={selectedSf}
-                                    startDate={dt}
-                                    pumpSt={pumpSt}
-                                    getDeviceLog={()=>this._getDeviceLog(startDate)}
+                        {/* <div className="wrap"> */}
+                        <PageBody disabled={true}>
+                                <ToastContainer />
+                                <StartFarmingModal
+                                    isOpen={modalsState}
+                                    modalFunc={this._changeModalsOpen}
+                                    sendFunc={this._changeFarming}
+                                    sfName={'sf-device#' + sfCode}
+                                    onChange={this._setFarming}
+                                    farm={farming}
+                                    farmRes={farmingResult}
+                                    resetFunc={this._setFarmingReset}
+                                    resetPipeFunc={this._setFarmingResetPipe}
+                                    resetFloorFunc={this._setFarmingResetFloor}
+                                    farmingCount={farmingCount}
+                                    isConfirm={isConfirm}
+                                    plantChange={this._plantChange}
                                 />
-                            }
-                            {/* 데이터 로거 */}
-                            {
-                                tabSelected === 1 && plantResult && plantResult.toJS().farmingDate &&
-                                <Chart dataset={dataset.toJS()}
-                                    info={plantResult.toJS()}
-                                    ec={ref => this.ec = ref}
-                                    ph={ref => this.ph = ref}
-                                    wt={ref => this.wt = ref}
-                                    th={ref => this.th = ref}
-                                    ref_ec={ref => this.ref_ec = ref}
-                                    ref_ph={ref => this.ref_ph = ref}
-                                    ref_wl={ref => this.ref_wl = ref}
-                                    ref_wt={ref => this.ref_wt = ref}
-                                    ref_e={ref => this.ref_e = ref}
-                                    dash_wl_ref={ref => this.dash_wl_ref = ref}
-                                    dash_e_ref={ref => this.dash_e_ref = ref}
-                                    // start={startDate.startOf('day').valueOf()}
-                                    // end={startDate.endOf('day').valueOf()}
-                                    start={startDate.startOf('day').valueOf()}
-                                    end={startDate.endOf('day').valueOf()}
-                                    getData={()=>this._getData(apCode, sfCode, startDate)}
-                                />
-                            }
+                                {/* 형상 정보 */}
+                                {
+                                    tabSelected === 0 &&
+                                    <DeviceInfo sfCode={sfCode} 
+                                        farm={farmingResult}
+                                        sendFunc={this._sendCommand}
+                                        logset={logset}
+                                        selectedSf={selectedSf}
+                                        startDate={dt}
+                                        pumpSt={pumpSt}
+                                        getDeviceLog={() => this._getDeviceLog(startDate)}
+                                        plantResultDisabled={plantResult && !plantResult.toJS().farmingDate}
+                                        startDate={startDate}
+                                        info={plantResult && plantResult.toJS()}
+                                        lastDataset={lastDataset}
+                                        last={()=>this._getLastData(apCode,stamp,new Date())}
+                                    />
+                                }
+                                {/* 데이터 로거 */}
+                                {
+                                    tabSelected === 1 && plantResult && plantResult.toJS().farmingDate &&
+                                    <Chart dataset={dataset.toJS()}
+                                        info={plantResult.toJS()}
+                                        ec={ref => this.ec = ref}
+                                        ph={ref => this.ph = ref}
+                                        wt={ref => this.wt = ref}
+                                        th={ref => this.th = ref}
+                                        ref_ec={ref => this.ref_ec = ref}
+                                        ref_ph={ref => this.ref_ph = ref}
+                                        ref_wl={ref => this.ref_wl = ref}
+                                        ref_wt={ref => this.ref_wt = ref}
+                                        ref_e={ref => this.ref_e = ref}
+                                        dash_wl_ref={ref => this.dash_wl_ref = ref}
+                                        dash_e_ref={ref => this.dash_e_ref = ref}
+                                        // start={startDate.startOf('day').valueOf()}
+                                        // end={startDate.endOf('day').valueOf()}
+                                        start={startDate.startOf('day').valueOf()}
+                                        end={startDate.endOf('day').valueOf()}
+                                        getData={() => this._getData(apCode, stamp, startDate)}
+                                    />
+                                }
                         </PageBody>
+                        {/* </div> */}
+                        <Copyright />
                     </PageContent>
                 </MainWrapper >
             </Fragment >
@@ -732,6 +764,7 @@ export default withRouter(
     connect(
         state => ({
             dataset: state.sensor.get('dataset'),
+            lastDataset: state.sensor.get('lastDataset'),
             startDate: state.sensor.get('startDate'),
             result: state.sensor.get('result'),
             datePickerToggle: state.sensor.get('datePickerToggle'),

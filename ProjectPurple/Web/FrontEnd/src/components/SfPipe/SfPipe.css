@@ -39,10 +39,16 @@
 }
 
 .StartFarmingModal-count{
-    width: 30px;
-    height: 30px;
+    margin-top: 5px;
+    width: 25px;
+    height: 20px;
+    font-size:10px;
     text-align: center;
     cursor: default;
+    background-color: #dfeaf0;
+    color: white;
+    font-weight: bold;
+    border-radius: 9px;
 }
 
 #myCheckbox input {

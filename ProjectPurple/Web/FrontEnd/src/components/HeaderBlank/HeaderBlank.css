@@ -7,17 +7,19 @@
     position: absolute;
     transition: .2s ease-in-out;
     display: block;
-    background-color: #2a2a2a
+    background-color: #5a81a9
 }
 
 .HeaderBlank-btn{
     display: none;
-    color: gray;
+    color: white;
     cursor: pointer;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
 .HeaderBlank-btn:hover{
-    color: white;
+    color: black;
 }
 
 @media(max-width:768px) {

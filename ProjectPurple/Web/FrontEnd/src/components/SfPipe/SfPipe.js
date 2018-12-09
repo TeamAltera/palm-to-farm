@@ -51,9 +51,9 @@ const SfPort = ({ index, onChange, checked, value, name }) => {
         <label id="myCheckbox">
             <input type="checkbox" name={index} checked={isCheck} onChange={onChange} 
             value={value} name={name}/>
-            <span><span id="nopadding">
-                {checked && <MdLocalFlorist size={20}/>}
-            </span></span>
+            <span style={{paddingLeft:'5px'}}>
+                {checked && <MdLocalFlorist size={20} color='#3f831c'/>}
+            </span>
         </label>
     )
 }
@@ -62,8 +62,10 @@ const SfPortNoInput = ({ checked }) => {
     return (
         <div id="myCheckbox">
             {/* <div type="checkbox"/> */}
-            <span style={{cursor: 'default'}}><span id="nopadding" style={{cursor: 'default'}}>
-                {checked && <MdLocalFlorist size={20} color='green'/>}
+            <span style={{cursor: 'default'}}><span id="nopadding" 
+            style={{cursor: 'default',  paddingLeft:'2px', paddingRight: '2px', paddingBottom:'2px', paddingTop:'0px'}}
+            >
+                {checked && <MdLocalFlorist size={20} color='#3f831c'/>}
             </span></span>
         </div>
     )
@@ -71,7 +73,8 @@ const SfPortNoInput = ({ checked }) => {
 
 const SfCount = ({ index }) =>
     <div className="StartFarmingModal-count">
-        <span className="text-muted smaller size-8" id="nanum-gothic">{index}</span>
+        <span className="text-muted smaller size-8" id="nanum-gothic"
+        style={{fontSize:'11px'}}>{index}</span>
     </div>
 
 export default SfPipe;

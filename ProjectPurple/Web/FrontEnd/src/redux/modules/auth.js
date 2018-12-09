@@ -61,6 +61,9 @@ const initialState = Map({
       passwordConfirm: '',
       authCode: '',
     }),
+    isFirstNameExist: false,
+    isSecondNameExist: false,
+    isEmailExist: false,
     passwordScore: 0,
     isAutenticated: false,
     spinnerLoading: false,
@@ -131,7 +134,9 @@ export default handleActions(
       type: SIGNIN,
       //signin 요청이 성공했을 때 수행하는 작업
       onSuccess: (state, action) =>
-        state.set('result', Map(action.payload.data)),
+        state.set('result', {msg:''}),
+      onFairue: (state, action) =>
+        state.set('result', {msg:'입력형식에 맞지 않습니다.'}),
     }),
 
     ...pender({

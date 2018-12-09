@@ -5,7 +5,7 @@ import { MdArrowForward } from 'react-icons/lib/md';
 import Moment from 'react-moment';
 import SfItem from '../SfItem/SfItem';
 
-const SfItemContainer = ({ option, data, close, children }) => {
+const SfItemContainer = ({ option, data, close, children}) => {
     let apCode;
     let apName;
     let regDate;
@@ -47,8 +47,8 @@ const SfItemContainer = ({ option, data, close, children }) => {
                 <div className="background-image-container"></div>
             </div>
             <div className="SfItemContainer-body SfItemContainer-item">
-                <div className="container-fluid mb-150">
-                    {children}
+                {children}
+                <div className="mt-3" id="SfItem-box" style={{height:'125px', zIndex: '9999', float:'left', border:'0'}}>
                 </div>
             </div>
         </div>

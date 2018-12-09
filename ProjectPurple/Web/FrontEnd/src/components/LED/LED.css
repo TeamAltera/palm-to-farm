@@ -1,0 +1,33 @@
+.led-btn-enabled{
+    width: 100%;
+    color: white;
+    background-color: #454a55;
+    cursor: pointer;
+    border: 0;
+}
+
+.led-btn-disabled{
+    width: 100%;
+    background-color: white;
+    color: #212529;
+    cursor: default;
+    border: 0;
+}
+
+.led-btn-enabled:hover{
+    background-color: #6293d7;
+}
+
+.led-btn-enabled:focus{
+    outline: none;
+}
+
+.led-btn-disabled:focus{
+    outline: none;
+}
+
+#btn-disabled{
+    cursor: default;
+    background-color: #e7e7e7;
+    color: white;
+}

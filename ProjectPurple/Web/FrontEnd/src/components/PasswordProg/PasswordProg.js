@@ -16,6 +16,11 @@ const PasswordProg = ({ value, option }) => {
 
 const status=[
     {
+        value: 0,
+        color: 'danger',
+        text: ''
+    },
+    {
         value: 20,
         color: 'danger',
         text: '매우약함'

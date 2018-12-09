@@ -19,9 +19,10 @@
 }
 
 .RouterAddButton-container {
-    height: 157px;
+    height: 225px;
     cursor: pointer;
     padding-top: 0px;
+    background-color: transparent;
 }
 
 .RouterAddButton-wrapper {
@@ -34,11 +35,18 @@
     justify-content: center;
     -webkit-align-items: center;
     align-items: center;
+    /* background-color: #e5e7ea; */
+    border: 3px solid white;
+    border-radius: 5px;
+    border-style: dashed;
+    color: white;
 }
 
+
 .RouterAddButton-wrapper:hover{
-    color:white;
+    color:#454a55;
     background-color: lightblue;
+    border-style: none;
 }
 
 .RouterAddButton-item {

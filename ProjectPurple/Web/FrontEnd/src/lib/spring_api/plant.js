@@ -1,13 +1,13 @@
 import axios from 'axios';
-const DOMAIN = 'http://203.250.32.91:9001/smart_plant/';
+import {DOMAIN} from './urlSetting';
 const PLANT_NAMESPACE = 'plant/';
 
-export const getDataset = (apCode,sfCode,selectedPlant) => {
+export const getDataset = (apCode,stamp,selectedPlant) => {
     //url, data, header순서
     return axios
         .post(DOMAIN + PLANT_NAMESPACE + 'info',{
             apCode: apCode,
-            sfCode: sfCode,
+            stamp: stamp,
             plantCode: selectedPlant,
         }).then(res => {
             console.log(res);

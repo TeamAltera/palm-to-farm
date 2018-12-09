@@ -1,5 +1,5 @@
 import axios from 'axios';
-const DOMAIN = 'http://203.250.32.91:9001/smart_plant/';
+import {DOMAIN} from './urlSetting';
 const LOG_NAMESPACE = 'log/';
 
 export const getDataset = (data) => {

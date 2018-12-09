@@ -26,7 +26,7 @@ const ChartAddOn = ({ maxEC, minEC, maxPH, minPH, lastEC, lastPH, lastCS, ref_ec
                                     {plant}의 생육 데이터
                         </div>
                             </TextCenter>
-                            <table>
+                            <table style={{fontSize:'12px'}}>
                                 <thead>
                                     <tr>
                                         <th>name</th>

@@ -5,20 +5,19 @@ import './Copyright.css'
 
 const Copyright = ({ children, option }) => {
     return (
-        <Fragment>
-            <div className="Copyright-back" />
-            <div className="Copyright">
-                <TextCenter option="mt-4">
-                    2018 &copy;
-                <a
+        <footer className="copyright-footer pt-2 pb-2">
+            <TextCenter>
+                2018 &copy;
+                    <a
                         href="https://github.com/AlteraLab/ProjectPonics"
                         target="_blank"
-                        rel="noopener noreferrer">
-                        <span className="Copyright-a">DCU Altera LAB</span>
+                        rel="noopener noreferrer"
+                        className="copyright-footer-text"
+                        >
+                        <span>DCU Altera LAB</span>
                     </a>
-                </TextCenter>
-            </div>
-        </Fragment>
+            </TextCenter>
+        </footer>
     )
 };
 

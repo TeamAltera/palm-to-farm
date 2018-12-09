@@ -25,6 +25,7 @@ const CHANGE_SELECTED_SF = 'main/CHANGE_SELECTED_SF';
 const CHANGE_SELECTED_SB = 'main/CHANGE_SELECTED_SB';
 const ADD_ITEM = 'main/ADD_ITEM';
 const INCREMENT_SF_CNT = 'main/INCREMENT_SF_CNT'
+const DELETE_DEVICE='main/DELETE_DEVICE';
 
 //action 생성
 export const changeSfToggleState = createAction(CHANGE_SF_TOGGLE_STATE);
@@ -33,6 +34,7 @@ export const getDeviceAllInfo = createAction(GET_DEVICE_ALL_INFO, DeviceApi.getD
 export const changeModalsState = createAction(CHANGE_MODALS_STATE);
 export const changeDropdownState = createAction(CHANGE_DROPDOWN_STATE);
 export const deleteAllRouter = createAction(DELETE_ALL_ROUTER);
+export const deleteDevice = createAction(DELETE_DEVICE, DeviceApi.deleteDevice);
 export const deleteSingleRouter = createAction(DELETE_SINGLE_ROUTER, DeviceApi.deleteSingleRouter);
 export const changeInput = createAction(CHANGE_INPUT);
 export const searchRouter = createAction(SEARCH_ROUTER, DeviceApi.searchRouter);
@@ -152,6 +154,16 @@ export default handleActions(
 
         ...pender({
             type: DELETE_SINGLE_ROUTER,
+            onSuccess: (state, action) => {
+                if (action.payload.data.status === 'OK')
+                    return state.set('deviceInfo', List(action.payload.data.data.deviceInfo))
+                else
+                    return state.set('result', Map(action.payload.data))
+            }
+        }),
+
+        ...pender({
+            type: DELETE_DEVICE,
             onSuccess: (state, action) => {
                 if (action.payload.data.status === 'OK')
                     return state.set('deviceInfo', List(action.payload.data.data.deviceInfo))

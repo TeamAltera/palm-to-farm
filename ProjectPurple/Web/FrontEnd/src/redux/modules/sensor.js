@@ -8,7 +8,8 @@ import { Map, List } from 'immutable';
 import moment from 'moment';
 
 //action 경로
-const GET_DATASET = 'sensor/GET_DATASET'; // input 값 변경
+const GET_DATASET = 'sensor/GET_DATASET'; 
+const GET_LAST_DATASET = 'sensor/GET_LAST_DATASET'; 
 const CHANGE_START_DATE = 'sensor/CHANGE_START_DATE';
 const CHANGE_DATE_PICKER = 'sensor/CHANGE_DATE_PICKER';
 const BLOCK = 'sensor/BLOCK';
@@ -24,6 +25,7 @@ const GET_PORT='sensor/GET_PORT';
 
 //action 생성
 export const getDataset = createAction(GET_DATASET, SensorApi.getDataset);
+export const getLastDataset =createAction(GET_LAST_DATASET, SensorApi.getLastDataset);
 export const changeStartDate = createAction(CHANGE_START_DATE);
 export const changeDatePickerToggle = createAction(CHANGE_START_DATE);
 
@@ -68,6 +70,7 @@ const initialState = Map({
   farmingResult:null,
 
   dataset: List(),
+  lastDataset:Map()
 });
 
 //action에 따른 리듀서 수행동작
@@ -134,6 +137,12 @@ export default handleActions(
       type: GET_DATASET,
       onSuccess: (state, action) =>
         state.set('dataset', List(action.payload.data.data)),
+    }),
+
+    ...pender({
+      type: GET_LAST_DATASET,
+      onSuccess: (state, action) =>
+        state.set('lastDataset', action.payload.data.data),
     }),
 
     ...pender({

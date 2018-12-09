@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as authActions from '../../redux/modules/auth';
@@ -6,13 +6,11 @@ import { withRouter } from 'react-router';
 import jwt from 'jsonwebtoken';
 import {
     Container,
-    Column,
     FormHeader,
     FormBody,
     FormInput,
     Button,
     FormError,
-    Form,
     FormGroup,
     Copyright,
     TextCenter,
@@ -93,11 +91,7 @@ class SigninContainer extends Component {
 
         //AuthActions.setSpinnerLoading(true);
         if (!error) {
-            //비밀번호 해싱 수행(단방향 해시)
-            let pwd = setHashing(password);
-            console.log('email은 ' + email + ' pwd는 ' + password);
-            console.log(pwd);
-
+            //hash
             try {
                 await AuthActions.doSignin(email, password);
 
@@ -116,7 +110,7 @@ class SigninContainer extends Component {
             }
             catch (e) {
                 console.log(e);
-                this._setErrorMessage(this.props.result.toJS().msg, 2);
+                this._setErrorMessage("이메일 또는 패스워드가 일치하지 않습니다.", 2);
             }
         }
         else {
@@ -149,9 +143,9 @@ class SigninContainer extends Component {
         // form 에서 email 과 password 값을 읽어온다
         const { email, password } = this.props.form.toJS();
         return (
-            <Container>
-                <Form isError={error}>
-                    <FormHeader>Smart Plant</FormHeader>
+            <Fragment>
+                <Container>
+                    <FormHeader/>
                     <FormBody>
                         <FormGroup>
                             <FormInput
@@ -166,7 +160,7 @@ class SigninContainer extends Component {
                                 disabled={false}
                             />
                         </FormGroup>
-                        {this._renderFormError(error, 1)}
+                        
                         <FormGroup>
                             <FormInput
                                 id="password"
@@ -179,18 +173,19 @@ class SigninContainer extends Component {
                                 disabled={false}
                             />
                         </FormGroup>
-                        {this._renderFormError(error, 2)}
                         <TextCenter>
                             <PulseLoader
                                 color={'#123abc'}
                                 loading={spinnerLoading}
                             />
                         </TextCenter>
+                        {this._renderFormError(error, 1)}
+                        {this._renderFormError(error, 2)}
                         {
                             !spinnerLoading &&
                             <Button onClick={this._handleSignin} disabled={true}>
                                 로그인
-                                </Button>
+                            </Button>
                         }
                         <TextCenter option="mt-3">
                             <PageLink
@@ -203,15 +198,15 @@ class SigninContainer extends Component {
                             <PageLink
                                 preChildren="비밀번호를 잊어버렸다면 "
                                 middleChildren="여기"
-                                postChildren="를 클릭해주세요."
+                                postChildren="를 클릭하세요."
                                 link="/"
                                 option="mt-1"
                             />
                         </TextCenter>
                     </FormBody>
-                    <Copyright/>
-                </Form>
-            </Container>
+                </Container>
+                <Copyright/>
+            </Fragment>
         );
     }
 }

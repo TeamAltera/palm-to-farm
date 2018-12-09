@@ -5,12 +5,12 @@ import { bindActionCreators } from 'redux';
 import * as mainActions from '../../redux/modules/main';
 import * as sensorActions from '../../redux/modules/sensor';
 import {
+    RouterItem,
     SideBar,
     PageContent,
     Header,
     MainWrapper,
     PageBody,
-    RouterItem,
     RouterAddButton,
     MainToolBar,
     RouterAddModal,
@@ -19,6 +19,8 @@ import {
     SfItem,
     HeaderBlank,
     BlankWrapper,
+    Copyright,
+    SfBlock
 } from '../../components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,6 +32,7 @@ import '../SfDeviceContainer/sfDeviceContainer.css'
 import setAuthorizationToken from '../../utils/setAuthorizationToken';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { DOMAIN } from '../../lib/spring_api/urlSetting';
 
 var stompClient = null;
 var socket = null;
@@ -39,9 +42,7 @@ class MainContainer extends Component {
 
     _connect(addSfAuto, userCode) {
         if (!stompClient) {
-            socket = new SockJS(
-                'http://203.250.32.91:9001/smart_plant/device_data'
-            );
+            socket = new SockJS(DOMAIN + 'device_data');
 
             socket.onclose = () => {
                 stompClient.disconnect();
@@ -59,28 +60,16 @@ class MainContainer extends Component {
     _addSfAuto = (message) => {
         const { deviceInfo, sfToggleState } = this.props;
         //MainActions.addItem({newSf:msg});
+        console.log("!!!")
         let msg = JSON.parse(message.body);
         deviceInfo.toJS().some(
             (arg, index) => {
-                //if (arg.apCode === msg.apCode) {
-                //    console.log(index)
-                //    console.log('find')
-                    this._getDeviceAllInfo();
+                this._getDeviceAllInfo();
 
-                    if (sfToggleState) {
-                        this._sfItemContainerControlClose();
-                    }
-                    // MainActions.incrementSfCnt({
-                    //     index: index,
-                    //     count: arg.apSfCnt+1
-                    // });
-                    // MainActions.addItem({
-                    //     index: index,
-                    //     data: msg
-                    // })
-                    //this._getDeviceAllInfo();
-                    return true;
-                //}
+                if (sfToggleState) {
+                    this._sfItemContainerControlClose();
+                }
+                return true;
             }
         );
         this._showAlert({
@@ -91,13 +80,6 @@ class MainContainer extends Component {
     }
 
     _handleSignout = async () => {
-        // const { UserActions } = this.props;
-        // try {
-        //     await UserActions.logout();
-        // } catch (e) {
-        //     console.log(e);
-        // }
-
         localStorage.removeItem('jwtToken');
         setAuthorizationToken(null);
         window.location.href = '/'; // 홈페이지로 새로고침
@@ -188,6 +170,16 @@ class MainContainer extends Component {
         );
     }
 
+    _deleteDevice = async (stamp) => {
+        const { MainActions } = this.props;
+        await MainActions.deleteDevice(stamp).then(
+            (res) => {
+                this._showAlert(res.data);
+                return res;
+            }
+        );
+    }
+
     //라우터 조회
     _searchRouter = async () => {
         const { MainActions, isConfirm } = this.props;
@@ -234,6 +226,7 @@ class MainContainer extends Component {
 
     _changeSelectedSf = (item) => {
         const { MainActions } = this.props;
+        console.log(item);
         MainActions.changeSelectedSf(item);
     }
 
@@ -249,10 +242,18 @@ class MainContainer extends Component {
     }
 
     componentDidMount() {
-        this._sfItemContainerControlClose();
-        this._sbChange(0);
-        this._getDeviceAllInfo();
-        this._getUserInfo();
+        const { history } = this.props;
+
+        //저장된 토큰 값이 존재한다면
+        if(localStorage.getItem("jwtToken")){
+            this._sfItemContainerControlClose();
+            this._sbChange(0);
+            this._getDeviceAllInfo();
+            this._getUserInfo();
+        }
+        else{
+            history.push('/');
+        }
     }
 
     componentWillUnmount() {
@@ -289,16 +290,19 @@ class MainContainer extends Component {
 
     _renderSfItems = (data) => {
         if (data) {
+            console.log(data)
             return data.map(
                 (sf) => {
                     return (
-                        <SfItem key={sf.sfCode}
+                        <SfItem key={sf.stamp}
                             coolerSt={sf.coolerSt}
                             ledSt={sf.ledSt} pumpSt={sf.pumpSt}
                             ip={sf.innerIp} ctrlMode={sf.ledCtrlMode}
                             sfCode={sf.sfCode} regDate={sf.sfRegDate}
                             floor={sf.floorCnt} port={sf.sfPortCnt}
+                            stamp={sf.stamp}
                             onClick={() => this._changeSelectedSf(sf)}
+                            deleteFunc={() => this._deleteDevice(sf.stamp)}
                         />
                     );
                 }
@@ -370,7 +374,8 @@ class MainContainer extends Component {
                             close={this._sfItemContainerControlClose}>
                             {selectedAp && this._renderSfItems(selectedAp.plantDevices)}
                         </SfItemContainer>
-                        <PageBody>
+                        <PageBody routerCnt={deviceInfo.toJS().length} disabled={false}>
+                            <SfBlock/>
                             {this._renderRouterItems(deviceInfo.toJS())}
                             <RouterAddButton
                                 onClick={this._changeModalsOpen} />
@@ -385,7 +390,7 @@ class MainContainer extends Component {
                             />
 
                         </PageBody>
-                        {/* <Footer /> */}
+                        <Copyright />
                     </PageContent>
                 </MainWrapper>
             </Fragment>

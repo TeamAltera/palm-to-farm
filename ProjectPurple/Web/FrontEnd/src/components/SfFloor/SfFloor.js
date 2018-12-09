@@ -13,37 +13,40 @@ const SfFloor = ({ floorIndex, children, resetPipeFunc, resetFloorFunc, option }
         dn = 3;
     }
     return (
-        <div>
-            <div className="row StartFarmingModal-justify-left mb-0 mr-1 ml-1">
-                <span className="StartFarmingModal-floor-title smaller size-8" id="nanum-gothic">
-                    <strong>{floorIndex}F</strong>
-                </span>
-                {
-                    option &&
-                    <Fragment>
-                        <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
-                            onClick={() => resetFloorFunc(up, dn)}>
-                            <strong>전체</strong>
+        <Fragment>
+            <div>
+                <div className="row StartFarmingModal-justify-left mb-0 mr-1 ml-1">
+                    <span className="StartFarmingModal-floor-title smaller size-8" id="nanum-gothic">
+                        <strong>{floorIndex}F</strong>
+                    </span>
+                    {
+                        option &&
+                        <Fragment>
+                            <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
+                                onClick={() => resetFloorFunc(up, dn)}>
+                                전체
                         </span>
-                        <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
-                            onClick={() => resetPipeFunc(up, false)}
-                        >
-                            <strong>{pipeUp}</strong>
-                        </span>
-                        <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
-                            onClick={() => resetPipeFunc(dn, false)}
-                        >
-                            <strong>{pipeDn}</strong>
-                        </span>
-                    </Fragment>
-                }
-            </div>
-            <div className="row StartFarmingModal-justify mb-3 mr-1 ml-1">
-                <div className="StartFarmingModal-floor">
-                    {children}
+                            <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
+                                onClick={() => resetPipeFunc(up, false)}
+                            >
+                                {pipeUp}
+                            </span>
+                            <span className="StartFarmingModal-floor-blank smaller size-8" id="nanum-gothic"
+                                onClick={() => resetPipeFunc(dn, false)}
+                            >
+                                {pipeDn}
+                            </span>
+                        </Fragment>
+                    }
+                </div>
+                <div className="row StartFarmingModal-justify mb-3 mr-1 ml-1">
+                    <div className="StartFarmingModal-floor">
+                        {children}
+                    </div>
                 </div>
             </div>
-        </div>
+
+        </Fragment>
     )
 };
 

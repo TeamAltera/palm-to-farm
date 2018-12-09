@@ -1,20 +1,20 @@
-.Copyright{
-    font-size: .9rem;
-    z-index: 3;
-}
-
-.Copyright-a{
-    color: black;
-    z-index: 3;
-}
-
-.Copyright-back{
+.copyright-footer {
+    background-color: #FFFFFF;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 0;
+    color: #90929E;
+    -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    font-size: 12px;
     position: absolute;
-    bottom: 0;
     left: 0;
-    height: 32px;
+    bottom: 0;
     width: 100%;
-    background-color: rgb(70, 70, 70);
-    opacity: .1;
-    z-index: 0;
+}
+
+.copyright-footer-text{
+    color: #90929E;
 }

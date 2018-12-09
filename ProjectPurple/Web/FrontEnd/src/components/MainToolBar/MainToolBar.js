@@ -10,30 +10,14 @@ const MainToolBar = ({ isOpen, toggle, addFunc, deleteFunc }) => {
             <div className="MainToolBar-box-left mt-2 mb-2">
             </div>
             <div className="MainToolBar-box-right mt-2 mb-2">
-                {/* <span className="smaller size-9 ml-1">정렬</span>
-                <Dropdown isOpen={isOpen} toggle={toggle} >
-                    <DropdownToggle className="MainToolBar-btn mr-2">
-                    <span className="smaller size-9">업데이트순</span>
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem>
-                            <span>업데이트순</span>
-                        </DropdownItem>
-                        <DropdownItem>
-                            <span>이름순</span>
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown> */}
-                {/* <div id="nanum-gothic"> */}
-                    <div href="#" className="MainToolBar-btn mr-2" onClick={deleteFunc}>
-                        <MdCancel size={20} />
-                        <span className="smaller size-9 ml-1">전체 삭제</span>
-                    </div>
-                    <div className="MainToolBar-btn mr-3" onClick={addFunc}>
-                        <MdAddCircle size={20} />
-                        <span className="smaller size-9 ml-1">새 라우터</span>
-                    </div>
-                {/* </div> */}
+                <div href="#" className="MainToolBar-btn mr-2" onClick={deleteFunc}>
+                    <MdCancel size={18} />
+                    <span className="ml-1">전체 삭제</span>
+                </div>
+                <div className="MainToolBar-btn mr-3" onClick={addFunc}>
+                    <MdAddCircle size={18} />
+                    <span className="ml-1">새 라우터</span>
+                </div>
             </div>
         </div>
     )

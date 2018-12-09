@@ -1,7 +1,7 @@
 #Header {
-  background-color: #2a2a2a;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  /* background-color: #2a2a2a; */
+  background-color: #355b85;
+  padding: 0;
   height: 45px;
   top: 0;
   right: 0;
@@ -25,10 +25,6 @@
 
 #Header-item-right {
   justify-content: right;
-}
-
-.Header-toggle {
-  cursor: pointer;
 }
 
 .Header-container {
@@ -71,11 +67,28 @@
   color: white;
   cursor: default;
   font-size: 20px;
+  padding-top: 8px;
+  padding-left: 8px;
 }
 
 .main-header-username{
   color: white;
   cursor: default;
+  width:150px;
+  padding: 0 15px;
+  border-left: 2px solid #2c6a95;
+  padding-top: 10px;
+}
+
+.Header-toggle {
+  cursor: pointer;
+  width:46px;
+  height: 46px;
+}
+
+.Header-toggle img{
+  height: 100%;
+  width: 100%;
 }
 
 .main-header{

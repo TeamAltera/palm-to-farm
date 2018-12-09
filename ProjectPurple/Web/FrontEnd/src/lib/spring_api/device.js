@@ -1,5 +1,5 @@
 import axios from 'axios';
-const DOMAIN = 'http://203.250.32.91:9001/smart_plant/';
+import {DOMAIN} from './urlSetting';
 const DEVICE_NAMESPACE = 'device/';
 
 //장치 정보 받아오기
@@ -35,6 +35,17 @@ export const deleteSingleRouter = (apCode) => {
             return res;
         });
 }
+
+export const deleteDevice = (stamp) => {
+    //url, data, header순서
+    return axios
+        .post(DOMAIN + DEVICE_NAMESPACE + 'delete/sf/manual/' + stamp, null)
+        .then(res => {
+            console.log(res);
+            return res;
+        });
+}
+
 
 export const searchRouter = (ip) => {
     return axios

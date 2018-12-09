@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const FormGroup = ({ children, option }) => (
 
-    <div className={"form-group " + option}>
+    <div className={"form-group form-group-width" + option}>
         {children}
     </div>
 

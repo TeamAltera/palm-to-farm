@@ -1,11 +1,8 @@
 #SfItem-box{
     width: 508px;
-    /* border: 1px solid rgba(0,0,0,.125); */
+    border: 1px solid rgba(0,0,0,.125);
     justify-content: center;
     z-index: 9999;
-}
-
-#SfItem-box:hover{
 }
 
 .SFItem-action{
@@ -16,11 +13,6 @@
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
-}
-
-.success{
-    /* background-color:#ffb024; */
-    /* color: white; */
 }
 
 .ready{
@@ -81,4 +73,25 @@
 
 #nomargin{
     margin: 0;
+}
+
+.sf-execute{
+    background-color: #434a56;
+    display: inline-block;
+    text-decoration: none;
+    width: 90px;
+    height: 23px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    font-size: 11px;
+    border: 0;
+}
+
+.sf-execute:hover{
+    background-color: #6293d7;
+}
+
+.sf-execute:focus{
+    outline: none;
 }

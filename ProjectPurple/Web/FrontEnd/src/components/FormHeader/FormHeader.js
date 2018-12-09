@@ -1,17 +1,18 @@
 import React, { Fragment } from 'react';
+import { TextCenter } from '../../components';
 import './FormHeader.css'
+import logo from '../../resources/img/ptf.png'
 
-const FormHeader = ({ children }) => (
+const FormHeader = () => (
     <Fragment>
-        <div className="FormHeader-back"></div>
-        <div className="Form-title mt-2">
-            <h3>
-                <span className="blue">S</span>
-                mart
-            <span className="blue"> P</span>
-                lant
-            </h3>
+        <div className="style__login__logo--wrapper">
+            <a href="/">
+                <img className="style__login__logo" src={logo} />
+            </a>
         </div>
+        <TextCenter>
+            <span className="style-title">당신의 식물공장을 지금 시작해보세요 :)</span>
+        </TextCenter>
     </Fragment>
 );
 

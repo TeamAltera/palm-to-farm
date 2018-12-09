@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import './FormInput.css';
-import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { InputGroup, InputGroupAddon} from 'reactstrap';
 
-const FormInput = ({ addon, addonText, type, id, placeholder, aria, onChange, value, name, disabled }) => {
+const FormInput = ({ addon, addonText, type, id, placeholder, onChange, value, name, disabled }) => {
     return (
         <Fragment>
             <label htmlFor={id} className="inp">

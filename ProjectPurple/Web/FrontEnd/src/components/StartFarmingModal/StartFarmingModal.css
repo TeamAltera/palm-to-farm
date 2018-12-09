@@ -1,41 +1,15 @@
-/* #RouterAddModal-content {
-    border-radius: .2rem;
+@font-face{
+    font-family: 'sansr';
+    src: url('../../resources/fonts/NotoSansKR-Regular.woff');
 }
-
-#RouterAddModal-header {
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0.4rem;
-    border-top-right-radius: .2rem;
-    border-top-left-radius: .2rem;
-    background-color: #2a2a2a;
-    color: white;
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-}
-
-.RouterAddModal-close {
-    border-top-right-radius: .2rem;
-    margin: 0;
-    background-color: #a93b36;
-    color: #ca8885;
-    border: 0;
-    float: right;
-    cursor: pointer;
-}
-
-.RouterAddModal-close:hover {
-    background-color: #8e211c;
-    color: #ffffff;
-} */
 
 .StartFarmingModal-box{
     border: 1px solid rgba(150, 150, 150, .5);
     padding-left: 5px;
     padding-right: 5px;
     cursor: default;
+    font-family: 'sansr';
+    font-size: 13px;
 }
 
 .StartFarmingModal-box:focus{

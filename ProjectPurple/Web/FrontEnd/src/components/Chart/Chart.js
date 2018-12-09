@@ -53,7 +53,7 @@ class Chart extends Component {
             e_d = dataset[len - 1].e;
         }
         return (
-            <div className={"container-fluid chart-cont"}>
+            <div className={"container-fluid chart-cont"} style={{marginBottom:'120px'}}>
                 <div className="row" id="nomargin">
                     {/* <div className="container-fluid">
                         <div className="row">
