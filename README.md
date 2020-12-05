@@ -1,16 +1,24 @@
 # Palm to Farm
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)             
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub language count](https://img.shields.io/github/languages/count/DCU-ICSLab/palm-to-farm)
+![GitHub repo size](https://img.shields.io/github/repo-size/DCU-ICSLab/palm-to-farm)
+[![HitCount](http://hits.dwyl.com/DCU-ICSLab/palm-to-farm.svg)](http://hits.dwyl.com/DCU-ICSLab/palm-to-farm)
 
+<p align="center">
+    <img src="./docs_img/ptf.jpg"/>
+</p>
+
+## Introduction
 Palm to Farm is a system that allows you to build a lightweight, flexible smart farm. The system is largely divided into four components: API server, Smart Farm Manager web app, gateway, and grower. Farmers who want to build smart farms can expand or reduce their growers by the number they want.
 
 This project was carried out for a total of eight months from February to September 2018 and won the **grand prize** at the **16th Embedded Software Competition**.
 
 If you want, it is possible to check the details of this project through demo video and document.
 
-- :yt: **[demo video](https://youtu.be/UkNaeAGOSR0)**
+- :penguin: **[demo video](https://youtu.be/UkNaeAGOSR0)**
 - :memo: **[detailed document](https://drive.google.com/file/d/1GS8nO6k64G959dgILUKcfnk7UEk-LYk3/view?usp=sharing)**
 
-## Repository Hierarchy & Technical Stack
+### Repository Hierarchy & Technical Stack
 - **[API server](https://github.com/DCU-ICSLab/palm-to-farm/tree/master/ProjectPurple/Web/BackEnd)** : Java, Spring, Mybatis, Oracle11g
 - **[Gateway](https://github.com/DCU-ICSLab/palm-to-farm/tree/master/ProjectPurple/Middle)** : PHP, MariaDB, RPI 3B+
 - **[Plant Grower Device](https://github.com/DCU-ICSLab/palm-to-farm/tree/master/ProjectPurple/Device)** : C++, Arduino
@@ -69,11 +77,13 @@ The smart farm cultivator uses the NFT method, one of the hydroponic cultivation
 <p align="center"><img src="./docs_img/schematic.png" width="600px"/><div align="center" style="font-style: italic;">(Figure 8), plant grower schematic</div></p>
 <br/>
 
-## Gateway
-The gateway is located between the API server and the grower. It delivers requested commands and JSON format data from API server to target growers through HTTP. If the sensing data is sent from the grower, the data is delivered to RabbitMQ located on the API server using AMQP.
+## Gateway & API Server
+- Gateway
+    - The gateway is located between the API server and the grower. It delivers requested commands and JSON format data from API server to target growers through HTTP. If the sensing data is sent from the grower, the data is delivered to RabbitMQ located on the API server using AMQP.
+- API server
+    - The API server provides resources to authorized users through the API paths below. The API server provides authorized users with resources related to smart farm systems and performs control and sensing functions. The API is separated by a certificate server that uses OAuth2.0 and a resource server that provides resources.       
 
-## API server
-The API server provides resources to authorized users through the API paths below.
+<p align="center"><img src="./docs_img/sensing_flow.png" width="600px"/><div align="center" style="font-style: italic;">(Figure 9), sensing flow</div></p>
 
 ## Project member
 - [Gyojun An](https://github.com/Altera520) **(PL)** : System design, API server and smart farm manager web app development
